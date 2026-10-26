@@ -124,7 +124,10 @@ struct LabourSettingsView: View {
                 "Lasting at least",
                 thresholds.adviceDurationSec > 0 ? StateCopy.phrase(seconds: thresholds.adviceDurationSec) : "No rule"
             ),
-            ("For", StateCopy.phrase(seconds: thresholds.patternWindowSec)),
+            (
+                "Wait at that rate first",
+                thresholds.patternWindowSec > 0 ? StateCopy.phrase(seconds: thresholds.patternWindowSec) : "No (NHS)"
+            ),
             ("Call now if one lasts over", StateCopy.phrase(seconds: thresholds.urgentSingleDurationSec)),
             ("Call now at", "\(thresholds.urgentCountIn10Min) in 10 minutes"),
         ]

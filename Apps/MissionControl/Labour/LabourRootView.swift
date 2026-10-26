@@ -22,16 +22,16 @@ struct LabourRootView: View {
             LabourTabStack(tab: $tab, showsStatus: false) { TimerTab() }
                 .tabItem { Label("Timer", systemImage: "timer") }
                 .tag(LabourTab.timer)
-            LabourTabStack(tab: $tab, title: "Call") { CallTab() }
+            LabourTabStack(tab: $tab, world: .call) { CallTab() }
                 .tabItem { Label("Call", systemImage: "phone.fill") }
                 .tag(LabourTab.call)
-            LabourTabStack(tab: $tab, title: "Birth plan") { PlanTab() }
+            LabourTabStack(tab: $tab, world: .plan) { PlanTab() }
                 .tabItem { Label("Plan", systemImage: "doc.text.fill") }
                 .tag(LabourTab.plan)
-            LabourTabStack(tab: $tab, title: "Coach") { CoachTab(stage: $stage) }
+            LabourTabStack(tab: $tab, world: .coach) { CoachTab(stage: $stage) }
                 .tabItem { Label("Coach", systemImage: "figure.2") }
                 .tag(LabourTab.coach)
-            LabourTabStack(tab: $tab, title: "Decoder") { DecoderTab(stage: stage) }
+            LabourTabStack(tab: $tab, world: .decoder) { DecoderTab(stage: stage) }
                 .tabItem { Label("Decoder", systemImage: "character.book.closed.fill") }
                 .tag(LabourTab.decoder)
         }
@@ -61,6 +61,8 @@ struct LabourRootView: View {
 struct LabourTabStack<Content: View>: View {
     @Binding var tab: LabourTab
     var title: String = ""
+    /// The tab's own look. Nil for the timer, which stays true black.
+    var world: LabourWorld?
     var showsStatus = true
     @ViewBuilder var content: () -> Content
 
@@ -73,10 +75,16 @@ struct LabourTabStack<Content: View>: View {
                 content()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .background(LabourTheme.background)
+            .background {
+                if let world {
+                    world.background
+                } else {
+                    LabourTheme.background
+                }
+            }
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(LabourTheme.background, for: .navigationBar)
+            .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
@@ -124,36 +132,10 @@ struct StatusStrip: View {
                 }
                 .padding(.horizontal, 16)
                 .frame(minHeight: 44)
-                .background(LabourTheme.surface)
+                .background(Color.black.opacity(0.4))
             }
             .buttonStyle(.plain)
             .accessibilityHint("Opens the timer")
-        }
-    }
-}
-
-extension RedFlag {
-    var label: String {
-        switch self {
-        case .reducedMovements: "Baby moving less"
-        case .watersBroken: "Waters broke"
-        case .watersColoured: "Waters green, brown or smelly"
-        case .bleeding: "Bleeding"
-        case .heavyBleeding: "Heavy bleeding"
-        case .urgeToPush: "Strong urge to push"
-        case .cordVisible: "Cord felt or seen"
-        case .seizureCollapse: "Seizure or collapse"
-        }
-    }
-
-    var icon: String {
-        switch self {
-        case .reducedMovements: "heart.text.square"
-        case .watersBroken, .watersColoured: "drop.fill"
-        case .bleeding, .heavyBleeding: "drop.triangle.fill"
-        case .urgeToPush: "arrow.down.to.line"
-        case .cordVisible: "exclamationmark.octagon.fill"
-        case .seizureCollapse: "bolt.heart.fill"
         }
     }
 }

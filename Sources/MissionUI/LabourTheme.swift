@@ -32,6 +32,33 @@ public enum LabourTheme {
     }
 }
 
+extension RedFlag {
+    /// What the toggle says, short enough for the watch.
+    public var label: String {
+        switch self {
+        case .reducedMovements: "Baby moving less"
+        case .watersBroken: "Waters broke"
+        case .watersColoured: "Waters green, brown or smelly"
+        case .bleeding: "Bleeding"
+        case .heavyBleeding: "Heavy bleeding"
+        case .urgeToPush: "Strong urge to push"
+        case .cordVisible: "Cord felt or seen"
+        case .seizureCollapse: "Seizure or collapse"
+        }
+    }
+
+    public var icon: String {
+        switch self {
+        case .reducedMovements: "heart.text.square"
+        case .watersBroken, .watersColoured: "drop.fill"
+        case .bleeding, .heavyBleeding: "drop.triangle.fill"
+        case .urgeToPush: "arrow.down.to.line"
+        case .cordVisible: "exclamationmark.octagon.fill"
+        case .seizureCollapse: "bolt.heart.fill"
+        }
+    }
+}
+
 extension EnvironmentValues {
     /// How much humour copy carries. The labour root forces `.off`.
     @Entry public var humourLevel: HumourLevel = .mild

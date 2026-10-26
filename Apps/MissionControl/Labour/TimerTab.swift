@@ -34,6 +34,7 @@ struct TimerTab: View {
             if labour.output?.state == .call999 || showsEmergency {
                 EmergencyCallButton(region: labour.region)
             }
+            LabourPrompts()
             StatsRow()
             flags
             Spacer(minLength: 0)
@@ -44,14 +45,27 @@ struct TimerTab: View {
                     elapsed: labour.openContraction.map { context.date.timeIntervalSince($0.start) }
                 ) {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                    labour.toggleContraction()
+                    labour.tap()
                 }
             }
             .frame(height: max(180, height * 0.34))
-            Label("History below", systemImage: "chevron.compact.up")
-                .font(.footnote)
-                .foregroundStyle(LabourTheme.secondaryText)
-                .labelStyle(.titleAndIcon)
+            HStack {
+                Label("History below", systemImage: "chevron.compact.up")
+                    .font(.footnote)
+                    .foregroundStyle(LabourTheme.secondaryText)
+                    .labelStyle(.titleAndIcon)
+                Spacer()
+                if !labour.log.contractions.isEmpty, labour.openContraction == nil,
+                    labour.output?.reasons.contains(.contractionsStopped) != true
+                {
+                    Button("They've stopped") { labour.markStopped() }
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(LabourTheme.secondaryText)
+                        .underline()
+                        .frame(minHeight: 44)
+                        .accessibilityHint("Tells the app the contractions have stopped. Undo is available.")
+                }
+            }
         }
         .padding(.top, 8)
         .frame(minHeight: height - 8)
@@ -59,14 +73,15 @@ struct TimerTab: View {
 
     @ViewBuilder private var banner: some View {
         if let output = labour.output {
-            let thresholds = labour.thresholds
+            let thresholds = output.thresholds
             StateBanner(
                 state: output.state,
                 headline: StateCopy.headline(for: output.state, region: labour.region),
-                detail: StateCopy.detail(for: output.state, region: labour.region, thresholds: thresholds),
-                reasonLines: output.reasons.map {
-                    StateCopy.reasonLine(for: $0, metrics: output.metrics, thresholds: thresholds)
-                },
+                detail: StateCopy.detail(for: output, region: labour.region, thresholds: thresholds),
+                reasonLines: output.reasons.filter { $0 != .noRecentTaps }.map {
+                    StateCopy.reasonLine(
+                        for: $0, metrics: output.metrics, thresholds: thresholds, now: output.evaluatedAt)
+                } + contractionLine(output),
                 source: output.reasons.first.map { StateCopy.source(for: $0, region: labour.region).title },
                 isExpanded: bannerExpanded
             )
@@ -74,6 +89,18 @@ struct TimerTab: View {
             .onLongPressGesture { withAnimation { showsEmergency = true } }
             .accessibilityHint("Tap for more detail. Long-press to show the emergency call button.")
         }
+    }
+
+    /// Under a red flag or the gestation rule, what the contractions alone say, so the pattern
+    /// is never hidden by a flag.
+    private func contractionLine(_ output: EngineOutput) -> [String] {
+        let advice = output.contractionAdvice
+        guard advice.state < output.state, let reason = advice.reasons.first(where: { $0 != .patternEasing }) else {
+            return []
+        }
+        let line = StateCopy.reasonLine(
+            for: reason, metrics: output.metrics, thresholds: output.thresholds, now: output.evaluatedAt)
+        return ["Contractions: \(line)"]
     }
 
     private var flags: some View {
@@ -174,7 +201,7 @@ private struct StatsRow: View {
                     label: "Since last",
                     value: metrics?.lastStart.map { clockText(context.date.timeIntervalSince($0)) } ?? "–"
                 )
-                StatTile(label: "Every", value: metrics?.medianIntervalSec.map(clockText) ?? "–")
+                StatTile(label: "Every", value: metrics.map { every($0, labour.thresholds) } ?? "–")
                 StatTile(label: "Lasting", value: metrics?.medianDurationSec.map { "\(Int($0.rounded()))s" } ?? "–")
                 StatTile(label: "Last hour", value: "\(lastHour)")
             }
@@ -182,7 +209,21 @@ private struct StatsRow: View {
     }
 }
 
-/// The undo chip for 10 seconds after any tap.
+/// The current rate, the same numbers the call rule uses: a range when the gaps are uneven, and
+/// never rounded across the call point ("5:20", not "5 min").
+private func every(_ metrics: ContractionMetrics, _ thresholds: ThresholdProfile) -> String {
+    let limit = thresholds.adviceIntervalSec
+    if StateCopy.isUneven(metrics, thresholds), let shortest = metrics.recentShortestIntervalSec,
+        let longest = metrics.recentLongestIntervalSec
+    {
+        return "\(StateCopy.clock(shortest, threshold: limit))–\(StateCopy.clock(longest, threshold: limit))"
+    }
+    return (metrics.recentMedianIntervalSec ?? metrics.medianIntervalSec).map {
+        StateCopy.clock($0, threshold: limit)
+    } ?? "–"
+}
+
+/// The undo chip for 10 seconds after any tap, or a short note such as "Ignored a double tap".
 private struct UndoArea: View {
     @Environment(AppModel.self) private var model
 
@@ -191,6 +232,11 @@ private struct UndoArea: View {
             if let undoable = model.labour.undoable, undoable.expiresAt > context.date {
                 UndoChip(label: undoable.label) { model.labour.undo() }
                     .transition(.opacity)
+            } else if let notice = model.labour.notice, notice.until > context.date {
+                Text(notice.text)
+                    .font(.headline)
+                    .foregroundStyle(LabourTheme.secondaryText)
+                    .frame(minHeight: LabourTheme.minimumControlSize)
             } else {
                 Color.clear.frame(height: LabourTheme.minimumControlSize)
             }
@@ -255,18 +301,22 @@ private struct RowEditor: View {
     var body: some View {
         let labour = model.labour
         VStack(alignment: .leading, spacing: 10) {
-            stepperRow("Start", minus: { labour.moveStart(of: contraction, byMinutes: -1) }) {
-                labour.moveStart(of: contraction, byMinutes: 1)
-            }
+            stepperRow(
+                "Start",
+                minus: { labour.moveStart(of: contraction, byMinutes: -1) },
+                plus: { labour.moveStart(of: contraction, byMinutes: 1) }
+            )
             if contraction.end != nil {
-                stepperRow("End", minus: { labour.moveEnd(of: contraction, byMinutes: -1) }) {
-                    labour.moveEnd(of: contraction, byMinutes: 1)
-                }
+                stepperRow(
+                    "End",
+                    minus: { labour.moveEnd(of: contraction, byMinutes: -1) },
+                    plus: { labour.moveEnd(of: contraction, byMinutes: 1) }
+                )
             } else if !isLast {
                 HStack(spacing: 8) {
                     Text("Lasted about").foregroundStyle(LabourTheme.secondaryText)
                     ForEach([30, 60, 90], id: \.self) { seconds in
-                        editButton("\(seconds)s") { labour.close(contraction, afterSeconds: Double(seconds)) }
+                        editButton("\(seconds)s") { labour.close(contraction.id, afterSeconds: Double(seconds)) }
                     }
                 }
             }

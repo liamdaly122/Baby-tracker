@@ -22,7 +22,9 @@ enum LaunchOptions {
                 fillProfile(model)
             }
             if arguments.contains("-demoLabour"), !model.labour.isActive {
-                model.labour.start(region: model.profile.region, thresholds: model.currentThresholds)
+                let launched = Date().addingTimeInterval(-3700)
+                model.labour.start(
+                    model.brief.sessionStart(at: launched, by: model.labour.deviceID, calendar: .current))
                 model.labour.insertDemoHistory(count: 15, every: 240, lasting: 50)
             }
         #endif
@@ -39,8 +41,10 @@ enum LaunchOptions {
                 profile.motherName = "Sam"
                 profile.hospitalNumber = "LTH1234567"
                 profile.notes = "GBS positive"
-                profile.unitName = "LGI Maternity Assessment Centre"
-                profile.triagePhone = "0113 000 0000"
+                // Ofcom's drama numbers: they ring nobody.
+                profile.unitName = "Northgate General Maternity Assessment Centre"
+                profile.triagePhone = "01632 960118 option 2"
+                profile.labourWardPhone = "01632 960245"
                 profile.travelMinutes = 25
                 profile.parkingNotes = "Multi-storey on Great George Street, pay by card"
                 profile.afterHoursEntrance = "Clarendon Wing, use the intercom"
@@ -72,11 +76,7 @@ enum LaunchOptions {
         func insertDemoHistory(count: Int, every: TimeInterval, lasting: TimeInterval) {
             let firstStart = Date().addingTimeInterval(-Double(count) * every)
             for index in 0..<count {
-                let start = firstStart.addingTimeInterval(Double(index) * every)
-                recordBackdated(.start, at: start)
-                if let open = openContraction {
-                    recordBackdated(.stop, at: start.addingTimeInterval(lasting), target: open.id)
-                }
+                recordDemoContraction(start: firstStart.addingTimeInterval(Double(index) * every), lasting: lasting)
             }
             refresh()
         }

@@ -16,7 +16,8 @@ struct BirthPlanEditor: View {
                 Text("The five that matter most")
             } footer: {
                 Text(
-                    "A birth plan is a list of preferences, not a contract. Things can change, and it's still her choice."
+                    "A birth plan is a list of preferences, not a contract. "
+                        + "Things can change, and it's still her choice."
                 )
             }
             ForEach(BirthPlanSection.allCases) { section in

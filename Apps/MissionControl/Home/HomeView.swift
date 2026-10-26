@@ -1,6 +1,7 @@
 import MissionCore
 import MissionUI
 import SwiftUI
+import UserNotifications
 
 /// The pre-launch shell: countdown, LAUNCH, and the set-up labour mode needs. The full T-minus
 /// dashboard, briefings and checklists arrive in Phase 6.
@@ -95,10 +96,41 @@ struct HomeView: View {
                     title: "When to call", detail: "NHS defaults, or your midwife's advice", icon: "slider.horizontal.3"
                 )
             }
+            Divider()
+            AlertsRow()
         }
         .padding(.horizontal, 16)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color(.secondarySystemGroupedBackground)))
+    }
+}
+
+/// Asks for notification permission before labour, so the first "time to call" alert isn't
+/// stuck behind a permission prompt.
+private struct AlertsRow: View {
+    @Environment(AppModel.self) private var model
+    @State private var status: UNAuthorizationStatus?
+
+    var body: some View {
+        Button {
+            Task {
+                await model.notifier.requestAuthorization()
+                status = await model.notifier.authorizationStatus()
+            }
+        } label: {
+            SetUpRow(title: "Labour alerts", detail: detail, icon: "bell.badge")
+        }
+        .buttonStyle(.plain)
+        .disabled(status == .authorized || status == .denied)
+        .task { status = await model.notifier.authorizationStatus() }
+    }
+
+    private var detail: String {
+        switch status {
+        case .authorized, .provisional, .ephemeral: "On. They break through Sleep and other Focus modes."
+        case .denied: "Off. Turn them on in Settings, Notifications, Mission Control."
+        default: "Allow them now, so they work the moment labour starts"
+        }
     }
 }
 
@@ -135,12 +167,14 @@ struct LaunchGate: View {
             Text("Before you start")
                 .font(.title2.bold())
             Text(
-                "Mission Control times contractions and follows NHS advice on when to call your maternity unit. It doesn't diagnose anything or tell you what stage of labour she's in."
+                "Mission Control times contractions and follows NHS advice on when to call your maternity unit. "
+                    + "It doesn't diagnose anything or tell you what stage of labour she's in."
             )
             Text("Your midwife's advice always comes first. In an emergency, call 999.")
                 .fontWeight(.semibold)
             Text(
-                "You'll be asked to allow notifications so the app can tell you when it's time to call, even with your phone locked."
+                "You'll be asked to allow notifications so the app can tell you when it's time to call, "
+                    + "even with your phone locked."
             )
             .font(.callout)
             .foregroundStyle(.secondary)

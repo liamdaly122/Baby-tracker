@@ -183,7 +183,7 @@ public enum StateCopy {
 
     /// Uneven, or met on frequency with a median over the rule: show the range, never one number
     /// that's over the call point.
-    static func isUneven(_ metrics: ContractionMetrics, _ thresholds: ThresholdProfile) -> Bool {
+    public static func isUneven(_ metrics: ContractionMetrics, _ thresholds: ThresholdProfile) -> Bool {
         metrics.recentRegularity.map { $0 > thresholds.regularityCV } ?? false
             || (metrics.recentMedianIntervalSec.map { $0 > thresholds.adviceIntervalSec } ?? false
                 && metrics.recentShortestIntervalSec.map { $0 <= thresholds.adviceIntervalSec } ?? false)

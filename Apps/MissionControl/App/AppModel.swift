@@ -4,7 +4,7 @@ import MissionCore
 import Observation
 import SwiftData
 
-/// Owns the two stores, the content and the labour session for the life of the app.
+/// Owns the two stores, the content, the labour session and the watch link for the life of the app.
 @MainActor
 @Observable
 final class AppModel {
@@ -12,6 +12,7 @@ final class AppModel {
     let labourStore: ModelContainer
     let labour: LabourSessionModel
     let notifier: ThresholdNotifier
+    private(set) var sync: PhoneSync?
     private(set) var library: ContentLibrary
     private(set) var profile: MissionProfile
     private(set) var birthPlan: BirthPlanRecord
@@ -25,16 +26,33 @@ final class AppModel {
         birthPlan = Self.fetchOrInsert(BirthPlanRecord.self, in: planningContext, make: BirthPlanRecord.init)
         library = (try? BundledContent.library(for: profile.region)) ?? Self.emptyLibrary(profile.region)
         notifier = ThresholdNotifier()
+        if !inMemory {
+            Migrations.run(profile: profile, labour: labourStore.mainContext)
+            try? planningContext.save()
+        }
 
-        labour = LabourSessionModel(
-            context: labourStore.mainContext,
-            deviceID: DeviceIdentity.current,
-            contextProvider: { moment in
-                LabourContext(profile: profile.labourProfile(at: moment), triage: profile.triageDetails(at: moment))
-            }
-        )
+        labour = LabourSessionModel(context: labourStore.mainContext, deviceID: DeviceIdentity.current)
+        labour.detailsProvider = { days in profile.triageDetails(gestationalAgeDays: days) }
         labour.alerting = notifier
         reloadLibrary()
+
+        let sync = PhoneSync(labour: labour) { [unowned self] in self.brief }
+        self.sync = sync
+        labour.sync = sync
+        let legacyThresholds = currentThresholds
+        labour.loadActiveSession { record in
+            // Saved before sessions kept their start: fix gestation at the start time now.
+            SessionStart(
+                sessionID: record.id,
+                startedAt: record.startedAt,
+                startedBy: record.ownerDeviceID,
+                profile: profile.brief(thresholds: legacyThresholds).labourProfile(
+                    at: record.startedAt, calendar: .current),
+                thresholds: record.thresholds ?? legacyThresholds
+            )
+        }
+        sync.activate()
+        sync.publishContext()
     }
 
     /// The thresholds a new labour would start with: region defaults plus any saved overrides.
@@ -46,19 +64,27 @@ final class AppModel {
         thresholdTable.profile(applying: profile.thresholdOverrides)
     }
 
+    /// What the watch needs to launch on its own.
+    var brief: MissionBrief {
+        profile.brief(thresholds: currentThresholds)
+    }
+
     func reloadLibrary() {
         if library.region != profile.region {
             library = (try? BundledContent.library(for: profile.region)) ?? Self.emptyLibrary(profile.region)
         }
     }
 
+    /// LAUNCH: fixes gestation, region and thresholds for this labour, and tells the watch.
     func launch() async {
         await notifier.requestAuthorization()
-        labour.start(region: profile.region, thresholds: currentThresholds)
+        labour.start(brief.sessionStart(at: Date(), by: labour.deviceID, calendar: .current))
     }
 
+    /// Saves the profile and sends the watch the new brief.
     func savePlanning() {
         try? planning.mainContext.save()
+        sync?.publishContext()
     }
 
     private static func fetchOrInsert<Model: PersistentModel>(

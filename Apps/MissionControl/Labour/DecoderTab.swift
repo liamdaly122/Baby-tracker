@@ -13,6 +13,11 @@ struct DecoderTab: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            LabourTabHeader(
+                world: .decoder, eyebrow: "Decoder", title: "What did they just say?",
+                subtitle: "\(model.library.glossary.count) terms in plain English, with a question to ask."
+            )
+            .padding([.horizontal, .top], 16)
             HStack(spacing: 10) {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(LabourTheme.secondaryText)
@@ -35,7 +40,11 @@ struct DecoderTab: View {
             }
             .padding(.horizontal, 14)
             .frame(minHeight: LabourTheme.minimumControlSize)
-            .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(LabourTheme.surface))
+            .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(LabourWorld.decoder.surface))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .strokeBorder(LabourWorld.decoder.accent.opacity(0.5), lineWidth: 1.5)
+            )
             .padding(16)
 
             let results = (index ?? GlossaryIndex(entries: model.library.glossary)).search(
@@ -47,7 +56,7 @@ struct DecoderTab: View {
                 Spacer()
             } else {
                 ScrollView {
-                    LazyVStack(spacing: 8) {
+                    LazyVStack(spacing: 0) {
                         ForEach(results) { entry in
                             GlossaryRow(entry: entry, isExpanded: expanded == entry.id || results.count == 1) {
                                 withAnimation { expanded = expanded == entry.id ? nil : entry.id }
@@ -78,7 +87,7 @@ private struct GlossaryRow: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack(alignment: .firstTextBaseline) {
                     Text(entry.term)
-                        .font(.title3.weight(.semibold))
+                        .font(.title2.weight(.heavy))
                         .foregroundStyle(LabourTheme.primaryText)
                     Spacer()
                     WorryBadge(level: entry.worryLevel)
@@ -90,13 +99,13 @@ private struct GlossaryRow: View {
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
                 if isExpanded {
-                    Label {
-                        Text("Ask: “\(entry.questionToAsk)”").fixedSize(horizontal: false, vertical: true)
-                    } icon: {
-                        Image(systemName: "bubble.left.fill").foregroundStyle(LabourTheme.amber)
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text("ASK")
+                            .font(.caption2.weight(.semibold).monospaced())
+                        Text("“\(entry.questionToAsk)”").fixedSize(horizontal: false, vertical: true)
                     }
                     .font(.body.weight(.semibold))
-                    .foregroundStyle(LabourTheme.primaryText)
+                    .foregroundStyle(LabourWorld.decoder.accent)
                     if !entry.aliases.isEmpty {
                         Text("Also: \(entry.aliases.joined(separator: ", "))")
                             .font(.footnote)
@@ -107,9 +116,16 @@ private struct GlossaryRow: View {
                         .foregroundStyle(LabourTheme.secondaryText)
                 }
             }
-            .padding(14)
+            .padding(.vertical, 14)
+            .padding(.horizontal, 2)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(LabourTheme.surface))
+            .contentShape(Rectangle())
+            .overlay(alignment: .top) {
+                Rectangle()
+                    .stroke(style: StrokeStyle(lineWidth: 1, dash: [4, 4]))
+                    .foregroundStyle(LabourWorld.decoder.accent.opacity(0.35))
+                    .frame(height: 1)
+            }
         }
         .buttonStyle(.plain)
     }

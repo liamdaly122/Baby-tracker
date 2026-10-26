@@ -6,19 +6,22 @@ import SwiftData
 /// Receives every engine evaluation so it can post and schedule notifications.
 @MainActor
 protocol LabourAlerting: AnyObject {
-    func engineDidUpdate(previousState: LabourState?, input: EngineInput, output: EngineOutput)
-    func sessionDidEnd()
+    func engineDidUpdate(sessionID: UUID, previous: EngineStateSnapshot?, input: EngineInput, output: EngineOutput)
+    func sessionDidEnd(sessionID: UUID)
 }
 
-/// The engine inputs that come from the pregnancy profile, worked out at a moment.
-struct LabourContext {
-    var profile: LabourProfile
-    var triage: TriageDetails
+/// Sends what happened here to the watch.
+@MainActor
+protocol LabourSyncing: AnyObject {
+    func sessionDidStart(_ start: SessionStart)
+    func didRecord(_ events: [TapEvent], sessionID: UUID)
+    func sessionDidEnd(sessionID: UUID, at date: Date)
 }
 
-/// Runs a labour session: records taps as events, rebuilds contractions from them, runs the
-/// go/no-go engine and keeps its snapshot. Everything is saved on every tap, so the timer
-/// survives the app being killed.
+/// Runs a labour session on the phone. The log and the advice live in `LabourSessionCore`, shared
+/// with the watch; this adds storage, undo, the questions the app asks instead of guessing, and
+/// the hooks for alerts and sync. Everything is saved on every tap, so the timer survives the app
+/// being killed.
 @MainActor
 @Observable
 final class LabourSessionModel {
@@ -31,100 +34,175 @@ final class LabourSessionModel {
         var expiresAt: Date
     }
 
+    /// A question on the timer that has to be answered before anything is recorded.
+    enum Prompt: Equatable {
+        /// The open contraction is past 5 minutes: did it just end, or is this a new one?
+        case endedOrNew(elapsedSec: TimeInterval)
+        /// He started a new one without stopping the last: how long did that one last?
+        case fixForgotten(contractionID: UUID, elapsedSec: TimeInterval)
+    }
+
     private let context: ModelContext
     private let now: () -> Date
     let deviceID: String
     weak var alerting: LabourAlerting?
-    /// Supplies the profile at a moment. Set by the app from `MissionProfile`.
-    var contextProvider: (Date) -> LabourContext
+    weak var sync: LabourSyncing?
+    /// Her details for the triage card. Set by the app from `MissionProfile`.
+    var detailsProvider: (Int?) -> TriageDetails = { TriageDetails(gestationalAge: $0.map(GestationalAge.init)) }
 
     private(set) var session: LabourSessionRecord?
-    private(set) var events: [TapEvent] = []
-    private(set) var log = ReducedLog(contractions: [], redFlags: [:])
+    private(set) var core: LabourSessionCore?
     private(set) var output: EngineOutput?
-    private(set) var lastInput: EngineInput?
     private(set) var undoable: UndoableAction?
-    private var clock = LamportClock()
+    var prompt: Prompt?
+    /// A short line for the undo area, such as "Ignored a double tap".
+    private(set) var notice: (text: String, until: Date)?
+    /// The last start he said was still coming, so the "are they still coming?" question goes away.
+    var quietAcknowledgedFor: Date?
 
-    init(
-        context: ModelContext,
-        deviceID: String,
-        now: @escaping () -> Date = Date.init,
-        contextProvider: @escaping (Date) -> LabourContext
-    ) {
+    init(context: ModelContext, deviceID: String, now: @escaping () -> Date = Date.init) {
         self.context = context
         self.deviceID = deviceID
         self.now = now
-        self.contextProvider = contextProvider
-        loadActiveSession()
     }
 
-    var isActive: Bool { session != nil }
+    var isActive: Bool { core != nil }
+    var sessionID: UUID? { core?.sessionID }
+    var start: SessionStart? { core?.start }
 
+    /// The thresholds in use, clamped. Copy and alerts use these.
     var thresholds: ThresholdProfile {
-        session?.thresholds ?? ThresholdTable.builtIn(for: session?.region ?? .uk).defaults
+        output?.thresholds ?? core?.thresholds ?? ThresholdTable.builtIn(for: .uk).defaults
     }
 
-    var region: ContentRegion { session?.region ?? .uk }
+    var region: ContentRegion { core?.start.profile.region ?? .uk }
+    var log: ReducedLog { core?.log ?? ReducedLog() }
 
     /// The contraction being timed right now, if the latest one hasn't been stopped.
-    var openContraction: Contraction? {
-        guard let last = log.contractions.last, last.end == nil else { return nil }
-        return last
+    var openContraction: Contraction? { log.openContraction }
+
+    /// No due date, and nobody has said she's 37 weeks or more.
+    var needsTermAnswer: Bool {
+        guard let start = core?.start, start.profile.gestationalAgeDays == nil else { return false }
+        return log.termAnswer != .term && log.termAnswer != .preterm
     }
 
     // MARK: Session
 
-    func loadActiveSession() {
+    /// Loads the unfinished session, if there is one. `legacyStart` builds a start for a session
+    /// saved before starts were stored.
+    func loadActiveSession(legacyStart: (LabourSessionRecord) -> SessionStart) {
         var descriptor = FetchDescriptor<LabourSessionRecord>(
             predicate: #Predicate { $0.endedAt == nil },
             sortBy: [SortDescriptor(\.startedAt, order: .reverse)]
         )
         descriptor.fetchLimit = 1
-        session = try? context.fetch(descriptor).first
-        reloadEvents()
+        guard let record = try? context.fetch(descriptor).first else { return }
+        let start = record.start ?? legacyStart(record)
+        if record.start == nil {
+            record.start = start
+            save()
+        }
+        session = record
+        core = LabourSessionCore(start: start, deviceID: deviceID, events: storedEvents(for: start.sessionID))
         refresh()
     }
 
-    func start(region: ContentRegion, thresholds: ThresholdProfile) {
-        guard session == nil else { return }
-        let record = LabourSessionRecord(
-            startedAt: now(), ownerDeviceID: deviceID, region: region, thresholds: thresholds)
+    func start(_ start: SessionStart) {
+        guard core == nil else { return }
+        let record = LabourSessionRecord(start: start)
         context.insert(record)
         save()
         session = record
-        reloadEvents()
+        core = LabourSessionCore(start: start, deviceID: deviceID)
+        sync?.sessionDidStart(start)
         refresh()
     }
 
     func end() {
-        guard let session else { return }
-        session.endedAt = now()
+        guard let session, let id = sessionID else { return }
+        let moment = now()
+        session.endedAt = moment
         save()
         self.session = nil
-        events = []
-        log = ReducedLog(contractions: [], redFlags: [:])
+        core = nil
         output = nil
-        lastInput = nil
         undoable = nil
-        alerting?.sessionDidEnd()
+        prompt = nil
+        alerting?.sessionDidEnd(sessionID: id)
+        sync?.sessionDidEnd(sessionID: id, at: moment)
     }
 
-    /// Applies new thresholds (e.g. after a call with the midwife) to the running labour.
+    /// Applies new thresholds (after a call with the midwife) to the running labour.
     func applyThresholds(_ thresholds: ThresholdProfile) {
-        session?.thresholds = thresholds
+        guard var start = core?.start else { return }
+        start.thresholds = thresholds
+        core?.update(start)
+        session?.start = start
         save()
+        sync?.sessionDidStart(start)
         refresh()
     }
 
     // MARK: Taps
 
-    func toggleContraction() {
-        if let open = openContraction {
-            record(.stop, target: open.id, label: "stop")
-        } else {
-            record(.start, label: "start")
+    /// The big button, through `TapPolicy`: the same rule as the watch.
+    func tap() {
+        guard var core else { return }
+        let outcome = core.tap(at: now())
+        self.core = core
+        switch outcome {
+        case .started(let event):
+            prompt = nil
+            stored([event], undoLabel: "start")
+        case .stopped(let event, _):
+            stored([event], undoLabel: "stop")
+        case .askIfEndedOrNew(_, let elapsed):
+            prompt = .endedOrNew(elapsedSec: elapsed)
+        case .ignoredDoubleTap:
+            notice = ("Ignored a double tap", now().addingTimeInterval(4))
         }
+    }
+
+    /// "It just ended."
+    func endedJustNow() {
+        prompt = nil
+        perform("stop") { $0.endOpenContraction(at: $1) }
+    }
+
+    /// "This is a new one": start it, then ask how long the forgotten one lasted.
+    func newOneStarted() {
+        guard let open = openContraction else {
+            prompt = nil
+            return
+        }
+        let elapsed = now().timeIntervalSince(open.start)
+        perform("start") { $0.startNew(at: $1) }
+        prompt = .fixForgotten(contractionID: open.id, elapsedSec: elapsed)
+    }
+
+    func close(_ contractionID: UUID, afterSeconds seconds: TimeInterval) {
+        if case .fixForgotten(let id, _) = prompt, id == contractionID {
+            prompt = nil
+        }
+        perform("edit") { $0.close(contractionID, afterSeconds: seconds, at: $1) }
+    }
+
+    func markStopped() {
+        quietAcknowledgedFor = nil
+        perform("they've stopped") { $0.markStopped(at: $1) }
+    }
+
+    func answerTerm(_ answer: TermAnswer) {
+        perform("answer") { $0.answerTerm(answer, at: $1) }
+    }
+
+    func setRedFlag(_ flag: RedFlag, isOn: Bool) {
+        perform(isOn ? "flag" : "flag off") { $0.setRedFlag(flag, isOn: isOn, at: $1) }
+    }
+
+    func logMovement() {
+        perform("movement") { $0.record(.movement, at: $1) }
     }
 
     func undo() {
@@ -133,44 +211,101 @@ final class LabourSessionModel {
             return
         }
         self.undoable = nil
-        record(.undo, target: undoable.event.id, label: nil)
+        perform(nil) { $0.record(.undo, at: $1, target: undoable.event.id) }
     }
 
     func moveStart(of contraction: Contraction, byMinutes minutes: Int) {
         let time = contraction.start.addingTimeInterval(Double(minutes) * 60)
-        record(.editStart, target: contraction.id, payload: TapPayload(time: time), label: "edit")
+        perform("edit") { $0.record(.editStart, at: $1, target: contraction.id, payload: TapPayload(time: time)) }
     }
 
     func moveEnd(of contraction: Contraction, byMinutes minutes: Int) {
         guard let end = contraction.end else { return }
         let time = end.addingTimeInterval(Double(minutes) * 60)
-        record(.editStop, target: contraction.id, payload: TapPayload(time: time), label: "edit")
-    }
-
-    /// Ends a contraction that was never stopped, at its start plus `duration`.
-    func close(_ contraction: Contraction, afterSeconds duration: TimeInterval) {
-        let time = contraction.start.addingTimeInterval(duration)
-        record(.editStop, target: contraction.id, payload: TapPayload(time: time), label: "edit")
+        perform("edit") { $0.record(.editStop, at: $1, target: contraction.id, payload: TapPayload(time: time)) }
     }
 
     func delete(_ contraction: Contraction) {
-        record(.delete, target: contraction.id, label: "delete")
+        perform("delete") { $0.record(.delete, at: $1, target: contraction.id) }
     }
 
     func mergeWithPrevious(_ contraction: Contraction) {
-        record(.merge, target: contraction.id, label: "merge")
-    }
-
-    func setRedFlag(_ flag: RedFlag, isOn: Bool) {
-        record(.redFlag, payload: TapPayload(flag: flag, isOn: isOn), label: isOn ? "flag" : "flag off")
-    }
-
-    func logMovement() {
-        record(.movement, label: "movement")
+        perform("merge") { $0.record(.merge, at: $1, target: contraction.id) }
     }
 
     func canMergeWithPrevious(_ contraction: Contraction) -> Bool {
         log.contractions.contains { ContractionMetrics.chronological($0, contraction) }
+    }
+
+    /// "Still coming": hides the question until the log goes quiet again.
+    func acknowledgeQuiet() {
+        quietAcknowledgedFor = output?.metrics.lastStart
+    }
+
+    // MARK: Sync
+
+    /// Events from the watch.
+    func receive(_ events: [TapEvent]) {
+        guard var core else { return }
+        let fresh = core.merge(events)
+        self.core = core
+        guard !fresh.isEmpty else { return }
+        persist(fresh)
+        refresh()
+    }
+
+    /// A session the watch started or updated. The earlier of two simultaneous starts wins.
+    func receive(_ remote: SessionStart) {
+        guard var current = core else {
+            start(remote)
+            return
+        }
+        if remote.sessionID == current.sessionID {
+            current.update(remote)
+            core = current
+            session?.start = remote
+            save()
+            refresh()
+            return
+        }
+        let winner = SessionStart.winner(current.start, remote)
+        guard winner == remote else { return }
+        alerting?.sessionDidEnd(sessionID: current.sessionID)
+        guard SessionStart.isSameLabour(current.start, remote) else {
+            // This phone's session is the stale one: close it and take the watch's.
+            session?.endedAt = now()
+            save()
+            session = nil
+            core = nil
+            prompt = nil
+            undoable = nil
+            start(remote)
+            return
+        }
+        // The watch started the same labour first: move this device's taps into its session.
+        current.adopt(remote)
+        core = current
+        session?.endedAt = remote.startedAt
+        let record = LabourSessionRecord(start: remote)
+        context.insert(record)
+        session = record
+        persist(current.events)
+        sync?.didRecord(current.events, sessionID: remote.sessionID)
+        refresh()
+    }
+
+    /// True if this phone has already ended that session, so a late message can't revive it.
+    func wasEnded(_ sessionID: UUID) -> Bool {
+        let records =
+            (try? context.fetch(FetchDescriptor<LabourSessionRecord>(predicate: #Predicate { $0.id == sessionID })))
+            ?? []
+        return records.contains { $0.endedAt != nil }
+    }
+
+    /// The watch ended the session (or the phone did, on another install).
+    func receiveEnd(sessionID: UUID) {
+        guard sessionID == self.sessionID else { return }
+        end()
     }
 
     // MARK: Engine
@@ -178,112 +313,97 @@ final class LabourSessionModel {
     /// Re-runs the engine at the current time. Called after every tap, on a timer while the
     /// app is open, and when it comes back to the foreground.
     func refresh() {
-        guard let session else {
+        guard var core, let session else {
             output = nil
-            lastInput = nil
             return
         }
         let moment = now()
-        let labourContext = contextProvider(moment)
-        let previous = session.engineSnapshot
-        let input = EngineInput(
-            contractions: log.contractions,
-            redFlags: log.activeRedFlags,
-            profile: labourContext.profile,
-            thresholds: thresholds,
-            previous: previous,
-            now: moment
-        )
-        let result = GoNoGoEngine.evaluate(input)
-        let previousState = output?.state ?? previous?.state
+        let result = core.output(at: moment)
+        self.core = core
         output = result
-        lastInput = input
-        if result.snapshot != previous {
-            session.engineSnapshot = result.snapshot
-            save()
-        }
         if let undoable, undoable.expiresAt <= moment {
             self.undoable = nil
         }
-        alerting?.engineDidUpdate(previousState: previousState, input: input, output: result)
+        if let notice, notice.until <= moment {
+            self.notice = nil
+        }
+        let previous = session.alertedSnapshot
+        alerting?.engineDidUpdate(
+            sessionID: core.sessionID,
+            previous: previous,
+            input: core.engineInput(at: moment, previous: previous),
+            output: result
+        )
+        if previous?.state != result.snapshot.state || previous?.reasonCodes != result.snapshot.reasonCodes {
+            session.alertedSnapshot = result.snapshot
+            save()
+        }
     }
 
     func triageScript(calendar: Calendar = .current) -> TriageScript? {
-        guard let output else { return nil }
-        let moment = now()
+        guard let output, let core else { return nil }
         return TriageScript.build(
-            details: contextProvider(moment).triage,
-            output: output,
-            log: log,
-            thresholds: thresholds,
-            now: moment,
-            calendar: calendar
+            TriageScript.Inputs(
+                details: detailsProvider(core.start.profile.gestationalAgeDays),
+                output: output,
+                log: core.log,
+                now: now(),
+                calendar: calendar
+            )
         )
     }
 
     // MARK: Storage
 
-    @discardableResult
-    private func record(
-        _ kind: TapEventKind,
-        target: UUID? = nil,
-        payload: TapPayload? = nil,
-        label: String?,
-        at time: Date? = nil,
-        evaluate: Bool = true
-    ) -> TapEvent? {
-        guard let session else { return nil }
-        let event = TapEvent(
-            sessionID: session.id,
-            kind: kind,
-            at: time ?? now(),
-            deviceID: deviceID,
-            lamport: clock.tick(),
-            target: target,
-            payload: payload
-        )
-        do {
-            context.insert(try TapEventRecord(event: event))
-            save()
-        } catch {
-            return nil
+    private func perform(_ undoLabel: String?, _ change: (inout LabourSessionCore, Date) -> TapEvent?) {
+        guard var core else { return }
+        let event = change(&core, now())
+        self.core = core
+        if let event {
+            stored([event], undoLabel: undoLabel)
         }
-        events.append(event)
-        log = EventLog.reduce(events)
-        undoable = label.map {
-            UndoableAction(event: event, label: $0, expiresAt: event.at.addingTimeInterval(Self.undoWindow))
-        }
-        if evaluate {
-            refresh()
-        }
-        return event
     }
 
-    #if DEBUG
-        /// Records a tap at an earlier time without running the engine, for demo data only. Call
-        /// `refresh()` once the batch is in, as the watch sync will after a merge.
-        func recordBackdated(_ kind: TapEventKind, at time: Date, target: UUID? = nil) {
-            record(kind, target: target, label: nil, at: time, evaluate: false)
+    private func stored(_ events: [TapEvent], undoLabel: String?) {
+        guard let id = sessionID else { return }
+        persist(events)
+        sync?.didRecord(events, sessionID: id)
+        if let undoLabel, let event = events.last {
+            undoable = UndoableAction(
+                event: event, label: undoLabel, expiresAt: event.at.addingTimeInterval(Self.undoWindow))
         }
-    #endif
+        refresh()
+    }
 
-    private func reloadEvents() {
-        guard let session else {
-            events = []
-            log = ReducedLog(contractions: [], redFlags: [:])
-            return
-        }
-        let id = session.id
-        let records =
-            (try? context.fetch(FetchDescriptor<TapEventRecord>(predicate: #Predicate { $0.sessionID == id }))) ?? []
-        events = EventMerger.ordered(records.compactMap(\.event))
+    private func persist(_ events: [TapEvent]) {
         for event in events {
-            clock.observe(event.lamport)
+            if let record = try? TapEventRecord(event: event) {
+                context.insert(record)
+            }
         }
-        log = EventLog.reduce(events)
+        save()
+    }
+
+    private func storedEvents(for sessionID: UUID) -> [TapEvent] {
+        let records =
+            (try? context.fetch(
+                FetchDescriptor<TapEventRecord>(predicate: #Predicate { $0.sessionID == sessionID }))) ?? []
+        return records.compactMap(\.event)
     }
 
     private func save() {
         try? context.save()
     }
+
+    #if DEBUG
+        /// A finished contraction at an earlier time, for demo data only.
+        func recordDemoContraction(start: Date, lasting seconds: TimeInterval) {
+            guard var core, let id = sessionID else { return }
+            let started = core.record(.start, at: start)
+            let stopped = core.record(.stop, at: start.addingTimeInterval(seconds), target: started.id)
+            self.core = core
+            persist([started, stopped])
+            sync?.didRecord([started, stopped], sessionID: id)
+        }
+    #endif
 }

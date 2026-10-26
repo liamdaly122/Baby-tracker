@@ -8,13 +8,19 @@ struct ThresholdEditor: View {
     @Environment(AppModel.self) private var model
     @State private var notes: [ThresholdField: String] = [:]
 
-    private static let editable: [(ThresholdField, String, Double)] = [
-        (.adviceIntervalSec, "Call when contractions come every", 30),
-        (.adviceDurationSec, "and last at least", 5),
-        (.patternWindowSec, "for", 300),
-        (.urgentSingleDurationSec, "Call now if one lasts longer than", 15),
-        (.urgentCountIn10Min, "Call now at this many in 10 minutes", 1),
-        (.regularityCV, "How even the gaps must be", 0.05),
+    private struct Editable {
+        var field: ThresholdField
+        var label: String
+        var step: Double
+    }
+
+    private static let editable: [Editable] = [
+        Editable(field: .adviceIntervalSec, label: "Call when contractions come every", step: 30),
+        Editable(field: .adviceDurationSec, label: "and last at least", step: 5),
+        Editable(field: .patternWindowSec, label: "Wait at that rate before calling", step: 300),
+        Editable(field: .urgentSingleDurationSec, label: "Call now if one lasts longer than", step: 15),
+        Editable(field: .urgentCountIn10Min, label: "Call now at this many in 10 minutes", step: 1),
+        Editable(field: .regularityCV, label: "How even the gaps must be", step: 0.05),
     ]
 
     var body: some View {
@@ -22,15 +28,18 @@ struct ThresholdEditor: View {
         let profile = table.profile(applying: model.profile.thresholdOverrides)
         Form {
             Section {
-                ForEach(Self.editable, id: \.0) { field, label, step in
-                    let limit = table.limit(for: field)
+                ForEach(Self.editable, id: \.field) { item in
+                    let limit = table.limit(for: item.field)
                     if limit.isEditable {
-                        row(field: field, label: label, step: step, limit: limit, value: profile[field])
+                        row(
+                            field: item.field, label: item.label, step: item.step, limit: limit,
+                            value: profile[item.field])
                     }
                 }
             } footer: {
                 Text(
-                    "Your midwife may give you different advice. Use theirs. The limits stop the app from ever waiting longer than the NHS urgent rules."
+                    "Your midwife may give you different advice. Use theirs. "
+                        + "The limits stop the app from ever waiting longer than the NHS urgent rules."
                 )
             }
             Section {
@@ -41,6 +50,7 @@ struct ThresholdEditor: View {
                 if model.labour.isActive {
                     Button("Use these for this labour") {
                         model.labour.applyThresholds(model.currentThresholds)
+                        model.savePlanning()
                     }
                 }
             } footer: {
@@ -76,8 +86,16 @@ struct ThresholdEditor: View {
                     in: limit.min...limit.max,
                     step: step
                 ) {
-                    LabeledContent(limit.allowsDisabled ? "Duration" : label, value: display(field, value))
+                    LabeledContent(limit.allowsDisabled ? "For" : label, value: display(field, value))
                 }
+            }
+            if model.thresholdTable.delaysAdvice(field, value: value) {
+                Label(
+                    "Only if your midwife told you to: this makes the app suggest calling later.",
+                    systemImage: "exclamationmark.triangle.fill"
+                )
+                .font(.footnote)
+                .foregroundStyle(.orange)
             }
             if let note = notes[field] {
                 Text(note)

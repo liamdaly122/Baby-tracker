@@ -15,6 +15,7 @@ final class MissionProfile {
     var notes: String = ""
     var unitName: String = ""
     var triagePhone: String = ""
+    var labourWardPhone: String = ""
     var parkingNotes: String = ""
     var afterHoursEntrance: String = ""
     var partnerCanStayOvernight: Bool = false
@@ -67,22 +68,30 @@ extension MissionProfile {
         }
     }
 
-    /// What the engine needs, worked out at `date` (gestational age moves on during a long labour).
-    func labourProfile(at date: Date, calendar: Calendar = .current) -> LabourProfile {
-        LabourProfile(
+    /// Everything labour mode needs to start, on the phone or the watch. Gestation is worked out
+    /// from it once, when labour starts.
+    func brief(thresholds: ThresholdProfile, now: Date = Date()) -> MissionBrief {
+        MissionBrief(
             region: region,
+            dueDateText: dueDate?.description,
             parity: parity,
             previousFastLabour: previousFastLabour,
-            gestationalAgeDays: pregnancyCalendar?.gestationalAgeDays(at: date, in: calendar),
-            travelMinutes: travelMinutes
+            travelMinutes: travelMinutes,
+            thresholds: thresholds,
+            motherName: motherName,
+            unitName: unitName,
+            triage: triageNumber,
+            labourWard: labourWardNumber,
+            updatedAt: now
         )
     }
 
-    func triageDetails(at date: Date, calendar: Calendar = .current) -> TriageDetails {
+    /// Her details for the triage call. Gestation comes from the session, fixed when it started.
+    func triageDetails(gestationalAgeDays: Int?) -> TriageDetails {
         TriageDetails(
             motherName: motherName,
             hospitalNumber: hospitalNumber,
-            gestationalAge: pregnancyCalendar?.gestationalAge(on: CalendarDay(date, in: calendar)),
+            gestationalAge: gestationalAgeDays.map(GestationalAge.init(totalDays:)),
             parity: parity,
             previousFastLabour: previousFastLabour,
             travelMinutes: travelMinutes,
@@ -95,9 +104,35 @@ extension MissionProfile {
         unitName.isEmpty ? "your maternity unit" : unitName
     }
 
-    var triageURL: URL? {
-        let digits = triagePhone.filter { $0.isNumber || $0 == "+" }
-        return digits.isEmpty ? nil : URL(string: "tel:\(digits)")
+    /// The saved triage line, checked. Older saves were free text, so they're parsed here every time
+    /// and a bad one shows as a problem to fix instead of dialling the wrong number.
+    var triageCheck: Result<PhoneNumber, PhoneNumber.Problem>? {
+        triagePhone.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            ? nil : PhoneNumber.parse(triagePhone, region: region)
+    }
+
+    var triageNumber: PhoneNumber? { try? triageCheck?.get() }
+
+    var labourWardCheck: Result<PhoneNumber, PhoneNumber.Problem>? {
+        labourWardPhone.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            ? nil : PhoneNumber.parse(labourWardPhone, region: region)
+    }
+
+    var labourWardNumber: PhoneNumber? { try? labourWardCheck?.get() }
+}
+
+extension PhoneNumber.Problem {
+    /// What went wrong, and how to fix it.
+    var message: String {
+        switch self {
+        case .empty: "Add a number."
+        case .letters: "Use digits only. Put menu options after the number, like “option 2”."
+        case .twoNumbers: "That looks like two numbers. Save each one in its own field."
+        case .tooShort: "That looks a digit short. Check it against her notes."
+        case .tooLong: "That's too long. Check it against her notes."
+        case .invalid: "That doesn't look like a number for this country. Check it against her notes."
+        case .overseas: "That's an overseas number. Ask the unit for a local one."
+        }
     }
 }
 
