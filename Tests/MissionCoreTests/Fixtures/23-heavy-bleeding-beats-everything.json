@@ -1,0 +1,32 @@
+{
+  "name": "Heavy bleeding with waters gone, 6 in 10 and preterm",
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 250,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {},
+  "redFlags": [
+    "watersBroken",
+    "heavyBleeding"
+  ],
+  "patterns": [
+    {
+      "firstStartSec": 0,
+      "count": 6,
+      "everySec": 100,
+      "durationSec": 40
+    }
+  ],
+  "contractions": [],
+  "evaluateAtSec": 560,
+  "expect": {
+    "state": "call999",
+    "reasons": [
+      "heavyBleeding"
+    ],
+    "needsEditCount": 0
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "US 5-1-1: every 5 min, 65 s long, for over an hour",
+  "region": "us",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 280,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "patterns": [
+    {
+      "firstStartSec": 0,
+      "count": 14,
+      "everySec": 300,
+      "durationSec": 65
+    }
+  ],
+  "contractions": [],
+  "evaluateAtSec": 3960,
+  "expect": {
+    "state": "callTriage",
+    "reasons": [
+      "regularPatternSustained"
+    ],
+    "needsEditCount": 0
+  }
+}

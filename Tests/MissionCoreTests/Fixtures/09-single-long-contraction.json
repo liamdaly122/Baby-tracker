@@ -1,0 +1,27 @@
+{
+  "name": "One contraction lasting 130 s",
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 280,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "patterns": [],
+  "contractions": [
+    {
+      "startSec": 0,
+      "durationSec": 130
+    }
+  ],
+  "evaluateAtSec": 200,
+  "expect": {
+    "state": "callNow",
+    "reasons": [
+      "contractionOverUrgentDuration"
+    ],
+    "needsEditCount": 0
+  }
+}

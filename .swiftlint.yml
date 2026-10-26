@@ -8,6 +8,7 @@ line_length:
   warning: 120
   error: 140
   ignores_comments: true
+  ignores_urls: true
 identifier_name:
   excluded: [id, at, lo, hi, p, q, uk, us, xp]
 type_body_length:
@@ -18,6 +19,7 @@ function_body_length:
   warning: 80
 cyclomatic_complexity:
   warning: 15
+  ignores_case_statements: true
 # swift-format owns layout; avoid the rules that fight it.
 disabled_rules:
   - trailing_comma

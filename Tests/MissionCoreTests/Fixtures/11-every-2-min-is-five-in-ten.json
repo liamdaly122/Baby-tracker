@@ -1,0 +1,29 @@
+{
+  "name": "Every 2 min gives 5 starts in any 10 minutes, not 6",
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 280,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "patterns": [
+    {
+      "firstStartSec": 0,
+      "count": 6,
+      "everySec": 120,
+      "durationSec": 40
+    }
+  ],
+  "contractions": [],
+  "evaluateAtSec": 650,
+  "expect": {
+    "state": "establishing",
+    "reasons": [
+      "patternNotYetSustained"
+    ],
+    "needsEditCount": 0
+  }
+}

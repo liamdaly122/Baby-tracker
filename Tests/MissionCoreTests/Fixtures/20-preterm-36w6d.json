@@ -1,0 +1,22 @@
+{
+  "name": "36+6 weeks with no contractions yet",
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 258,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "patterns": [],
+  "contractions": [],
+  "evaluateAtSec": 60,
+  "expect": {
+    "state": "callNow",
+    "reasons": [
+      "preterm"
+    ],
+    "needsEditCount": 0
+  }
+}

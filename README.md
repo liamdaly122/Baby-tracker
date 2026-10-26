@@ -60,5 +60,5 @@ Then open `MissionControl.xcodeproj`. Simulator builds need no signing. For a de
 ## Status
 
 - Phase 0 (research, plan, scaffold) complete.
-- Phase 1 (go/no-go engine and event log) in progress.
+- Phase 1 (go/no-go engine and event-sourced tap log) complete: `GoNoGoEngine`, `ContractionMetrics`, hysteresis, NHS-worded state copy, `EventLog` and `EventMerger`, with 26 scripted labours and property tests.
 - Next: Phase 2, the pregnancy calendar and UK content v1. See `docs/plan.md` section B10 for the full phase list.

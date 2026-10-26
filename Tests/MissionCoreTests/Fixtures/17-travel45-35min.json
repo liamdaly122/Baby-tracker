@@ -1,0 +1,29 @@
+{
+  "name": "First baby, 45 min from the unit: same pattern for 35 min",
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 280,
+    "travelMinutes": 45
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "patterns": [
+    {
+      "firstStartSec": 0,
+      "count": 9,
+      "everySec": 240,
+      "durationSec": 50
+    }
+  ],
+  "contractions": [],
+  "evaluateAtSec": 2100,
+  "expect": {
+    "state": "callTriage",
+    "reasons": [
+      "regularPatternSustained"
+    ],
+    "needsEditCount": 0
+  }
+}

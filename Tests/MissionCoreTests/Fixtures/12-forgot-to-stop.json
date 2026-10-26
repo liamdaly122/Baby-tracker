@@ -1,0 +1,30 @@
+{
+  "name": "Last contraction left running for 400 s",
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 280,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "patterns": [
+    {
+      "firstStartSec": 0,
+      "count": 5,
+      "everySec": 300,
+      "durationSec": 50,
+      "openLast": true
+    }
+  ],
+  "contractions": [],
+  "evaluateAtSec": 1600,
+  "expect": {
+    "state": "callNow",
+    "reasons": [
+      "openContractionOverUrgentDuration"
+    ],
+    "needsEditCount": 1
+  }
+}

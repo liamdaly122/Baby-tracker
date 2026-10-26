@@ -1,0 +1,31 @@
+{
+  "name": "UK with a midwife's 45 s duration rule: every 4 min but 40 s long",
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 280,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {
+    "adviceDurationSec": 45
+  },
+  "redFlags": [],
+  "patterns": [
+    {
+      "firstStartSec": 0,
+      "count": 17,
+      "everySec": 240,
+      "durationSec": 40
+    }
+  ],
+  "contractions": [],
+  "evaluateAtSec": 3900,
+  "expect": {
+    "state": "establishing",
+    "reasons": [
+      "patternBuilding"
+    ],
+    "needsEditCount": 0
+  }
+}

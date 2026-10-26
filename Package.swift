@@ -16,7 +16,11 @@ var targets: [Target] = [
         dependencies: ["MissionCore"],
         resources: [.copy("Content")]
     ),
-    .testTarget(name: "MissionCoreTests", dependencies: ["MissionCore"]),
+    .testTarget(
+        name: "MissionCoreTests",
+        dependencies: ["MissionCore"],
+        resources: [.copy("Fixtures")]
+    ),
     .testTarget(
         name: "MissionContentTests",
         dependencies: ["MissionCore", "MissionContent"]
