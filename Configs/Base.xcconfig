@@ -1,0 +1,9 @@
+// Shared build settings for every target in MissionControl.xcodeproj.
+//
+// Signing: put your Apple Developer team in Configs/Signing.local.xcconfig (gitignored):
+//   DEVELOPMENT_TEAM = ABCDE12345
+// Simulator builds work without it.
+
+APP_GROUP_IDENTIFIER = group.com.liamdaly.missioncontrol
+
+#include? "Signing.local.xcconfig"

@@ -1,0 +1,24 @@
+included:
+  - Sources
+  - Tests
+  - Apps
+excluded:
+  - .build
+line_length:
+  warning: 120
+  error: 140
+  ignores_comments: true
+identifier_name:
+  excluded: [id, at, lo, hi, p, q, uk, us, xp]
+type_body_length:
+  warning: 400
+file_length:
+  warning: 600
+function_body_length:
+  warning: 80
+cyclomatic_complexity:
+  warning: 15
+# swift-format owns layout; avoid the rules that fight it.
+disabled_rules:
+  - trailing_comma
+  - opening_brace
