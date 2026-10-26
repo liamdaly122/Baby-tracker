@@ -1,0 +1,61 @@
+{
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 280,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "contractions": [],
+  "name": "Gaps alternating 2:30 and 5 min stay at the call point for the whole 2 hours",
+  "patterns": [
+    {
+      "firstStartSec": 0,
+      "count": 33,
+      "cycleSec": [
+        150,
+        300
+      ],
+      "durationSec": 50
+    }
+  ],
+  "checks": [
+    {
+      "atSec": 800,
+      "state": "callTriage",
+      "reasons": [
+        "regularPatternSustained"
+      ]
+    },
+    {
+      "atSec": 1800,
+      "state": "callTriage",
+      "reasons": [
+        "regularPatternSustained"
+      ]
+    },
+    {
+      "atSec": 3600,
+      "state": "callTriage",
+      "reasons": [
+        "regularPatternSustained"
+      ]
+    },
+    {
+      "atSec": 5400,
+      "state": "callTriage",
+      "reasons": [
+        "regularPatternSustained"
+      ]
+    },
+    {
+      "atSec": 7200,
+      "state": "callTriage",
+      "reasons": [
+        "regularPatternSustained"
+      ]
+    }
+  ]
+}

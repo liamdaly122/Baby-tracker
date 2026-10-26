@@ -1,0 +1,58 @@
+{
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 280,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {
+    "patternWindowSec": 3600
+  },
+  "redFlags": [],
+  "contractions": [],
+  "name": "With a midwife's hour: three missed taps don't restart the hour: held while the gap is unconfirmed, then filled in once the next one is on rhythm",
+  "patterns": [
+    {
+      "firstStartSec": 0,
+      "count": 20,
+      "everySec": 240,
+      "durationSec": 50,
+      "skip": [
+        12,
+        13,
+        14
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "atSec": 2700,
+      "state": "establishing",
+      "reasons": [
+        "patternNotYetSustained"
+      ]
+    },
+    {
+      "atSec": 3660,
+      "state": "establishing",
+      "reasons": [
+        "patternBuilding"
+      ]
+    },
+    {
+      "atSec": 3960,
+      "state": "callTriage",
+      "reasons": [
+        "regularPatternSustained"
+      ]
+    },
+    {
+      "atSec": 4620,
+      "state": "callTriage",
+      "reasons": [
+        "regularPatternSustained"
+      ]
+    }
+  ]
+}

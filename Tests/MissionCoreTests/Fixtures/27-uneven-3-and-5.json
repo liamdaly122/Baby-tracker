@@ -1,0 +1,32 @@
+{
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 280,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "contractions": [],
+  "name": "Gaps alternating 3 and 5 min are frequent enough to call, whatever the spread",
+  "patterns": [
+    {
+      "firstStartSec": 0,
+      "count": 12,
+      "cycleSec": [
+        180,
+        300
+      ],
+      "durationSec": 50
+    }
+  ],
+  "evaluateAtSec": 2640,
+  "expect": {
+    "state": "callTriage",
+    "reasons": [
+      "regularPatternSustained"
+    ],
+    "needsEditCount": 0
+  }
+}

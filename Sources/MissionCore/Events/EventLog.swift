@@ -10,14 +10,36 @@ public struct ReducedLog: Sendable, Hashable {
     /// Live contractions in start order.
     public var contractions: [Contraction]
     public var redFlags: [RedFlag: RedFlagStatus]
+    /// The latest time she felt the baby move, if it was logged.
+    public var lastMovementAt: Date?
+    /// The latest time he said the contractions have stopped. A later start within 3× the pace cancels
+    /// it as a mis-tap; otherwise the next contraction starts a new run.
+    public var easedAt: Date?
+    /// The latest answer to "Is she 37 weeks or more?".
+    public var termAnswer: TermAnswer?
+
+    public init(
+        contractions: [Contraction] = [],
+        redFlags: [RedFlag: RedFlagStatus] = [:],
+        lastMovementAt: Date? = nil,
+        easedAt: Date? = nil,
+        termAnswer: TermAnswer? = nil
+    ) {
+        self.contractions = contractions
+        self.redFlags = redFlags
+        self.lastMovementAt = lastMovementAt
+        self.easedAt = easedAt
+        self.termAnswer = termAnswer
+    }
 
     public var activeRedFlags: Set<RedFlag> {
         Set(redFlags.filter(\.value.isOn).keys)
     }
 
-    /// The latest contraction that is still being timed, if any.
+    /// The latest contraction, if it's still being timed. An earlier one without an end is a
+    /// forgotten stop to fix, never what the next tap stops.
     public var openContraction: Contraction? {
-        contractions.last { $0.end == nil }
+        contractions.last.flatMap { $0.end == nil ? $0 : nil }
     }
 }
 
@@ -35,7 +57,7 @@ public enum EventLog {
         var contractions: [Contraction] = []
         var startDevice: [UUID: String] = [:]
         var aliases: [UUID: UUID] = [:]
-        var redFlags: [RedFlag: RedFlagStatus] = [:]
+        var notes = Annotations()
 
         func resolve(_ id: UUID?) -> Int? {
             guard var id else { return nil }
@@ -47,7 +69,7 @@ public enum EventLog {
             return contractions.firstIndex { $0.id == id }
         }
 
-        for event in ordered where !cancelled.contains(event.id) {
+        for event in ordered where !cancelled.contains(event.id) && !notes.apply(event) {
             switch event.kind {
             case .start:
                 if let open = latestOpenIndex(contractions),
@@ -93,16 +115,18 @@ public enum EventLog {
                 }
                 aliases[merged.id] = contractions[previous].id
                 contractions.remove(at: index)
-            case .redFlag:
-                if let flag = event.payload?.flag, let isOn = event.payload?.isOn {
-                    redFlags[flag] = RedFlagStatus(isOn: isOn, changedAt: event.at)
-                }
-            case .undo:
+            case .redFlag, .movement, .eased, .termAnswer, .undo, .unknown:
                 break
             }
         }
 
-        return ReducedLog(contractions: contractions.sorted(by: ContractionMetrics.chronological), redFlags: redFlags)
+        return ReducedLog(
+            contractions: contractions.sorted(by: ContractionMetrics.chronological),
+            redFlags: notes.redFlags,
+            lastMovementAt: notes.lastMovementAt,
+            easedAt: notes.easedAt,
+            termAnswer: notes.termAnswer
+        )
     }
 
     /// IDs cancelled by undo events. Later undos are applied first, so undoing an undo restores
@@ -121,5 +145,34 @@ public enum EventLog {
         contractions.indices
             .filter { contractions[$0].end == nil }
             .max { ContractionMetrics.chronological(contractions[$0], contractions[$1]) }
+    }
+}
+
+/// Everything in the log that isn't a contraction: red flags, movements and his answers.
+private struct Annotations {
+    var redFlags: [RedFlag: RedFlagStatus] = [:]
+    var lastMovementAt: Date?
+    var easedAt: Date?
+    var termAnswer: TermAnswer?
+
+    /// Applies `event` if it's an annotation, and says whether it was.
+    mutating func apply(_ event: TapEvent) -> Bool {
+        switch event.kind {
+        case .redFlag:
+            if let flag = event.payload?.flag, let isOn = event.payload?.isOn {
+                redFlags[flag] = RedFlagStatus(isOn: isOn, changedAt: event.at)
+            }
+        case .movement:
+            lastMovementAt = max(lastMovementAt ?? event.at, event.at)
+        case .eased:
+            easedAt = max(easedAt ?? event.at, event.at)
+        case .termAnswer:
+            if let term = event.payload?.term {
+                termAnswer = term
+            }
+        case .start, .stop, .editStart, .editStop, .delete, .merge, .undo, .unknown:
+            return false
+        }
+        return true
     }
 }

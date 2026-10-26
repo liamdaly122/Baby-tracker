@@ -1,0 +1,64 @@
+{
+  "region": "us",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 280,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "contractions": [],
+  "name": "US 5-1-1: every 7 min, then every 4 min: the slower lead-in counts towards the hour (E5), and it never drops back",
+  "patterns": [
+    {
+      "firstStartSec": 0,
+      "count": 9,
+      "everySec": 420,
+      "durationSec": 65
+    },
+    {
+      "firstStartSec": 3600,
+      "count": 15,
+      "everySec": 240,
+      "durationSec": 65
+    }
+  ],
+  "checks": [
+    {
+      "atSec": 3420,
+      "state": "establishing",
+      "reasons": [
+        "patternBuilding"
+      ]
+    },
+    {
+      "atSec": 3700,
+      "state": "establishing",
+      "reasons": [
+        "patternBuilding"
+      ]
+    },
+    {
+      "atSec": 4100,
+      "state": "callTriage",
+      "reasons": [
+        "regularPatternSustained"
+      ]
+    },
+    {
+      "atSec": 5400,
+      "state": "callTriage",
+      "reasons": [
+        "regularPatternSustained"
+      ]
+    },
+    {
+      "atSec": 6900,
+      "state": "callTriage",
+      "reasons": [
+        "regularPatternSustained"
+      ]
+    }
+  ]
+}

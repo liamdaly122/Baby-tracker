@@ -1,5 +1,7 @@
 import Foundation
 
+/// Decoding is tolerant: a kind this build doesn't know (from a newer peer) becomes `unknown`, which
+/// the log ignores, instead of failing the whole batch.
 public enum TapEventKind: String, Codable, Sendable, CaseIterable {
     /// A contraction starts at `at`. The contraction's ID is this event's ID.
     case start
@@ -17,17 +19,42 @@ public enum TapEventKind: String, Codable, Sendable, CaseIterable {
     case undo
     /// Turns `payload.flag` on or off.
     case redFlag
+    /// She felt the baby move at `at`. Triage asks about movements in the last 24 hours.
+    case movement
+    /// He said the contractions have stopped, at `at`. A later start within 3× the pace cancels it as
+    /// a mis-tap; otherwise the next contraction starts a new run.
+    case eased
+    /// The answer to "Is she 37 weeks or more?" in `payload.term`, when there's no due date.
+    case termAnswer
+    /// A kind from a newer build. Kept so the event isn't lost, and ignored.
+    case unknown
+
+    public init(from decoder: Decoder) throws {
+        let raw = try decoder.singleValueContainer().decode(String.self)
+        self = TapEventKind(rawValue: raw) ?? .unknown
+    }
 }
 
 public struct TapPayload: Codable, Sendable, Hashable {
     public var time: Date?
     public var flag: RedFlag?
     public var isOn: Bool?
+    public var term: TermAnswer?
 
-    public init(time: Date? = nil, flag: RedFlag? = nil, isOn: Bool? = nil) {
+    public init(time: Date? = nil, flag: RedFlag? = nil, isOn: Bool? = nil, term: TermAnswer? = nil) {
         self.time = time
         self.flag = flag
         self.isOn = isOn
+        self.term = term
+    }
+
+    /// Values this build doesn't know (from a newer peer) decode as nil rather than failing.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        time = try container.decodeIfPresent(Date.self, forKey: .time)
+        flag = try? container.decodeIfPresent(RedFlag.self, forKey: .flag)
+        isOn = try container.decodeIfPresent(Bool.self, forKey: .isOn)
+        term = try? container.decodeIfPresent(TermAnswer.self, forKey: .term)
     }
 }
 

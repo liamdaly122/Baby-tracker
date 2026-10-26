@@ -1,5 +1,5 @@
 {
-  "name": "Every 2 min gives 5 starts in any 10 minutes, not 6",
+  "name": "Every 2 min gives 5 starts in any 10 minutes: not the urgent rule, but time to call",
   "region": "uk",
   "profile": {
     "parity": 0,
@@ -20,9 +20,9 @@
   "contractions": [],
   "evaluateAtSec": 650,
   "expect": {
-    "state": "establishing",
+    "state": "callTriage",
     "reasons": [
-      "patternNotYetSustained"
+      "regularPatternSustained"
     ],
     "needsEditCount": 0
   }

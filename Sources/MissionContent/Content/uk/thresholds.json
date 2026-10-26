@@ -39,12 +39,12 @@
     },
     {
       "id": "patternWindowSec",
-      "default": 3600,
+      "default": 0,
       "min": 1800,
       "max": 3600,
-      "allowsDisabled": false,
+      "allowsDisabled": true,
       "unit": "seconds",
-      "note": "NHS says 'regular' without giving a time. One hour matches the widely used 5-1-1 convention. Can be shortened, never lengthened.",
+      "note": "How long contractions must stay at the call rate before 'Time to call'. The NHS says to call when contractions are regular and every 5 minutes or more often, and gives no time, so the UK default is off (0). If a midwife asks you to wait, it can be set between 30 and 60 minutes, never longer.",
       "provenance": {
         "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
         "sourceTitle": "NHS: Signs that labour has begun",
@@ -95,7 +95,7 @@
       "max": 0.5,
       "allowsDisabled": false,
       "unit": "ratio",
-      "note": "App-defined, for midwife review. Turns 'regular' into a number: the spread of start-to-start intervals (interquartile range) divided by the median interval.",
+      "note": "App-defined, for midwife review. How far over the advice interval the longer gaps may run for a pattern to count as regular: with 0.35 and 5 minutes, the median gap at or under 5 minutes and three in four at or under 6:45. Also used to describe a pattern as regular or uneven.",
       "provenance": {
         "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
         "sourceTitle": "NHS: Signs that labour has begun",
@@ -112,7 +112,7 @@
       "max": 1800,
       "allowsDisabled": false,
       "unit": "seconds",
-      "note": "Second and later babies, a previous fast labour or a journey over 30 minutes: call earlier rather than waiting the full hour. Not editable in v1.",
+      "note": "Only matters when a hold is set (a midwife's UK hold, or the US default): second and later babies, a previous fast labour or a journey over 30 minutes then wait at most 30 minutes. NHS: call earlier for subsequent babies and long journeys.",
       "provenance": {
         "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/what-happens/the-stages-of-labour-and-birth/",
         "sourceTitle": "NHS: The stages of labour and birth",

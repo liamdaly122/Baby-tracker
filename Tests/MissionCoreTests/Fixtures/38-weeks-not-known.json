@@ -1,0 +1,22 @@
+{
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": null,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "contractions": [],
+  "name": "No due date and no answer: call now, because she could be under 37 weeks",
+  "patterns": [],
+  "evaluateAtSec": 60,
+  "expect": {
+    "state": "callNow",
+    "reasons": [
+      "gestationUnknown"
+    ],
+    "needsEditCount": 0
+  }
+}

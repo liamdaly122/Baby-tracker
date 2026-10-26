@@ -16,21 +16,36 @@ func regular(count: Int, every: Double, duration: Double, first: Double = 0) -> 
     }
 }
 
+/// UK thresholds with the pattern hold switched on at an hour, as a midwife might ask.
+let ukWithHour = ThresholdTable.builtIn(for: .uk).profile(applying: [.patternWindowSec: 3600])
+
 func ukInput(
     _ contractions: [Contraction],
     flags: Set<RedFlag> = [],
     profile: LabourProfile = LabourProfile(region: .uk, gestationalAgeDays: 280),
+    thresholds: ThresholdProfile = ThresholdTable.builtIn(for: .uk).defaults,
     previous: EngineStateSnapshot? = nil,
+    easedAt: Double? = nil,
     now: Double
 ) -> EngineInput {
     EngineInput(
         contractions: contractions,
         redFlags: flags,
         profile: profile,
-        thresholds: ThresholdTable.builtIn(for: .uk).defaults,
+        thresholds: thresholds,
         previous: previous,
+        easedAt: easedAt.map(at),
         now: at(now)
     )
+}
+
+/// Contractions with these start-to-start gaps, from `first`, each `duration` long.
+func withGaps(_ gaps: [Double], duration: Double = 50, first: Double = 0) -> [Contraction] {
+    var starts = [first]
+    for gap in gaps {
+        starts.append(starts[starts.count - 1] + gap)
+    }
+    return starts.map { Contraction(start: at($0), end: at($0 + duration)) }
 }
 
 /// SplitMix64: a small seeded generator so random tests repeat exactly on every platform.

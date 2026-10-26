@@ -33,9 +33,9 @@
   ],
   "evaluateAtSec": 1020,
   "expect": {
-    "state": "establishing",
+    "state": "callTriage",
     "reasons": [
-      "patternNotYetSustained"
+      "regularPatternSustained"
     ],
     "needsEditCount": 1
   }

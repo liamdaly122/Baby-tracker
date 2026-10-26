@@ -1,5 +1,5 @@
 {
-  "name": "First baby, exactly 30 min away is not over 30",
+  "name": "With a midwife's hour: first baby, exactly 30 min away is not over 30",
   "region": "uk",
   "profile": {
     "parity": 0,
@@ -7,7 +7,9 @@
     "gestationalAgeDays": 280,
     "travelMinutes": 30
   },
-  "thresholdOverrides": {},
+  "thresholdOverrides": {
+    "patternWindowSec": 3600
+  },
   "redFlags": [],
   "patterns": [
     {

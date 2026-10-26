@@ -6,18 +6,33 @@ public enum ThresholdField: String, Codable, Sendable, CaseIterable {
     case adviceIntervalSec
     /// Median duration needed for the call-for-advice rule. 0 switches the rule off (UK default).
     case adviceDurationSec
-    /// How long the pattern must hold. Can be shortened, never lengthened.
+    /// How long the pattern must hold before "Time to call". 0 switches the hold off (UK default:
+    /// the NHS gives no time). When on, 30 to 60 minutes; it can never be longer than an hour.
     case patternWindowSec
     /// Any contraction longer than this means call now. Can be tightened, never relaxed.
     case urgentSingleDurationSec
     /// This many contraction starts inside any 10 minutes means call now.
     case urgentCountIn10Min
-    /// Interval spread (IQR divided by median) at or below which contractions count as regular.
+    /// How far over the advice interval the upper quartile of gaps may run for a pattern at the
+    /// limit to count as regular (0.35: median at or under 5 minutes, three in four at or under 6:45).
+    /// Frequent contractions meet the call rule whatever their spread. Also used to describe a
+    /// pattern as regular or uneven (interquartile range over the median).
     case regularityCV
     /// Shorter required window for second and later babies, a fast previous labour or a long trip.
     case earlyCallerWindowSec
     /// A journey longer than this makes the user an early caller.
     case travelEarlyCallMinutes
+
+    /// Whether a higher value makes the app suggest calling sooner. A change in the other direction
+    /// delays the advice and should only be made on a midwife's instructions.
+    public var higherCallsSooner: Bool {
+        switch self {
+        case .adviceIntervalSec, .regularityCV: true
+        case .adviceDurationSec, .patternWindowSec, .urgentSingleDurationSec, .urgentCountIn10Min,
+            .earlyCallerWindowSec, .travelEarlyCallMinutes:
+            false
+        }
+    }
 }
 
 /// The thresholds the engine runs with. Always built through `ThresholdTable` so values are clamped.
@@ -129,6 +144,23 @@ public struct ThresholdTable: Sendable, Hashable {
         profile(applying: [:])
     }
 
+    /// `profile` with every field clamped to its safe bounds.
+    public func clamped(_ profile: ThresholdProfile) -> ThresholdProfile {
+        var result = profile
+        for field in ThresholdField.allCases {
+            result[field] = limit(for: field).clamp(profile[field])
+        }
+        return result
+    }
+
+    /// True if `value` makes the advice come later than the default does, so the editor can say
+    /// "only if your midwife told you".
+    public func delaysAdvice(_ field: ThresholdField, value: Double) -> Bool {
+        let clamped = limit(for: field).clamp(value)
+        let defaultValue = limit(for: field).defaultValue
+        return field.higherCallsSooner ? clamped < defaultValue : clamped > defaultValue
+    }
+
     /// The defaults with any overrides applied, each clamped to its safe bounds.
     public func profile(applying overrides: [ThresholdField: Double]) -> ThresholdProfile {
         var profile = ThresholdProfile(
@@ -158,10 +190,15 @@ extension ThresholdTable {
             case .uk: ThresholdLimit(defaultValue: 0, min: 30, max: 90, allowsDisabled: true)
             case .us: ThresholdLimit(defaultValue: 60, min: 30, max: 90, allowsDisabled: true)
             }
+        let patternWindow: ThresholdLimit =
+            switch region {
+            case .uk: ThresholdLimit(defaultValue: 0, min: 1800, max: 3600, allowsDisabled: true)
+            case .us: ThresholdLimit(defaultValue: 3600, min: 1800, max: 3600)
+            }
         let limits: [ThresholdField: ThresholdLimit] = [
             .adviceIntervalSec: ThresholdLimit(defaultValue: 300, min: 180, max: 420),
             .adviceDurationSec: adviceDuration,
-            .patternWindowSec: ThresholdLimit(defaultValue: 3600, min: 1800, max: 3600),
+            .patternWindowSec: patternWindow,
             .urgentSingleDurationSec: ThresholdLimit(defaultValue: 120, min: 90, max: 120),
             .urgentCountIn10Min: ThresholdLimit(defaultValue: 6, min: 5, max: 6),
             .regularityCV: ThresholdLimit(defaultValue: 0.35, min: 0.25, max: 0.5),

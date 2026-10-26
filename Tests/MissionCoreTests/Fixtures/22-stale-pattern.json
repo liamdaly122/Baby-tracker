@@ -1,5 +1,5 @@
 {
-  "name": "Regular for 68 min, then nothing for 15 min",
+  "name": "Regular for 68 min, then nothing logged for 15 min: still time to call, and asks if they're still coming",
   "region": "uk",
   "profile": {
     "parity": 0,
@@ -20,9 +20,10 @@
   "contractions": [],
   "evaluateAtSec": 4980,
   "expect": {
-    "state": "early",
+    "state": "callTriage",
     "reasons": [
-      "notEnoughContractions"
+      "regularPatternSustained",
+      "noRecentTaps"
     ],
     "needsEditCount": 0
   }

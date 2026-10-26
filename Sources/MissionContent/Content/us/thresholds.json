@@ -95,7 +95,7 @@
       "max": 0.5,
       "allowsDisabled": false,
       "unit": "ratio",
-      "note": "App-defined, for midwife review. Turns 'regular' into a number: the spread of start-to-start intervals (interquartile range) divided by the median interval.",
+      "note": "App-defined, for midwife review. How far over the advice interval the longer gaps may run for a pattern to count as regular: with 0.35 and 5 minutes, the median gap at or under 5 minutes and three in four at or under 6:45. Also used to describe a pattern as regular or uneven.",
       "provenance": {
         "sourceURL": "https://my.clevelandclinic.org/health/articles/9676-labor-delivery",
         "sourceTitle": "Cleveland Clinic: Labor and delivery",

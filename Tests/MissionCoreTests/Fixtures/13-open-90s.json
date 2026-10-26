@@ -1,5 +1,5 @@
 {
-  "name": "Contraction still being timed at 90 s",
+  "name": "Contraction still being timed at 90 s, after a pattern that meets the call rule",
   "region": "uk",
   "profile": {
     "parity": 0,
@@ -21,9 +21,9 @@
   "contractions": [],
   "evaluateAtSec": 1290,
   "expect": {
-    "state": "establishing",
+    "state": "callTriage",
     "reasons": [
-      "patternNotYetSustained"
+      "regularPatternSustained"
     ],
     "needsEditCount": 0
   }
