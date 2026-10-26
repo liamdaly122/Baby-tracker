@@ -1,0 +1,3241 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "2026.10.26-1",
+  "region": "uk",
+  "items": [
+    {
+      "id": "admin.employer-policy",
+      "module": "adminAndLeave",
+      "title": {
+        "off": "Check your employer's paternity policy",
+        "full": "Read the small print before the small person arrives"
+      },
+      "why": {
+        "off": "Some employers pay more than the statutory rate, often only if notice is given correctly. You don't need to tell work yet."
+      },
+      "clinicalText": null,
+      "unlockWeek": 6,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/paternity-pay-leave/pay",
+        "sourceTitle": "GOV.UK: Paternity pay",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "admin.paternity-pay-eligibility",
+      "module": "adminAndLeave",
+      "title": {
+        "off": "Check you qualify for Statutory Paternity Pay"
+      },
+      "why": {
+        "off": "Paternity leave has been a day-one right since 6 April 2026, but pay isn't. Statutory Paternity Pay is £194.32 a week (or 90% of your average earnings if that's lower) and needs 26 weeks' continuous employment by the end of the qualifying week, plus average earnings of £129 a week or more."
+      },
+      "clinicalText": null,
+      "unlockWeek": 14,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/paternity-pay-leave/eligibility",
+        "sourceTitle": "GOV.UK: Paternity pay and leave eligibility",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "admin.paternity-notice",
+      "module": "adminAndLeave",
+      "title": {
+        "off": "Give paternity leave notice",
+        "full": "Deadline Dodger: file your paternity leave notice"
+      },
+      "why": {
+        "off": "Tell your employer the due date, that you're taking paternity leave, and whether it's 1 week or 2. The deadline is the end of the 15th week before the week the baby is due, at about 25 weeks. It's the deadline dads miss most.",
+        "full": "Tell your employer the due date, that you're taking paternity leave, and whether it's 1 week or 2. The deadline is the end of the 15th week before the week the baby is due, at about 25 weeks. CAPCOM has seen many good men miss this one. Don't be a statistic."
+      },
+      "clinicalText": null,
+      "unlockWeek": 20,
+      "deadline": {
+        "anchor": "ewc",
+        "offsetDays": -99
+      },
+      "reminderDaysBefore": [
+        28,
+        14,
+        7,
+        1
+      ],
+      "quizID": null,
+      "xp": 50,
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/paternity-pay-leave/how-to-claim",
+        "sourceTitle": "GOV.UK: Paternity pay and leave, how to claim",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "admin.mum-tells-employer",
+      "module": "adminAndLeave",
+      "title": {
+        "off": "Help her plan telling her employer"
+      },
+      "why": {
+        "off": "She must tell her employer by the end of the same 15th week before the week the baby is due, and she'll need the MATB1 form from her midwife. Offer to help with the conversation and the paperwork, not to do it for her."
+      },
+      "clinicalText": null,
+      "unlockWeek": 16,
+      "deadline": {
+        "anchor": "ewc",
+        "offsetDays": -99
+      },
+      "reminderDaysBefore": [
+        14
+      ],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/maternity-pay-leave/leave",
+        "sourceTitle": "GOV.UK: Maternity pay and leave",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "admin.paternity-start-notice",
+      "module": "adminAndLeave",
+      "title": {
+        "off": "Confirm when your paternity leave starts"
+      },
+      "why": {
+        "off": "If you're giving a fixed start date, you need to give 28 days' notice. Most dads choose 'the day of the birth', which doesn't need a date. Leave can't start before the birth and must be taken within 52 weeks, as one block or two separate weeks."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": {
+        "anchor": "edd",
+        "offsetDays": -42
+      },
+      "reminderDaysBefore": [
+        7
+      ],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/paternity-pay-leave/leave",
+        "sourceTitle": "GOV.UK: Paternity leave",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "admin.shared-parental-leave",
+      "module": "adminAndLeave",
+      "title": {
+        "off": "Do the Shared Parental Leave maths",
+        "full": "Run the Shared Parental Leave simulations"
+      },
+      "why": {
+        "off": "Couples can share up to 50 weeks of leave and 37 weeks of pay, in up to 3 blocks each with 8 weeks' notice per block. Shared Parental Pay is a flat rate, so work out the household income before committing."
+      },
+      "clinicalText": null,
+      "unlockWeek": 22,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/shared-parental-leave-and-pay",
+        "sourceTitle": "GOV.UK: Shared Parental Leave and Pay",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "admin.antenatal-time-off",
+      "module": "adminAndLeave",
+      "title": {
+        "off": "Book time off for 2 antenatal appointments"
+      },
+      "why": {
+        "off": "You have a right to unpaid time off for 2 antenatal appointments, up to 6.5 hours each including travel. Most dads use them for the dating scan and the 20-week scan. Your employer can ask for a declaration but not proof."
+      },
+      "clinicalText": null,
+      "unlockWeek": 8,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.acas.org.uk/pregnancy-at-work/antenatal-appointments",
+        "sourceTitle": "Acas: Time off for antenatal appointments",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "admin.unpaid-parental-leave",
+      "module": "adminAndLeave",
+      "title": {
+        "off": "Know about unpaid parental leave"
+      },
+      "why": {
+        "off": "Each parent can take up to 18 weeks' unpaid parental leave per child before their 18th birthday, at most 4 weeks a year, in whole weeks. It's been a day-one right since 6 April 2026."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/parental-leave/entitlement",
+        "sourceTitle": "GOV.UK: Unpaid parental leave",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "admin.will-guardians",
+      "module": "adminAndLeave",
+      "title": {
+        "off": "Write a will and name guardians"
+      },
+      "why": {
+        "off": "Without a will, the courts decide who raises your child if you both die. A will lets you appoint guardians."
+      },
+      "clinicalText": null,
+      "unlockWeek": 28,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 20,
+      "provenance": {
+        "sourceURL": "https://trustedtraders.which.co.uk/money/wills-and-probate/passing-on-your-money/will-writing-for-new-parents-aFSAK9n8ctbN",
+        "sourceTitle": "Which? Trusted Traders: Will writing for new parents",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "admin.life-insurance",
+      "module": "adminAndLeave",
+      "title": {
+        "off": "Review life insurance"
+      },
+      "why": {
+        "off": "Term cover for the mortgage, income and childcare to 18 is the usual aim; a common rule of thumb is 10 times salary. Write policies in trust."
+      },
+      "clinicalText": null,
+      "unlockWeek": 28,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.aviva.co.uk/insurance/life-products/life-insurance/knowledge-centre/family-protection-to-do-list/",
+        "sourceTitle": "Aviva: Family protection to-do list",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "admin.registration-plan",
+      "module": "adminAndLeave",
+      "title": {
+        "off": "Find out how to register the birth",
+        "full": "Locate the paperwork launch site"
+      },
+      "why": {
+        "off": "You have 42 days to register the birth (21 in Scotland). In Leeds it's appointment-only at Merrion House, so check how to book now. Some hospitals offer registration on the ward."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.leeds.gov.uk/births-deaths-and-marriages/register-a-birth",
+        "sourceTitle": "Leeds City Council: Register a birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "admin.unmarried-registration",
+      "module": "adminAndLeave",
+      "title": {
+        "off": "Not married? Plan to register the birth together"
+      },
+      "why": {
+        "off": "If you're not married, you only get parental responsibility by registering the birth jointly (or later through an agreement or a court order). If she registers alone, you won't be on the certificate, so you both need to attend, or you make a statutory declaration of parentage."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/parental-rights-responsibilities/who-has-parental-responsibility",
+        "sourceTitle": "GOV.UK: Who has parental responsibility",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "money.baby-budget",
+      "module": "money",
+      "title": {
+        "off": "Open a baby budget",
+        "full": "Open the mission budget"
+      },
+      "why": {
+        "off": "The first year costs roughly £8,000 to £10,000 before childcare. The bigger hit is usually the drop in income during maternity leave."
+      },
+      "clinicalText": null,
+      "unlockWeek": 4,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.moneyhelper.org.uk/en/blog/life-events/what-is-the-average-cost-to-have-a-baby",
+        "sourceTitle": "MoneyHelper: The average cost of having a baby",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "money.maternity-income",
+      "module": "money",
+      "title": {
+        "off": "Work out the maternity leave income drop"
+      },
+      "why": {
+        "off": "Statutory Maternity Pay is 90% of earnings for the first 6 weeks, then a flat rate. Work out the monthly gap now, while there's time to save for it."
+      },
+      "clinicalText": null,
+      "unlockWeek": 16,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/maternity-pay-leave/leave",
+        "sourceTitle": "GOV.UK: Maternity pay and leave",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "money.healthy-start",
+      "module": "money",
+      "title": {
+        "off": "Check Healthy Start eligibility"
+      },
+      "why": {
+        "off": "If she gets certain benefits, Healthy Start gives a prepaid card from 10 weeks pregnant, worth £4.25 a week during pregnancy."
+      },
+      "clinicalText": null,
+      "unlockWeek": 10,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.moneysavingexpert.com/family/maternity-grants-pregnancy-benefits/",
+        "sourceTitle": "MoneySavingExpert: Maternity grants and pregnancy benefits",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "money.sure-start-grant",
+      "module": "money",
+      "title": {
+        "off": "Check the Sure Start Maternity Grant"
+      },
+      "why": {
+        "off": "A one-off £500, usually for a first baby, if you get certain benefits (England, Wales and Northern Ireland; Scotland has the Best Start Grant). You can claim from 11 weeks before the due date until 6 months after the birth."
+      },
+      "clinicalText": null,
+      "unlockWeek": 28,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.turn2us.org.uk/get-support/information-for-your-situation/sure-start-maternity-grant",
+        "sourceTitle": "Turn2us: Sure Start Maternity Grant",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "money.maternity-allowance",
+      "module": "money",
+      "title": {
+        "off": "Self-employed? Look at Maternity Allowance"
+      },
+      "why": {
+        "off": "If she can't get Statutory Maternity Pay, Maternity Allowance pays £194.32 a week or 90% of average earnings (whichever is lower) for 39 weeks, tax-free. Claim on form MA1 from 26 weeks."
+      },
+      "clinicalText": null,
+      "unlockWeek": 24,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.workingfamilies.org.uk/articles/maternity-allowance",
+        "sourceTitle": "Working Families: Maternity Allowance",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "money.buy-new",
+      "module": "money",
+      "title": {
+        "off": "Decide what to buy new and what to borrow",
+        "full": "Procurement: new versus pre-loved"
+      },
+      "why": {
+        "off": "Buy the car seat and cot mattress new: crash damage is invisible, and a mattress must be firm, flat and fit the cot. Pram frames, Moses baskets (with a new mattress), bouncers, baths, slings, steriliser and clothes are fine second-hand. Newborn clothes only fit for about 3 to 4 weeks."
+      },
+      "clinicalText": null,
+      "unlockWeek": 20,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://rospa.com/Home-Safety/Advice/Product/Second-hand-Goods",
+        "sourceTitle": "RoSPA: Second-hand goods",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "money.nappy-party",
+      "module": "money",
+      "title": {
+        "off": "Host a nappy party",
+        "full": "Host a nappy party (guests bring ammunition)"
+      },
+      "why": {
+        "off": "Ask friends to bring a pack of nappies instead of a gift. Newborns get through 70 to 80 a week."
+      },
+      "clinicalText": null,
+      "unlockWeek": 24,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://sefton.gov.uk/childrens-services/schools-and-learning/early-years/families/your-childs-development/newborn",
+        "sourceTitle": "Sefton Council: Your newborn",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "money.child-benefit-plan",
+      "module": "money",
+      "title": {
+        "off": "Decide who will claim Child Benefit"
+      },
+      "why": {
+        "off": "Only one parent can claim. The claimant gets National Insurance credits towards their State Pension, so the lower earner usually claims. Claim even if the High Income Child Benefit Charge applies: you can opt out of the payments and keep the credits."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.which.co.uk/money/tax/tax-credits-and-benefits/child-benefit-ajRMh2r8Efbr",
+        "sourceTitle": "Which?: Child Benefit",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "money.childcare-funding",
+      "module": "money",
+      "title": {
+        "off": "Note the funded childcare dates"
+      },
+      "why": {
+        "off": "Working parents can get 30 hours a week of funded childcare from the term after the baby turns 9 months. You can apply once the baby is 23 weeks old, and must reconfirm every 3 months."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": {
+        "anchor": "birth",
+        "offsetDays": 161
+      },
+      "reminderDaysBefore": [
+        0
+      ],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://leeds.gov.uk/children-and-families/early-years/funded-childcare-9-months-4-years",
+        "sourceTitle": "Leeds City Council: Funded childcare from 9 months",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "appts.booking",
+      "module": "appointments",
+      "title": {
+        "off": "Go to the booking appointment"
+      },
+      "why": {
+        "off": "The first midwife appointment, between 8 and 12 weeks, takes about an hour: health history, blood pressure, urine and blood tests. You'll be asked about your family history too, so go if you can."
+      },
+      "clinicalText": null,
+      "unlockWeek": 6,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/your-pregnancy-care/your-antenatal-appointments/",
+        "sourceTitle": "NHS: Your antenatal appointments",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "appts.exemption-certificate",
+      "module": "appointments",
+      "title": {
+        "off": "Ask about the maternity exemption certificate"
+      },
+      "why": {
+        "off": "It gives her free prescriptions and NHS dental care until 12 months after the birth. The midwife or GP applies. Don't claim free prescriptions until it arrives (the penalty can be up to £100); it's backdated one month."
+      },
+      "clinicalText": null,
+      "unlockWeek": 6,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.nhsbsa.nhs.uk/node/1201",
+        "sourceTitle": "NHSBSA: Maternity exemption certificate",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "appts.appointments-count",
+      "module": "appointments",
+      "title": {
+        "off": "Plan to go to as many appointments as you can"
+      },
+      "why": {
+        "off": "There are 10 or more appointments for a first pregnancy, 7 or more after that, plus 2 scans."
+      },
+      "clinicalText": null,
+      "unlockWeek": 6,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/your-pregnancy-care/your-antenatal-appointments/",
+        "sourceTitle": "NHS: Your antenatal appointments",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "appts.dating-scan",
+      "module": "appointments",
+      "title": {
+        "off": "Go to the dating scan",
+        "full": "First contact: the dating scan"
+      },
+      "why": {
+        "off": "Between 11 and 14 weeks. It confirms the due date and how many babies, and offers combined screening for Down's, Edwards' and Patau's syndromes. Use one of your 2 antenatal appointment rights."
+      },
+      "clinicalText": null,
+      "unlockWeek": 10,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/your-pregnancy-care/your-antenatal-appointments/",
+        "sourceTitle": "NHS: Your antenatal appointments",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "appts.whooping-cough",
+      "module": "appointments",
+      "title": {
+        "off": "Remind her about the whooping cough jab"
+      },
+      "why": {
+        "off": "Offered from 16 weeks, usually around 20, and best given by 32 weeks. It protects the baby before their own jabs at 8 weeks."
+      },
+      "clinicalText": "Whooping cough vaccine: from 16 weeks, ideally by 32 weeks.",
+      "unlockWeek": 16,
+      "deadline": {
+        "anchor": "edd",
+        "offsetDays": -56
+      },
+      "reminderDaysBefore": [
+        14
+      ],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/keeping-well/whooping-cough-vaccination/",
+        "sourceTitle": "NHS: Whooping cough vaccination in pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "appts.anomaly-scan",
+      "module": "appointments",
+      "title": {
+        "off": "Go to the 20-week scan",
+        "full": "Systems check: the 20-week scan"
+      },
+      "why": {
+        "off": "Between 18 and 21 weeks, about 30 minutes. It checks for 11 physical conditions. It isn't 'the gender scan': staff may not confirm the sex. Use your second antenatal appointment right."
+      },
+      "clinicalText": null,
+      "unlockWeek": 18,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/your-pregnancy-care/your-antenatal-appointments/",
+        "sourceTitle": "NHS: Your antenatal appointments",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "appts.glucose-test",
+      "module": "appointments",
+      "title": {
+        "off": "Drive her to the glucose test if she needs one"
+      },
+      "why": {
+        "off": "If she has risk factors she'll be offered a glucose tolerance test between 24 and 28 weeks. She'll have fasted and it takes about 2 hours, so drive her."
+      },
+      "clinicalText": null,
+      "unlockWeek": 24,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.gatesheadhealth.nhs.uk/resources/having-an-oral-glucose-tolerance-test-ogtt-in-pregnancy/",
+        "sourceTitle": "Gateshead Health NHS: Oral glucose tolerance test in pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "appts.movements",
+      "module": "appointments",
+      "title": {
+        "off": "Learn the reduced movements rule"
+      },
+      "why": {
+        "off": "If the baby is moving less than usual, or the pattern changes, call the maternity unit straight away, even at night. Don't wait until the next day and don't use a home doppler. There's no set number of kicks: learn her normal."
+      },
+      "clinicalText": "Reduced or changed movements: call the maternity unit immediately, day or night.",
+      "unlockWeek": 24,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 20,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/keeping-well/your-babys-movements/",
+        "sourceTitle": "NHS: Your baby's movements",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "appts.week-28",
+      "module": "appointments",
+      "title": {
+        "off": "Go to the 28-week appointment"
+      },
+      "why": {
+        "off": "Blood tests for iron and antibodies, anti-D if she's rhesus negative, and a talk about labour and newborn screening."
+      },
+      "clinicalText": null,
+      "unlockWeek": 27,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/your-pregnancy-care/your-antenatal-appointments/",
+        "sourceTitle": "NHS: Your antenatal appointments",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "appts.rsv-vaccine",
+      "module": "appointments",
+      "title": {
+        "off": "Remind her about the RSV vaccine"
+      },
+      "why": {
+        "off": "Offered from 28 weeks in every pregnancy. It protects the baby from bronchiolitis for their first 6 months."
+      },
+      "clinicalText": "RSV vaccine: offered from 28 weeks in each pregnancy.",
+      "unlockWeek": 28,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/vaccinations/rsv-vaccine/",
+        "sourceTitle": "NHS: RSV vaccine",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "appts.week-36",
+      "module": "appointments",
+      "title": {
+        "off": "Go to the 36-week appointment"
+      },
+      "why": {
+        "off": "The midwife checks the baby's position and talks through the birth plan and feeding."
+      },
+      "clinicalText": null,
+      "unlockWeek": 35,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/your-pregnancy-care/your-antenatal-appointments/",
+        "sourceTitle": "NHS: Your antenatal appointments",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "appts.after-40-weeks",
+      "module": "appointments",
+      "title": {
+        "off": "Know what happens after 40 weeks"
+      },
+      "why": {
+        "off": "A membrane sweep is offered from about 39 to 40 weeks, and induction is discussed at 41 weeks. It's her choice at every step."
+      },
+      "clinicalText": null,
+      "unlockWeek": 37,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/inducing-labour/",
+        "sourceTitle": "NHS: Inducing labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "classes.choose",
+      "module": "classes",
+      "title": {
+        "off": "Choose antenatal classes",
+        "full": "Pick your flight school"
+      },
+      "why": {
+        "off": "NHS classes are free and run in the 8 to 10 weeks before the due date. NCT courses cost about £200 to £300 for you both. Partners are welcome at both."
+      },
+      "clinicalText": null,
+      "unlockWeek": 18,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/preparing-for-the-birth/antenatal-classes/",
+        "sourceTitle": "NHS: Antenatal classes",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "classes.book-nct",
+      "module": "classes",
+      "title": {
+        "off": "Book NCT early if you want it"
+      },
+      "why": {
+        "off": "NCT courses fill up 3 to 4 months ahead. Book at about 20 weeks for a course starting around 30 to 34 weeks."
+      },
+      "clinicalText": null,
+      "unlockWeek": 18,
+      "deadline": {
+        "anchor": "edd",
+        "offsetDays": -140
+      },
+      "reminderDaysBefore": [
+        7
+      ],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nct.org.uk/courses-workshops/nct-antenatal-course/frequently-asked-questions",
+        "sourceTitle": "NCT: Antenatal course FAQs",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "classes.book-nhs",
+      "module": "classes",
+      "title": {
+        "off": "Book the free NHS classes"
+      },
+      "why": {
+        "off": "In Leeds, 'Preparation for Birth and Beyond' is free: 4 weekly sessions plus a reunion, online or at children's centres, including a session on the birth partner's role. Book from about 24 weeks."
+      },
+      "clinicalText": null,
+      "unlockWeek": 24,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.leedsth.nhs.uk/services/maternity/pregnancy/antenatal-classes/",
+        "sourceTitle": "Leeds Teaching Hospitals: Antenatal classes",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "classes.dad-support",
+      "module": "classes",
+      "title": {
+        "off": "Find something just for dads"
+      },
+      "why": {
+        "off": "DaddyNatal runs men-only antenatal classes. Dad Matters Leeds offers 1:1 and group support from pregnancy to 12 months (0113 244 2419), and Leeds Dads meet up at weekends."
+      },
+      "clinicalText": null,
+      "unlockWeek": 20,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.mindwell-leeds.org.uk/services-directory/dad-matters/",
+        "sourceTitle": "MindWell Leeds: Dad Matters",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "classes.hypnobirthing",
+      "module": "classes",
+      "title": {
+        "off": "Decide together on hypnobirthing"
+      },
+      "why": {
+        "off": "Breathing, relaxation and self-hypnosis, with partners learning massage and breathing cues. About £140 to £250 a couple. The evidence on pain is limited, but it can be used alongside pain relief and staff must respect it."
+      },
+      "clinicalText": null,
+      "unlockWeek": 20,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://yorkhospitals.nhs.uk/seecmsfile/?id=1968",
+        "sourceTitle": "York and Scarborough NHS: Hypnobirthing",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "classes.apps",
+      "module": "classes",
+      "title": {
+        "off": "Download DadPad or Baby Buddy"
+      },
+      "why": {
+        "off": "Both are free. DadPad is NHS-commissioned in 45 or more areas and covers feeding, holding, changing, bathing, crying and your own wellbeing."
+      },
+      "clinicalText": null,
+      "unlockWeek": 12,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://lancashireandsouthcumbria.icb.nhs.uk/news-and-media/latest-news/new-dads-can-download-dadpad-advice-and-support",
+        "sourceTitle": "NHS Lancashire and South Cumbria: DadPad",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "classes.attend",
+      "module": "classes",
+      "title": {
+        "off": "Go to every session",
+        "full": "Complete flight school"
+      },
+      "why": {
+        "off": "Classes cover labour, pain relief, interventions, feeding and newborn care. You'll get far more out of the labour coaching cards in this app if you've been."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 20,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/preparing-for-the-birth/antenatal-classes/",
+        "sourceTitle": "NHS: Antenatal classes",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "plan.where",
+      "module": "birthPlan",
+      "title": {
+        "off": "Talk through where to give birth"
+      },
+      "why": {
+        "off": "Home, a midwife-led unit next to a labour ward, a freestanding midwife-led unit, or a labour ward. For a first baby, planned home birth has more serious problems for the baby (about 9 in 1,000 against 5 in 1,000 in hospital); for later babies it's as safe as hospital. Epidurals are only available on labour wards."
+      },
+      "clinicalText": null,
+      "unlockWeek": 20,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/preparing-for-the-birth/where-to-give-birth-the-options/",
+        "sourceTitle": "NHS: Where to give birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "plan.draft",
+      "module": "birthPlan",
+      "title": {
+        "off": "Start the birth plan",
+        "full": "Draft the Flight Plan"
+      },
+      "why": {
+        "off": "It's a list of preferences, not a contract: things can change at the last minute. Write it together, and write down what your role is."
+      },
+      "clinicalText": null,
+      "unlockWeek": 20,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/preparing-for-the-birth/how-to-make-a-birth-plan/",
+        "sourceTitle": "NHS: How to make a birth plan",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "plan.pain-relief",
+      "module": "birthPlan",
+      "title": {
+        "off": "Talk through pain relief options"
+      },
+      "why": {
+        "off": "From breathing, TENS and water, through gas and air and pethidine or diamorphine, to an epidural. Know what she wants to try first and what she'd rather avoid."
+      },
+      "clinicalText": null,
+      "unlockWeek": 28,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/what-happens/pain-relief-in-labour/",
+        "sourceTitle": "NHS: Pain relief in labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "plan.theatre",
+      "module": "birthPlan",
+      "title": {
+        "off": "Agree who goes into theatre"
+      },
+      "why": {
+        "off": "Usually one partner can go in for a caesarean or assisted birth under a spinal anaesthetic. Under a general anaesthetic, partners wait outside and usually get the baby for skin-to-skin in recovery. Knowing this now makes it less frightening if it happens."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/conditions/caesarean-section/what-happens/",
+        "sourceTitle": "NHS: Caesarean section, what happens",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "plan.third-stage",
+      "module": "birthPlan",
+      "title": {
+        "off": "Decide on the third stage and cord clamping"
+      },
+      "why": {
+        "off": "An injection to help deliver the placenta (active) or waiting for it (physiological). NICE says the cord shouldn't be clamped before 1 minute unless there are concerns. Ask if you'd like to cut it."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/QS105/chapter/quality-statement-6-delayed-cord-clamping",
+        "sourceTitle": "NICE QS105: Delayed cord clamping",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "plan.skin-to-skin-vitamin-k",
+      "module": "birthPlan",
+      "title": {
+        "off": "Decide on skin-to-skin and vitamin K"
+      },
+      "why": {
+        "off": "Skin-to-skin straight after the birth, ideally before the cord is cut. Vitamin K is one injection, or oral doses that need repeating."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/after-the-birth/what-happens-straight-after/",
+        "sourceTitle": "NHS: What happens straight after the birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "plan.feeding",
+      "module": "birthPlan",
+      "title": {
+        "off": "Talk about feeding plans"
+      },
+      "why": {
+        "off": "Breast, expressed, formula or a mix. Knowing her plan means you can back it up when she's tired and visitors have opinions."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/start-for-life/pregnancy/preparing-for-labour-and-birth/what-to-include-in-your-birth-plan/",
+        "sourceTitle": "NHS Start for Life: What to include in your birth plan",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "plan.photos",
+      "module": "birthPlan",
+      "title": {
+        "off": "Agree on photos and video",
+        "full": "Agree the media embargo"
+      },
+      "why": {
+        "off": "No photos or filming of her without her say-so, and many units restrict filming in theatre. Agree it now, not during."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/start-for-life/pregnancy/preparing-for-labour-and-birth/what-to-include-in-your-birth-plan/",
+        "sourceTitle": "NHS Start for Life: What to include in your birth plan",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "plan.plan-changes",
+      "module": "birthPlan",
+      "title": {
+        "off": "Talk about what you'll do if plans change"
+      },
+      "why": {
+        "off": "Induction, an epidural, an assisted birth or a caesarean can all happen. Agree what matters most if they do, and how you'll ask questions: Benefits, Risks, Alternatives, Intuition, and what if we do Nothing for now?"
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.tommys.org/pregnancy-information/dads-and-partners/how-support-decision-making-and-speak-your-partner-and",
+        "sourceTitle": "Tommy's: Supporting decisions and speaking up",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "plan.advocate",
+      "module": "birthPlan",
+      "title": {
+        "off": "Know your role as her advocate"
+      },
+      "why": {
+        "off": "Only she can consent. You can't consent for her, but you can make sure she's asked and heard, ask for time, and ask 'Is this an emergency or a recommendation?'"
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://birthrights.org.uk/wp-content/uploads/2025/03/Birth-partners-factsheet-March-2025.docx.pdf",
+        "sourceTitle": "Birthrights: Birth partners factsheet",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "plan.one-page",
+      "module": "birthPlan",
+      "title": {
+        "off": "Make the one-page version",
+        "full": "Compress the Flight Plan to one page"
+      },
+      "why": {
+        "off": "A 3-page plan nobody reads doesn't help. Pick the 5 things that matter most and bring 2 copies. The app shows it on one screen in labour mode."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": {
+        "anchor": "edd",
+        "offsetDays": -28
+      },
+      "reminderDaysBefore": [
+        7
+      ],
+      "quizID": null,
+      "xp": 20,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/preparing-for-the-birth/how-to-make-a-birth-plan/",
+        "sourceTitle": "NHS: How to make a birth plan",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "bag.start",
+      "module": "hospitalBag",
+      "title": {
+        "off": "Start packing the hospital bags",
+        "full": "Begin pre-flight packing"
+      },
+      "why": {
+        "off": "Three bags: her labour bag, her postnatal bag and the baby's. Plus yours. Aim to have them done by 36 weeks."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": {
+        "anchor": "edd",
+        "offsetDays": -28
+      },
+      "reminderDaysBefore": [
+        7
+      ],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/preparing-for-the-birth/pack-your-bag-for-labour/",
+        "sourceTitle": "NHS: Pack your bag for labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "bag.labour-bag",
+      "module": "hospitalBag",
+      "title": {
+        "off": "Pack her labour bag"
+      },
+      "why": {
+        "off": "Maternity notes and birth plan copies, a loose top or nightie, dressing gown, slippers, TENS machine, water bottle with a straw, lip balm, hair ties, a fan or water spray, snacks, music and headphones, a pillow from home."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": {
+        "anchor": "edd",
+        "offsetDays": -28
+      },
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/preparing-for-the-birth/pack-your-bag-for-labour/",
+        "sourceTitle": "NHS: Pack your bag for labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "bag.postnatal-bag",
+      "module": "hospitalBag",
+      "title": {
+        "off": "Pack her postnatal bag"
+      },
+      "why": {
+        "off": "Plenty of maternity pads, 5 or more pairs of big dark knickers, nursing bras and pads, front-opening nightwear, a going-home outfit in maternity size, a towel, toiletries, a long phone cable and any medication."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": {
+        "anchor": "edd",
+        "offsetDays": -28
+      },
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://leedsth.nhs.uk/?p=4005",
+        "sourceTitle": "Leeds Teaching Hospitals: What to bring",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "bag.baby-bag",
+      "module": "hospitalBag",
+      "title": {
+        "off": "Pack the baby's bag"
+      },
+      "why": {
+        "off": "3 to 5 vests and sleepsuits in newborn and 0 to 3 sizes, a hat, scratch mitts, a cardigan, a blanket, 20 newborn nappies, cotton wool or water wipes, muslins and a going-home outfit. A formula starter pack if you're bottle-feeding."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": {
+        "anchor": "edd",
+        "offsetDays": -28
+      },
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://thh.nhs.uk/packing-your-hospital-bag",
+        "sourceTitle": "The Hillingdon Hospitals: Packing your hospital bag",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "bag.dad-bag",
+      "module": "hospitalBag",
+      "title": {
+        "off": "Pack your own bag",
+        "full": "Pack the Flight Director's kit"
+      },
+      "why": {
+        "off": "Snacks and drinks (hospital food is for her), change or a card for parking and vending machines, a battery pack and long cable, toothbrush, a change of clothes, swim shorts if there's a birth pool, a pillow and blanket for the chair, downloaded entertainment, a printed phone list and a copy of the birth plan."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": {
+        "anchor": "edd",
+        "offsetDays": -28
+      },
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.which.co.uk/reviews/giving-birth/article/what-to-pack-in-your-hospital-bag",
+        "sourceTitle": "Which?: What to pack in your hospital bag",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "bag.staged",
+      "module": "hospitalBag",
+      "title": {
+        "off": "Put the bags where you'll grab them"
+      },
+      "why": {
+        "off": "By the door or in the car, and make sure she knows where they are if labour starts while you're out."
+      },
+      "clinicalText": null,
+      "unlockWeek": 35,
+      "deadline": {
+        "anchor": "edd",
+        "offsetDays": -28
+      },
+      "reminderDaysBefore": [
+        3
+      ],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/preparing-for-the-birth/pack-your-bag-for-labour/",
+        "sourceTitle": "NHS: Pack your bag for labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "bag.overnight-rules",
+      "module": "hospitalBag",
+      "title": {
+        "off": "Check whether you can stay overnight"
+      },
+      "why": {
+        "off": "Leeds lets one birth partner stay overnight in the bedside chair. Other units vary, so check yours and pack for the chair."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.leedsth.nhs.uk/services/maternity/after-birth/postnatal/",
+        "sourceTitle": "Leeds Teaching Hospitals: Postnatal care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "vehicle.choose-seat",
+      "module": "vehicle",
+      "title": {
+        "off": "Choose an infant car seat"
+      },
+      "why": {
+        "off": "Look for an R129 (i-Size) seat, which must face backwards until the baby is over 15 months. Check it's approved for your car and try it before you buy. New R44 seats haven't been sold since September 2024."
+      },
+      "clinicalText": null,
+      "unlockWeek": 26,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/child-car-seats-the-rules",
+        "sourceTitle": "GOV.UK: Child car seats, the rules",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "vehicle.no-unknown-seats",
+      "module": "vehicle",
+      "title": {
+        "off": "Don't use a second-hand seat with an unknown history"
+      },
+      "why": {
+        "off": "Crash damage can't be seen. Only accept a seat from someone you trust, with its instructions, that has never been in a crash or dropped."
+      },
+      "clinicalText": null,
+      "unlockWeek": 26,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://childcarseats.org.uk/choosing-using/second-hand-child-seats/",
+        "sourceTitle": "Child Car Seats (RoSPA): Second-hand child seats",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "vehicle.fit-seat",
+      "module": "vehicle",
+      "title": {
+        "off": "Fit the car seat",
+        "full": "Pit Crew: fit the car seat"
+      },
+      "why": {
+        "off": "Practise fitting and removing it until you can do it in the dark. A seat still in its box in the boot doesn't count.",
+        "full": "Practise fitting and removing it until you can do it in the dark. A seat still in its box in the boot doesn't count. Ground Control will not let you improvise."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": {
+        "anchor": "edd",
+        "offsetDays": -28
+      },
+      "reminderDaysBefore": [
+        7
+      ],
+      "quizID": "car-seat",
+      "xp": 30,
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/child-car-seats-the-rules",
+        "sourceTitle": "GOV.UK: Child car seats, the rules",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "vehicle.check-fitting",
+      "module": "vehicle",
+      "title": {
+        "off": "Get the fitting checked"
+      },
+      "why": {
+        "off": "Retailers and council fitting events can check it. Watch for twisted straps, a harness below shoulder height, and bulky coats under the straps."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.which.co.uk/reviews/child-car-seats/article/child-car-seat-laws-uk-and-abroad/child-car-seat-laws-in-the-uk-ay4Sj1h8HGhU",
+        "sourceTitle": "Which?: Child car seat laws in the UK",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "vehicle.airbag",
+      "module": "vehicle",
+      "title": {
+        "off": "Turn the airbag off if the seat goes in the front"
+      },
+      "why": {
+        "off": "A rear-facing seat must never sit in front of an active airbag. The driver is responsible: fines are up to £500."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/child-car-seats-the-rules",
+        "sourceTitle": "GOV.UK: Child car seats, the rules",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "vehicle.pram",
+      "module": "vehicle",
+      "title": {
+        "off": "Learn the pram",
+        "full": "Fold Master: one hand, under 10 seconds"
+      },
+      "why": {
+        "off": "The carrycot must lie flat from birth. Practise folding it one-handed, getting the carrycot and car seat on and off the frame, and check it fits in the boot alongside the bags."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.silvercrossbaby.com/blogs/the-edit/travel-systems-explained",
+        "sourceTitle": "Silver Cross: Travel systems explained",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "vehicle.seat-not-bed",
+      "module": "vehicle",
+      "title": {
+        "off": "Car seats are for travel, not sleep"
+      },
+      "why": {
+        "off": "Take the baby out when you arrive, take breaks on long journeys, and stop if the baby slumps. Take off hats and bulky coats in the car."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.lullabytrust.org.uk/safer-sleep-advice/car-seats/",
+        "sourceTitle": "The Lullaby Trust: Car seats",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "vehicle.taxi-rule",
+      "module": "vehicle",
+      "title": {
+        "off": "Know the taxi rule"
+      },
+      "why": {
+        "off": "Under-3s can travel without a car seat in a licensed taxi or private hire car, but only in the back. It's legal, not ideal."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/child-car-seats-the-rules/when-a-child-can-travel-without-a-car-seat",
+        "sourceTitle": "GOV.UK: When a child can travel without a car seat",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "vehicle.fuel",
+      "module": "vehicle",
+      "title": {
+        "off": "Keep the tank above a quarter",
+        "full": "Maintain launch fuel reserves"
+      },
+      "why": {
+        "off": "From 36 weeks, keep fuel (or charge) above a quarter at all times."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": null
+    },
+    {
+      "id": "home.smoke-free",
+      "module": "homeModule",
+      "title": {
+        "off": "Make the home smoke-free"
+      },
+      "why": {
+        "off": "A smoke-free home, before and after the birth, is part of safer sleep advice."
+      },
+      "clinicalText": null,
+      "unlockWeek": 8,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.lullabytrust.org.uk/safer-sleep-advice/",
+        "sourceTitle": "The Lullaby Trust: Safer sleep advice",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "home.no-cosy-extras",
+      "module": "homeModule",
+      "title": {
+        "off": "Skip bumpers, pods, nests and wedges",
+        "full": "Decline the cosy-looking extras"
+      },
+      "why": {
+        "off": "They look cosy and they aren't safe. No pillows, duvets, soft toys or sleep positioners either: lightweight bedding or a fitted baby sleeping bag instead."
+      },
+      "clinicalText": null,
+      "unlockWeek": 24,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.lullabytrust.org.uk/safer-sleep-advice/",
+        "sourceTitle": "The Lullaby Trust: Safer sleep advice",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "home.baby-proofing",
+      "module": "homeModule",
+      "title": {
+        "off": "Don't buy baby-proofing yet"
+      },
+      "why": {
+        "off": "Stair gates, socket covers and cupboard locks aren't needed until about 6 months. Spend the money later."
+      },
+      "clinicalText": null,
+      "unlockWeek": 28,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": null
+    },
+    {
+      "id": "home.sleep-space",
+      "module": "homeModule",
+      "title": {
+        "off": "Set up a safe sleep space in your room"
+      },
+      "why": {
+        "off": "A cot, Moses basket or bedside crib with a firm, flat, waterproof mattress that fits, in your room day and night for the first 6 months."
+      },
+      "clinicalText": "On their back, in a clear, flat, firm sleep space, in your room for the first 6 months.",
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": "safe-sleep",
+      "xp": 20,
+      "provenance": {
+        "sourceURL": "https://www.lullabytrust.org.uk/safer-sleep-advice/",
+        "sourceTitle": "The Lullaby Trust: Safer sleep advice",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "home.thermometer",
+      "module": "homeModule",
+      "title": {
+        "off": "Get a room thermometer"
+      },
+      "why": {
+        "off": "Keep the baby's room at 16 to 20°C."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.lullabytrust.org.uk/safer-sleep-advice/",
+        "sourceTitle": "The Lullaby Trust: Safer sleep advice",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "home.pets",
+      "module": "homeModule",
+      "title": {
+        "off": "Prepare the dog",
+        "full": "Dog Diplomat: brief the crew's other dependant"
+      },
+      "why": {
+        "off": "Vaccinations, flea and worm treatment up to date. Put stair gates up early so the dog doesn't link them with the baby, play baby-cry recordings, let them sniff the pram and car seat, and plan to bring home a blanket with the baby's scent."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.wchc.nhs.uk/children-young-people/parents-carers/new-parents/how-to-prepare-your-dog-for-a-new-baby/",
+        "sourceTitle": "Wirral Community Health and Care NHS: Preparing your dog for a new baby",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "home.cot",
+      "module": "homeModule",
+      "title": {
+        "off": "Build the cot",
+        "full": "Flat-Pack Hero: build the cot"
+      },
+      "why": {
+        "off": "Check the mattress is firm, flat and fits with no gaps."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": {
+        "anchor": "edd",
+        "offsetDays": -28
+      },
+      "reminderDaysBefore": [
+        7
+      ],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.lullabytrust.org.uk/safer-sleep-advice/",
+        "sourceTitle": "The Lullaby Trust: Safer sleep advice",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "home.nappies",
+      "module": "homeModule",
+      "title": {
+        "off": "Stock up on nappies, but not too many of one size"
+      },
+      "why": {
+        "off": "About 10 to 12 changes a day at first, so 70 to 80 nappies a week. Babies grow out of a size fast."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://sefton.gov.uk/childrens-services/schools-and-learning/early-years/families/your-childs-development/newborn",
+        "sourceTitle": "Sefton Council: Your newborn",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "home.batch-cook",
+      "module": "homeModule",
+      "title": {
+        "off": "Batch-cook 2 to 3 weeks of meals",
+        "full": "Freezer Full: stock 14 meals"
+      },
+      "why": {
+        "off": "Label and date them, and add one-handed snacks: you'll be eating with a baby on you."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 20,
+      "provenance": null
+    },
+    {
+      "id": "home.deep-clean",
+      "module": "homeModule",
+      "title": {
+        "off": "Deep clean now, not at 39 weeks"
+      },
+      "why": {
+        "off": "Declutter and deep clean at 32 to 34 weeks, while there's still time and before she needs to rest."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": null
+    },
+    {
+      "id": "home.clothes",
+      "module": "homeModule",
+      "title": {
+        "off": "Wash the baby's clothes"
+      },
+      "why": {
+        "off": "About 6 to 8 vests and 6 to 8 sleepsuits in each of newborn and 0 to 3 month sizes, 2 or 3 cardigans, hats, scratch mitts and 6 or more muslins. Wash them in non-bio before the birth."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.johnlewis.com/content/baby-children/baby-checklist",
+        "sourceTitle": "John Lewis: Baby checklist",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "home.changing-station",
+      "module": "homeModule",
+      "title": {
+        "off": "Set up a changing station"
+      },
+      "why": {
+        "off": "Changing mat, cotton wool or water wipes, barrier cream and nappy bags. Never leave the baby on a raised surface."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/baby/caring-for-a-newborn",
+        "sourceTitle": "NHS: Caring for a newborn",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "home.feeding-kit",
+      "module": "homeModule",
+      "title": {
+        "off": "Set up the feeding kit"
+      },
+      "why": {
+        "off": "Breastfeeding: breast pads, nipple cream, perhaps a pump. Formula: 6 bottles and teats, a steriliser, a bottle brush and formula. Sterilise feeding equipment until 12 months."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.cambspborochildrenshealth.nhs.uk/feeding-and-eating/bottle-feeding/bottle-hygiene-and-equipment-sterilisation/",
+        "sourceTitle": "Cambridgeshire and Peterborough NHS: Sterilising bottles",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "home.grocery-delivery",
+      "module": "homeModule",
+      "title": {
+        "off": "Set up online grocery delivery"
+      },
+      "why": {
+        "off": "Book regular slots for the first few weeks. Nobody wants to do a big shop on two hours' sleep."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": null
+    },
+    {
+      "id": "dayof.save-number",
+      "module": "dayOfLogistics",
+      "title": {
+        "off": "Save the maternity unit's number",
+        "full": "Programme Ground Control into your phone"
+      },
+      "why": {
+        "off": "Save your unit's triage line (in Leeds, the Maternity Assessment Centre, open 24 hours) in your phone and in the app's hospital details. Phone before you go in."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.leedsth.nhs.uk/services/maternity/pregnancy/mac/",
+        "sourceTitle": "Leeds Teaching Hospitals: Maternity Assessment Centre",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "dayof.hospital-details",
+      "module": "dayOfLogistics",
+      "title": {
+        "off": "Enter your hospital details in the app"
+      },
+      "why": {
+        "off": "The triage number, where to park and how to pay, the after-hours entrance, and whether partners can stay overnight. They'll show on the labour screen when you need them."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": null
+    },
+    {
+      "id": "dayof.route",
+      "module": "dayOfLogistics",
+      "title": {
+        "off": "Drive the route at rush hour and at 3am",
+        "full": "Dry Run: rehearse the launch trajectory"
+      },
+      "why": {
+        "off": "Find the maternity entrance (it may be different at night) and an alternative route, and time both."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 20,
+      "provenance": null
+    },
+    {
+      "id": "dayof.parking",
+      "module": "dayOfLogistics",
+      "title": {
+        "off": "Sort parking payment"
+      },
+      "why": {
+        "off": "Coins, a card or the parking app set up in advance. Parking fines are a classic."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.nct.org.uk/labour-birth/dads-and-partners/ten-tips-for-birth-partners",
+        "sourceTitle": "NCT: Ten tips for birth partners",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "dayof.when-to-call",
+      "module": "dayOfLogistics",
+      "title": {
+        "off": "Learn when to call"
+      },
+      "why": {
+        "off": "Call your maternity unit if contractions are regular and every 5 minutes or more often, if her waters break, if there's bleeding, if the baby is moving less, or if you're worried. Call 999 if she has a strong urge to push, you can see the head or cord, there's heavy bleeding, or she has a seizure or collapses."
+      },
+      "clinicalText": "Call the unit: regular contractions every 5 minutes or more often, waters breaking, bleeding, reduced movements, or worry. Call 999: urge to push, head or cord showing, heavy bleeding, seizure or collapse.",
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": "when-to-call",
+      "xp": 30,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
+        "sourceTitle": "NHS: Signs that labour has begun",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "dayof.backup-driver",
+      "module": "dayOfLogistics",
+      "title": {
+        "off": "Name a backup driver"
+      },
+      "why": {
+        "off": "If you could be more than 45 minutes away, line up a neighbour or relative nearby who can drive her in."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": null
+    },
+    {
+      "id": "dayof.backups",
+      "module": "dayOfLogistics",
+      "title": {
+        "off": "Line up two backups for other children and pets"
+      },
+      "why": {
+        "off": "Two named people for each, with keys, car seats and overnight bags ready."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": null
+    },
+    {
+      "id": "dayof.playlist",
+      "module": "dayOfLogistics",
+      "title": {
+        "off": "Download a labour playlist",
+        "full": "Birth DJ: download the playlist"
+      },
+      "why": {
+        "off": "Long, calm, with a hype section. Download it, because hospital Wi-Fi is unreliable."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": null
+    },
+    {
+      "id": "dayof.alone-plan",
+      "module": "dayOfLogistics",
+      "title": {
+        "off": "Make the 'labour starts while you're out' plan"
+      },
+      "why": {
+        "off": "She phones the maternity unit first, then you. She knows where the bags are and has a taxi app with payment set up."
+      },
+      "clinicalText": null,
+      "unlockWeek": 35,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.leedsth.nhs.uk/services/maternity/pregnancy/mac/",
+        "sourceTitle": "Leeds Teaching Hospitals: Maternity Assessment Centre",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "dayof.comms-plan",
+      "module": "dayOfLogistics",
+      "title": {
+        "off": "Agree the comms plan"
+      },
+      "why": {
+        "off": "Who gets the first call, a single 'we're in, all fine, no news is good news' message, and nothing posted until you both agree."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.nct.org.uk/labour-birth/dads-and-partners/ten-tips-for-birth-partners",
+        "sourceTitle": "NCT: Ten tips for birth partners",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "dayof.tell-work",
+      "module": "dayOfLogistics",
+      "title": {
+        "off": "Tell work you might leave mid-shift"
+      },
+      "why": {
+        "off": "From 37 weeks, keep your phone on loud and agree how you'll be reached if phones aren't allowed."
+      },
+      "clinicalText": null,
+      "unlockWeek": 37,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": null
+    },
+    {
+      "id": "dayof.stay-close",
+      "module": "dayOfLogistics",
+      "title": {
+        "off": "Stay within about an hour of home",
+        "full": "Hold position near the launch pad"
+      },
+      "why": {
+        "off": "From 37 weeks the baby is term and could come any day."
+      },
+      "clinicalText": null,
+      "unlockWeek": 37,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": null
+    },
+    {
+      "id": "skills.safe-sleep",
+      "module": "skillsTraining",
+      "title": {
+        "off": "Learn the safe sleep rules"
+      },
+      "why": {
+        "off": "On their back, in a clear, flat, firm space, in your room for 6 months, at 16 to 20°C, smoke-free, feet to the foot of the cot. Never fall asleep with the baby on a sofa or armchair."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": "safe-sleep",
+      "xp": 20,
+      "provenance": {
+        "sourceURL": "https://www.lullabytrust.org.uk/safer-sleep-advice/",
+        "sourceTitle": "The Lullaby Trust: Safer sleep advice",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "skills.nappy",
+      "module": "skillsTraining",
+      "title": {
+        "off": "Learn to change a nappy",
+        "full": "Nappy Ninja: master the change"
+      },
+      "why": {
+        "off": "10 to 12 a day at first. Wipe front to back, use cotton wool and water for the first weeks and a thin layer of barrier cream, and never leave the baby on a raised surface."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": "nappy-and-bath",
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/baby/caring-for-a-newborn",
+        "sourceTitle": "NHS: Caring for a newborn",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "skills.bath",
+      "module": "skillsTraining",
+      "title": {
+        "off": "Learn top and tail and the first bath"
+      },
+      "why": {
+        "off": "No need for a daily bath: 2 or 3 a week is fine. Plain water only for the first month. Test the water with your elbow (about 37°C), support the head, and never leave the baby in water, even for a second."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": "nappy-and-bath",
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.healthiertogether.nhs.uk/new-parent-and-baby/washing-and-bathing-your-baby",
+        "sourceTitle": "Healthier Together NHS: Washing and bathing your baby",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "skills.cord-care",
+      "module": "skillsTraining",
+      "title": {
+        "off": "Learn cord care"
+      },
+      "why": {
+        "off": "Keep the cord stump clean and dry with water only, and fold the nappy below it. It falls off at about 5 to 12 days. Redness, a smell or discharge means call the midwife or GP."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.uhsussex.nhs.uk/?p=8871",
+        "sourceTitle": "University Hospitals Sussex: Umbilical cord care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "skills.swaddle",
+      "module": "skillsTraining",
+      "title": {
+        "off": "Learn to swaddle safely",
+        "full": "Swaddle Sensei"
+      },
+      "why": {
+        "off": "Thin, breathable fabric, loose around the hips, always on their back, never over the head, and no extra blankets. Stop when the baby starts trying to roll."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": "swaddle-and-sling",
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.healthychildren.org/english/ages-stages/baby/diapers-clothing/pages/swaddling-is-it-safe.aspx",
+        "sourceTitle": "HealthyChildren.org (AAP): Swaddling, is it safe?",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "skills.sling",
+      "module": "skillsTraining",
+      "title": {
+        "off": "Learn the TICKS sling check"
+      },
+      "why": {
+        "off": "Tight, In view at all times, Close enough to kiss, Keep chin off chest, Supported back."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": "swaddle-and-sling",
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://theburydirectory.co.uk/storage/2937/safe_sleep_products_checklist.pdf",
+        "sourceTitle": "Bury Directory: Safe sleep products checklist",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "skills.winding",
+      "module": "skillsTraining",
+      "title": {
+        "off": "Learn to wind a baby",
+        "full": "Burp Baron: learn the three holds"
+      },
+      "why": {
+        "off": "Over your shoulder, sitting upright on your lap with the chin supported, or face down across your lap. Gentle pats or rubs, with a muslin ready."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": "soothing-and-feeding",
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/baby/caring-for-a-newborn/soothing-a-crying-baby/",
+        "sourceTitle": "NHS: Soothing a crying baby",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "skills.soothing",
+      "module": "skillsTraining",
+      "title": {
+        "off": "Learn to soothe a crying baby"
+      },
+      "why": {
+        "off": "Try feeding, holding, rocking, singing, white noise, a walk in the pram, a warm bath or stroking their back. Colic comes in waves and passes. Never shake a baby."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": "soothing-and-feeding",
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/baby/caring-for-a-newborn/soothing-a-crying-baby/",
+        "sourceTitle": "NHS: Soothing a crying baby",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "skills.formula",
+      "module": "skillsTraining",
+      "title": {
+        "off": "Learn to make up a formula feed",
+        "full": "70-Degree Club: make a feed properly"
+      },
+      "why": {
+        "off": "Fresh tap water, boiled and left no more than 30 minutes so it's still 70°C or more. Water first, then the powder. Cool it under a running tap and test it on your wrist. One feed at a time, throw away leftovers, and never use the microwave."
+      },
+      "clinicalText": "Water at 70°C or more (boiled, left no more than 30 minutes). One feed at a time. Never microwave.",
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": "formula",
+      "xp": 20,
+      "provenance": {
+        "sourceURL": "https://www.cambspborochildrenshealth.nhs.uk/feeding-and-eating/bottle-feeding/making-up-a-feed/",
+        "sourceTitle": "Cambridgeshire and Peterborough NHS: Making up a feed",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "skills.sterilising",
+      "module": "skillsTraining",
+      "title": {
+        "off": "Learn to sterilise bottles"
+      },
+      "why": {
+        "off": "Steam, cold-water solution, or boiling for 10 minutes or more. Sterilise all feeding equipment until 12 months."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": "formula",
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.cambspborochildrenshealth.nhs.uk/feeding-and-eating/bottle-feeding/bottle-hygiene-and-equipment-sterilisation/",
+        "sourceTitle": "Cambridgeshire and Peterborough NHS: Sterilising bottles",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "skills.breastfeeding-support",
+      "module": "skillsTraining",
+      "title": {
+        "off": "Learn how to support breastfeeding"
+      },
+      "why": {
+        "off": "Bring water and snacks every feed, sort the pillows, take all the nappies and winding, protect her sleep, and see off unhelpful comments. National Breastfeeding Helpline: 0300 100 0212."
+      },
+      "clinicalText": null,
+      "unlockWeek": 32,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.suffolk.gov.uk/asset-library/nhs-startforlife-off-to-the-best-start-leaflet-20221.pdf",
+        "sourceTitle": "NHS Start for Life: Off to the best start",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "skills.feeding-cues",
+      "module": "skillsTraining",
+      "title": {
+        "off": "Learn the feeding cues"
+      },
+      "why": {
+        "off": "Early cues are stirring, opening the mouth and turning to root; then stretching and hands to mouth. Crying is a late cue: calm the baby first, then feed. Newborns feed 8 to 12 or more times in 24 hours."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": "soothing-and-feeding",
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.justonenorfolk.nhs.uk/healthy-lifestyles/infant-feeding/breastfeeding/feeding-cues/",
+        "sourceTitle": "Just One Norfolk NHS: Feeding cues",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "skills.jaundice",
+      "module": "skillsTraining",
+      "title": {
+        "off": "Learn the jaundice signs"
+      },
+      "why": {
+        "off": "Yellow skin, eyes or under the tongue, most visible around day 3 and usually gone within 2 weeks. Call the midwife, GP or 111 if it isn't improving or the baby has dark urine or pale, chalky poo. Jaundice in the first 24 hours is an emergency: go to A&E or call 999."
+      },
+      "clinicalText": "Jaundice under 24 hours old: A&E or 999. Dark urine or pale poo: contact the midwife, GP or 111 urgently.",
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/conditions/jaundice-newborn/",
+        "sourceTitle": "NHS: Newborn jaundice",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "skills.baby-red-flags",
+      "module": "skillsTraining",
+      "title": {
+        "off": "Learn the baby red flags"
+      },
+      "why": {
+        "off": "Get medical help urgently if the baby has a fit; blue, grey, pale or blotchy skin; is floppy or hard to wake; has trouble breathing; has a rash that doesn't fade under a glass; has a temperature of 38°C or more, or under 36°C; has had no wet nappy in 8 hours; or has a cry that doesn't sound like them."
+      },
+      "clinicalText": "Fit, blue or grey skin, floppy, breathing difficulty, non-fading rash, 38°C or more or under 36°C, no wet nappy in 8 hours: get urgent help.",
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/baby/caring-for-a-newborn/soothing-a-crying-baby/",
+        "sourceTitle": "NHS: Soothing a crying baby",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "commander.who-to-tell",
+      "module": "commanderSupport",
+      "title": {
+        "off": "Agree who to tell and when"
+      },
+      "why": {
+        "off": "Many couples wait for the 12-week scan. Her news, her pace."
+      },
+      "clinicalText": null,
+      "unlockWeek": 4,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": null
+    },
+    {
+      "id": "commander.sickness",
+      "module": "commanderSupport",
+      "title": {
+        "off": "Take over the strong-smelling cooking"
+      },
+      "why": {
+        "off": "Sickness often peaks between 6 and 12 weeks. Keep dry crackers by the bed and take cooking off her list."
+      },
+      "clinicalText": null,
+      "unlockWeek": 5,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://bewellwigan.org/wp-content/uploads/2025/02/What-can-I-do-A-guide-for-partners-during-pregnancy.pdf",
+        "sourceTitle": "Be Well Wigan: A guide for partners during pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "commander.emotions",
+      "module": "commanderSupport",
+      "title": {
+        "off": "Expect big feelings and don't try to fix them"
+      },
+      "why": {
+        "off": "Hormones can make emotions stronger and moods change fast. Practical help (cooking, chores, snacks, protecting her sleep, coming to appointments) usually helps more than advice."
+      },
+      "clinicalText": null,
+      "unlockWeek": 8,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.tommys.org/pregnancy-information/dads-and-partners/your-partners-emotions-during-pregnancy",
+        "sourceTitle": "Tommy's: Your partner's emotions during pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "commander.sex",
+      "module": "commanderSupport",
+      "title": {
+        "off": "Know that sex is safe in a straightforward pregnancy"
+      },
+      "why": {
+        "off": "It won't cause a miscarriage or start labour early. Avoid it if there's heavy bleeding or a low placenta, her waters have broken, or her midwife has advised against it."
+      },
+      "clinicalText": null,
+      "unlockWeek": 12,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/keeping-well/sex/",
+        "sourceTitle": "NHS: Sex in pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "commander.names",
+      "module": "commanderSupport",
+      "title": {
+        "off": "Start the names shortlist",
+        "full": "Name Game: begin candidate selection"
+      },
+      "why": {
+        "off": "Shortlists, veto rounds, an initials check and the 'shout it across a park' test. Aim to finalise by about 34 weeks."
+      },
+      "clinicalText": null,
+      "unlockWeek": 12,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": null
+    },
+    {
+      "id": "commander.announcement",
+      "module": "commanderSupport",
+      "title": {
+        "off": "Agree how you'll announce it"
+      },
+      "why": {
+        "off": "Who hears first, and no photos online before the grandparents know."
+      },
+      "clinicalText": null,
+      "unlockWeek": 12,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": null
+    },
+    {
+      "id": "commander.pre-eclampsia",
+      "module": "commanderSupport",
+      "title": {
+        "off": "Know the pre-eclampsia warning signs"
+      },
+      "why": {
+        "off": "A severe headache, problems with vision, pain just below the ribs, vomiting, or sudden swelling of the face, hands or feet: call the midwife or maternity unit straight away. It can also start after the birth."
+      },
+      "clinicalText": "Severe headache, vision problems, pain below the ribs, vomiting or sudden swelling: call straight away, during pregnancy or after the birth.",
+      "unlockWeek": 20,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/conditions/pre-eclampsia/",
+        "sourceTitle": "NHS: Pre-eclampsia",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "commander.dad-mental-health",
+      "module": "commanderSupport",
+      "title": {
+        "off": "Know the signs in yourself"
+      },
+      "why": {
+        "off": "About 1 in 10 dads have mental health difficulties around the birth. In men it often looks like irritability, withdrawal, working longer or drinking more. PANDAS helpline 0808 1961 776, Dad Matters Leeds 0113 244 2419, CALM 0800 58 58 58, Samaritans 116 123."
+      },
+      "clinicalText": null,
+      "unlockWeek": 20,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://pandasfoundation.org.uk/how-we-can-support-you/support-for-dads/",
+        "sourceTitle": "PANDAS Foundation: Support for dads",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "commander.dad-health",
+      "module": "commanderSupport",
+      "title": {
+        "off": "Look after your own health",
+        "full": "Dad Bod to Dad Mode"
+      },
+      "why": {
+        "off": "Bank some sleep, and cut out alcohol as the due date gets close: you're the driver."
+      },
+      "clinicalText": null,
+      "unlockWeek": 30,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": null
+    },
+    {
+      "id": "commander.visitors",
+      "module": "commanderSupport",
+      "title": {
+        "off": "Agree the visitors policy",
+        "full": "Gatekeeper: agree visitor clearance"
+      },
+      "why": {
+        "off": "Who visits in the first 2 weeks and for how long, plus the rules: bring food, don't come if you're ill, wash hands, no kissing the baby's face, no unsolicited advice. You're in charge of the door."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://debretts.com/the-etiquette-of-visiting-new-parents/",
+        "sourceTitle": "Debrett's: The etiquette of visiting new parents",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "commander.grandparents",
+      "module": "commanderSupport",
+      "title": {
+        "off": "Brief the grandparents"
+      },
+      "why": {
+        "off": "Safe sleep, car seat law and formula preparation have all changed since they did this. Tell them the visitors plan too."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": null
+    },
+    {
+      "id": "splashdown.skin-to-skin",
+      "module": "splashdown",
+      "title": {
+        "off": "Be ready to do skin-to-skin"
+      },
+      "why": {
+        "off": "If she's on gas and air, drowsy, or in theatre under a general anaesthetic, you do skin-to-skin."
+      },
+      "clinicalText": null,
+      "unlockWeek": 34,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.unicef.org.uk/babyfriendly/baby-friendly-resources/implementing-standards-resources/skin-to-skin-contact/",
+        "sourceTitle": "UNICEF UK Baby Friendly: Skin-to-skin contact",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "splashdown.maternal-red-flags",
+      "module": "splashdown",
+      "title": {
+        "off": "Know the warning signs for her after the birth"
+      },
+      "why": {
+        "off": "Call the maternity unit or 999 for: bleeding that soaks more than one pad an hour or large clots; feeling faint or a racing heart; a severe headache with vision changes, vomiting, swelling or upper tummy pain; fever, shivering, confusion, severe breathlessness, blotchy skin or no urine for 12 to 18 hours; calf pain or swelling, or chest pain."
+      },
+      "clinicalText": "Heavy bleeding, severe headache with vision changes, signs of infection, calf or chest pain: call the maternity unit or 999.",
+      "unlockWeek": 36,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.nnuh.nhs.uk/publication/download/information-for-mothers-following-the-birth-of-a-baby-signs-and-symptoms-of-serious-illness-v6",
+        "sourceTitle": "Norfolk and Norwich University Hospitals: Signs of serious illness after birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "splashdown.baby-blues",
+      "module": "splashdown",
+      "title": {
+        "off": "Know baby blues from postnatal depression"
+      },
+      "why": {
+        "off": "Tearful, anxious or irritable days in the first 2 weeks are common and pass. If it lasts longer or gets worse, see the GP or health visitor. Confusion, hallucinations or mania after the birth are an emergency."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/mental-health/conditions/post-natal-depression/overview/",
+        "sourceTitle": "NHS: Postnatal depression",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "splashdown.night-shift",
+      "module": "splashdown",
+      "title": {
+        "off": "Take the night shift",
+        "full": "Assume command of the night shift"
+      },
+      "why": {
+        "off": "The 12 weeks after the birth: the baby sleeps in short bursts and wants holding while she recovers. Your job is nights and early mornings, meals, the door, the admin, the dog, and noticing her mood."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.birthingrampian.scot.nhs.uk/the-4th-trimester/",
+        "sourceTitle": "NHS Grampian: The fourth trimester",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "splashdown.broadcast",
+      "module": "splashdown",
+      "title": {
+        "off": "Send the 'baby's here' message",
+        "full": "Broadcast: the Payload has landed"
+      },
+      "why": {
+        "off": "One message to your agreed list: the baby's here, everyone's well, and the visiting plan. Nothing posted until you both agree."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": null
+    },
+    {
+      "id": "splashdown.nipe",
+      "module": "splashdown",
+      "title": {
+        "off": "Newborn physical check"
+      },
+      "why": {
+        "off": "Within 72 hours: eyes, heart, hips and testes. It's repeated at 6 to 8 weeks."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": {
+        "anchor": "birth",
+        "offsetDays": 3
+      },
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/conditions/baby/newborn-screening/physical-examination/",
+        "sourceTitle": "NHS: Newborn physical examination",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "splashdown.midwife-visits",
+      "module": "splashdown",
+      "title": {
+        "off": "First midwife visits at home"
+      },
+      "why": {
+        "off": "Within 36 hours of getting home, then around day 3 for weight, jaundice and feeding."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng194/resources/postnatal-care-pdf-66142082148037",
+        "sourceTitle": "NICE NG194: Postnatal care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "splashdown.heel-prick",
+      "module": "splashdown",
+      "title": {
+        "off": "Day 5 heel prick test"
+      },
+      "why": {
+        "off": "A blood spot test for sickle cell disease, cystic fibrosis, congenital hypothyroidism and inherited metabolic conditions. Results by 6 weeks."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": {
+        "anchor": "birth",
+        "offsetDays": 5
+      },
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/conditions/baby/newborn-screening/blood-spot-test/",
+        "sourceTitle": "NHS: Newborn blood spot test",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "splashdown.hearing",
+      "module": "splashdown",
+      "title": {
+        "off": "Newborn hearing screen"
+      },
+      "why": {
+        "off": "Before you leave hospital, or by 4 to 5 weeks."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": {
+        "anchor": "birth",
+        "offsetDays": 35
+      },
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/newbornhearing",
+        "sourceTitle": "NHS: Newborn hearing screening",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "splashdown.health-visitor",
+      "module": "splashdown",
+      "title": {
+        "off": "Health visitor's new-birth visit"
+      },
+      "why": {
+        "off": "Between 10 and 14 days the midwife hands over to the health visitor, who checks weight, feeding, safe sleep and how you're all doing."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": {
+        "anchor": "birth",
+        "offsetDays": 14
+      },
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 5,
+      "provenance": {
+        "sourceURL": "https://nelft.nhs.uk/new-birth-visits",
+        "sourceTitle": "NELFT NHS: New birth visits",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "splashdown.register",
+      "module": "splashdown",
+      "title": {
+        "off": "Register the birth",
+        "full": "File the official mission report"
+      },
+      "why": {
+        "off": "Within 42 days (21 in Scotland). In Leeds, book an appointment at Merrion House and bring photo ID and the red book. If you're not married, you both need to go for you to be on the certificate."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": {
+        "anchor": "birth",
+        "offsetDays": 42
+      },
+      "reminderDaysBefore": [
+        14,
+        7,
+        2
+      ],
+      "quizID": null,
+      "xp": 40,
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/register-birth",
+        "sourceTitle": "GOV.UK: Register a birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "splashdown.child-benefit",
+      "module": "splashdown",
+      "title": {
+        "off": "Claim Child Benefit"
+      },
+      "why": {
+        "off": "You can claim from 48 hours after registering, and payments only backdate 3 months. It's £27.05 a week for a first child. Claim even if the High Income Child Benefit Charge applies: opting out of payments keeps the National Insurance credits and gets the baby a National Insurance number."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": {
+        "anchor": "birth",
+        "offsetDays": 90
+      },
+      "reminderDaysBefore": [
+        30,
+        7
+      ],
+      "quizID": null,
+      "xp": 30,
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/child-benefit/how-to-claim",
+        "sourceTitle": "GOV.UK: Child Benefit, how to claim",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "splashdown.gp",
+      "module": "splashdown",
+      "title": {
+        "off": "Register the baby with your GP"
+      },
+      "why": {
+        "off": "Use the practice's registration form; the red book or birth certificate helps."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": {
+        "anchor": "birth",
+        "offsetDays": 14
+      },
+      "reminderDaysBefore": [
+        3
+      ],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/nhs-services/gps/how-to-register-with-a-gp-surgery/",
+        "sourceTitle": "NHS: How to register with a GP surgery",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "splashdown.will-update",
+      "module": "splashdown",
+      "title": {
+        "off": "Add the baby to your will and life insurance"
+      },
+      "why": {
+        "off": "Update the beneficiaries and confirm the guardians you named."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 15,
+      "provenance": {
+        "sourceURL": "https://trustedtraders.which.co.uk/money/wills-and-probate/passing-on-your-money/will-writing-for-new-parents-aFSAK9n8ctbN",
+        "sourceTitle": "Which? Trusted Traders: Will writing for new parents",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "splashdown.dad-check-in",
+      "module": "splashdown",
+      "title": {
+        "off": "Check in on yourself every fortnight"
+      },
+      "why": {
+        "off": "How are you sleeping, drinking and coping? Birth can be traumatic for partners too, and it can surface months later. You can ask the unit for a birth reflections appointment to talk it through."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": null,
+      "reminderDaysBefore": [],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://pandasfoundation.org.uk/how-we-can-support-you/support-for-dads/",
+        "sourceTitle": "PANDAS Foundation: Support for dads",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "splashdown.six-week-checks",
+      "module": "splashdown",
+      "title": {
+        "off": "Book the 6 to 8 week checks"
+      },
+      "why": {
+        "off": "Her postnatal GP check (mental health, bleeding, healing, feeding and contraception) and the baby's check, with first vaccinations at 8 weeks."
+      },
+      "clinicalText": null,
+      "unlockWeek": 36,
+      "deadline": {
+        "anchor": "birth",
+        "offsetDays": 56
+      },
+      "reminderDaysBefore": [
+        7
+      ],
+      "quizID": null,
+      "xp": 10,
+      "provenance": {
+        "sourceURL": "https://www.england.nhs.uk/2023/12/nhs-boosts-health-support-for-new-mums/",
+        "sourceTitle": "NHS England: Health support for new mums",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    }
+  ]
+}

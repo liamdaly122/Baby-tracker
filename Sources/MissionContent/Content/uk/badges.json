@@ -1,0 +1,474 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "2026.10.26-1",
+  "region": "uk",
+  "items": [
+    {
+      "id": "badge.scan-squad",
+      "name": "Scan Squad",
+      "description": {
+        "off": "Went to the dating scan and the 20-week scan."
+      },
+      "rule": {
+        "kind": "checklistItemsDone",
+        "targetIDs": [
+          "appts.dating-scan",
+          "appts.anomaly-scan"
+        ]
+      }
+    },
+    {
+      "id": "badge.deadline-dodger",
+      "name": "Deadline Dodger",
+      "description": {
+        "off": "Gave paternity leave notice in time.",
+        "full": "Gave paternity leave notice in time. Most don't. You did."
+      },
+      "rule": {
+        "kind": "checklistItemsDone",
+        "targetIDs": [
+          "admin.paternity-notice"
+        ]
+      }
+    },
+    {
+      "id": "badge.pit-crew",
+      "name": "Pit Crew",
+      "description": {
+        "off": "Car seat fitted and checked."
+      },
+      "rule": {
+        "kind": "checklistItemsDone",
+        "targetIDs": [
+          "vehicle.fit-seat",
+          "vehicle.check-fitting"
+        ]
+      }
+    },
+    {
+      "id": "badge.dry-run",
+      "name": "Dry Run",
+      "description": {
+        "off": "Drove the route and sorted the parking."
+      },
+      "rule": {
+        "kind": "checklistItemsDone",
+        "targetIDs": [
+          "dayof.route",
+          "dayof.parking"
+        ]
+      }
+    },
+    {
+      "id": "badge.flat-pack-hero",
+      "name": "Flat-Pack Hero",
+      "description": {
+        "off": "Built the cot.",
+        "full": "Built the cot. No screws left over. Allegedly."
+      },
+      "rule": {
+        "kind": "checklistItemsDone",
+        "targetIDs": [
+          "home.cot"
+        ]
+      }
+    },
+    {
+      "id": "badge.fold-master",
+      "name": "Fold Master",
+      "description": {
+        "off": "Mastered the pram."
+      },
+      "rule": {
+        "kind": "checklistItemsDone",
+        "targetIDs": [
+          "vehicle.pram"
+        ]
+      }
+    },
+    {
+      "id": "badge.freezer-full",
+      "name": "Freezer Full",
+      "description": {
+        "off": "Stocked the freezer with meals."
+      },
+      "rule": {
+        "kind": "checklistItemsDone",
+        "targetIDs": [
+          "home.batch-cook"
+        ]
+      }
+    },
+    {
+      "id": "badge.bag-boss",
+      "name": "Bag Boss",
+      "description": {
+        "off": "Every bag packed and staged."
+      },
+      "rule": {
+        "kind": "checklistItemsDone",
+        "targetIDs": [
+          "bag.labour-bag",
+          "bag.postnatal-bag",
+          "bag.baby-bag",
+          "bag.dad-bag",
+          "bag.staged"
+        ]
+      }
+    },
+    {
+      "id": "badge.nappy-ninja",
+      "name": "Nappy Ninja",
+      "description": {
+        "off": "Passed the nappy and bath quiz."
+      },
+      "rule": {
+        "kind": "quizPassed",
+        "targetIDs": [
+          "nappy-and-bath"
+        ]
+      }
+    },
+    {
+      "id": "badge.swaddle-sensei",
+      "name": "Swaddle Sensei",
+      "description": {
+        "off": "Passed the swaddle and sling quiz."
+      },
+      "rule": {
+        "kind": "quizPassed",
+        "targetIDs": [
+          "swaddle-and-sling"
+        ]
+      }
+    },
+    {
+      "id": "badge.burp-baron",
+      "name": "Burp Baron",
+      "description": {
+        "off": "Passed the soothing and feeding quiz."
+      },
+      "rule": {
+        "kind": "quizPassed",
+        "targetIDs": [
+          "soothing-and-feeding"
+        ]
+      }
+    },
+    {
+      "id": "badge.seventy-degree-club",
+      "name": "70-Degree Club",
+      "description": {
+        "off": "Passed the formula quiz."
+      },
+      "rule": {
+        "kind": "quizPassed",
+        "targetIDs": [
+          "formula"
+        ]
+      }
+    },
+    {
+      "id": "badge.safe-sleep-certified",
+      "name": "Safe Sleep Certified",
+      "description": {
+        "off": "Passed the safe sleep quiz."
+      },
+      "rule": {
+        "kind": "quizPassed",
+        "targetIDs": [
+          "safe-sleep"
+        ]
+      }
+    },
+    {
+      "id": "badge.car-seat-certified",
+      "name": "Car Seat Certified",
+      "description": {
+        "off": "Passed the car seat quiz."
+      },
+      "rule": {
+        "kind": "quizPassed",
+        "targetIDs": [
+          "car-seat"
+        ]
+      }
+    },
+    {
+      "id": "badge.ready-to-call",
+      "name": "Ready to Call",
+      "description": {
+        "off": "Passed the when-to-call quiz."
+      },
+      "rule": {
+        "kind": "quizPassed",
+        "targetIDs": [
+          "when-to-call"
+        ]
+      }
+    },
+    {
+      "id": "badge.name-game",
+      "name": "Name Game",
+      "description": {
+        "off": "Started the names shortlist."
+      },
+      "rule": {
+        "kind": "checklistItemsDone",
+        "targetIDs": [
+          "commander.names"
+        ]
+      }
+    },
+    {
+      "id": "badge.birth-dj",
+      "name": "Birth DJ",
+      "description": {
+        "off": "Labour playlist downloaded."
+      },
+      "rule": {
+        "kind": "checklistItemsDone",
+        "targetIDs": [
+          "dayof.playlist"
+        ]
+      }
+    },
+    {
+      "id": "badge.dog-diplomat",
+      "name": "Dog Diplomat",
+      "description": {
+        "off": "Got the dog ready for the baby."
+      },
+      "rule": {
+        "kind": "checklistItemsDone",
+        "targetIDs": [
+          "home.pets"
+        ]
+      }
+    },
+    {
+      "id": "badge.gatekeeper",
+      "name": "Gatekeeper",
+      "description": {
+        "off": "Agreed the visitors policy."
+      },
+      "rule": {
+        "kind": "checklistItemsDone",
+        "targetIDs": [
+          "commander.visitors"
+        ]
+      }
+    },
+    {
+      "id": "badge.dad-mode",
+      "name": "Dad Bod to Dad Mode",
+      "description": {
+        "off": "Looking after your own body and mind."
+      },
+      "rule": {
+        "kind": "checklistItemsDone",
+        "targetIDs": [
+          "commander.dad-health",
+          "commander.dad-mental-health"
+        ]
+      }
+    },
+    {
+      "id": "badge.day-one-done",
+      "name": "Day-One Done",
+      "description": {
+        "off": "Sent the 'baby's here' message."
+      },
+      "rule": {
+        "kind": "checklistItemsDone",
+        "targetIDs": [
+          "splashdown.broadcast"
+        ]
+      }
+    },
+    {
+      "id": "badge.form-filler-supreme",
+      "name": "Form Filler Supreme",
+      "description": {
+        "off": "Registered the birth, claimed Child Benefit, registered with the GP and updated the will."
+      },
+      "rule": {
+        "kind": "checklistItemsDone",
+        "targetIDs": [
+          "splashdown.register",
+          "splashdown.child-benefit",
+          "splashdown.gp",
+          "splashdown.will-update"
+        ]
+      }
+    },
+    {
+      "id": "badge.streak-7",
+      "name": "Seven-Day Streak",
+      "description": {
+        "off": "Checked in 7 days running."
+      },
+      "rule": {
+        "kind": "streakDays",
+        "targetIDs": [],
+        "count": 7
+      }
+    },
+    {
+      "id": "badge.patch-adminAndLeave",
+      "name": "Admin and Leave patch",
+      "description": {
+        "off": "Completed the Admin and Leave module."
+      },
+      "rule": {
+        "kind": "moduleComplete",
+        "targetIDs": [
+          "adminAndLeave"
+        ]
+      }
+    },
+    {
+      "id": "badge.patch-money",
+      "name": "Money patch",
+      "description": {
+        "off": "Completed the Money module."
+      },
+      "rule": {
+        "kind": "moduleComplete",
+        "targetIDs": [
+          "money"
+        ]
+      }
+    },
+    {
+      "id": "badge.patch-appointments",
+      "name": "Appointments patch",
+      "description": {
+        "off": "Completed the Appointments module."
+      },
+      "rule": {
+        "kind": "moduleComplete",
+        "targetIDs": [
+          "appointments"
+        ]
+      }
+    },
+    {
+      "id": "badge.patch-classes",
+      "name": "Classes patch",
+      "description": {
+        "off": "Completed the Classes module."
+      },
+      "rule": {
+        "kind": "moduleComplete",
+        "targetIDs": [
+          "classes"
+        ]
+      }
+    },
+    {
+      "id": "badge.patch-birthPlan",
+      "name": "Flight Plan patch",
+      "description": {
+        "off": "Completed the Flight Plan module."
+      },
+      "rule": {
+        "kind": "moduleComplete",
+        "targetIDs": [
+          "birthPlan"
+        ]
+      }
+    },
+    {
+      "id": "badge.patch-hospitalBag",
+      "name": "Hospital Bag patch",
+      "description": {
+        "off": "Completed the Hospital Bag module."
+      },
+      "rule": {
+        "kind": "moduleComplete",
+        "targetIDs": [
+          "hospitalBag"
+        ]
+      }
+    },
+    {
+      "id": "badge.patch-vehicle",
+      "name": "Vehicle patch",
+      "description": {
+        "off": "Completed the Vehicle module."
+      },
+      "rule": {
+        "kind": "moduleComplete",
+        "targetIDs": [
+          "vehicle"
+        ]
+      }
+    },
+    {
+      "id": "badge.patch-homeModule",
+      "name": "Home Module patch",
+      "description": {
+        "off": "Completed the Home Module module."
+      },
+      "rule": {
+        "kind": "moduleComplete",
+        "targetIDs": [
+          "homeModule"
+        ]
+      }
+    },
+    {
+      "id": "badge.patch-dayOfLogistics",
+      "name": "Day-Of Logistics patch",
+      "description": {
+        "off": "Completed the Day-Of Logistics module."
+      },
+      "rule": {
+        "kind": "moduleComplete",
+        "targetIDs": [
+          "dayOfLogistics"
+        ]
+      }
+    },
+    {
+      "id": "badge.patch-skillsTraining",
+      "name": "Skills Training patch",
+      "description": {
+        "off": "Completed the Skills Training module."
+      },
+      "rule": {
+        "kind": "moduleComplete",
+        "targetIDs": [
+          "skillsTraining"
+        ]
+      }
+    },
+    {
+      "id": "badge.patch-commanderSupport",
+      "name": "Commander Support patch",
+      "description": {
+        "off": "Completed the Commander Support module."
+      },
+      "rule": {
+        "kind": "moduleComplete",
+        "targetIDs": [
+          "commanderSupport"
+        ]
+      }
+    },
+    {
+      "id": "badge.patch-splashdown",
+      "name": "Splashdown patch",
+      "description": {
+        "off": "Completed the Splashdown module."
+      },
+      "rule": {
+        "kind": "moduleComplete",
+        "targetIDs": [
+          "splashdown"
+        ]
+      }
+    }
+  ]
+}

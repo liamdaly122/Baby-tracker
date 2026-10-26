@@ -1,0 +1,447 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "2026.10.26-1",
+  "region": "uk",
+  "items": [
+    {
+      "id": "quiz.safe-sleep.1",
+      "quizID": "safe-sleep",
+      "prompt": "Which position should the baby sleep in?",
+      "choices": [
+        "On their side",
+        "On their back",
+        "On their front"
+      ],
+      "correctIndex": 1,
+      "explanation": "Always on their back, for every sleep, day and night.",
+      "provenance": {
+        "sourceURL": "https://www.lullabytrust.org.uk/safer-sleep-advice/",
+        "sourceTitle": "The Lullaby Trust: Safer sleep advice",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.safe-sleep.2",
+      "quizID": "safe-sleep",
+      "prompt": "What temperature should the baby's room be?",
+      "choices": [
+        "21 to 24°C",
+        "As warm as possible",
+        "16 to 20°C"
+      ],
+      "correctIndex": 2,
+      "explanation": "16 to 20°C. A room thermometer takes the guesswork out.",
+      "provenance": {
+        "sourceURL": "https://www.lullabytrust.org.uk/safer-sleep-advice/",
+        "sourceTitle": "The Lullaby Trust: Safer sleep advice",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.safe-sleep.3",
+      "quizID": "safe-sleep",
+      "prompt": "Where should the baby sleep for the first 6 months?",
+      "choices": [
+        "In their own cot or crib in your room",
+        "In their own room",
+        "On the sofa with you if you're both shattered"
+      ],
+      "correctIndex": 0,
+      "explanation": "In your room, in their own clear, flat, firm sleep space. Never fall asleep with the baby on a sofa or armchair.",
+      "provenance": {
+        "sourceURL": "https://www.lullabytrust.org.uk/safer-sleep-advice/",
+        "sourceTitle": "The Lullaby Trust: Safer sleep advice",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.car-seat.1",
+      "quizID": "car-seat",
+      "prompt": "Which way must an i-Size (R129) seat face for a newborn?",
+      "choices": [
+        "Forward-facing",
+        "Rear-facing",
+        "Either, once they can hold their head up"
+      ],
+      "correctIndex": 1,
+      "explanation": "Rear-facing until the baby is over 15 months.",
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/child-car-seats-the-rules",
+        "sourceTitle": "GOV.UK: Child car seats, the rules",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.car-seat.2",
+      "quizID": "car-seat",
+      "prompt": "A rear-facing seat in the front passenger seat needs what?",
+      "choices": [
+        "The front airbag turned off",
+        "The seat pushed right back",
+        "Nothing extra"
+      ],
+      "correctIndex": 0,
+      "explanation": "Never put a rear-facing seat in front of an active airbag. The driver can be fined up to £500.",
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/child-car-seats-the-rules",
+        "sourceTitle": "GOV.UK: Child car seats, the rules",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.car-seat.3",
+      "quizID": "car-seat",
+      "prompt": "What should the baby wear under the harness in winter?",
+      "choices": [
+        "A snowsuit",
+        "Normal clothes: no bulky coats or hats in the car",
+        "A thick blanket tucked under the straps"
+      ],
+      "correctIndex": 1,
+      "explanation": "Take off bulky coats and hats in the car: they stop the harness fitting snugly.",
+      "provenance": {
+        "sourceURL": "https://www.lullabytrust.org.uk/safer-sleep-advice/car-seats/",
+        "sourceTitle": "The Lullaby Trust: Car seats",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.formula.1",
+      "quizID": "formula",
+      "prompt": "How hot should the water be when you add formula powder?",
+      "choices": [
+        "About 37°C",
+        "Room temperature",
+        "70°C or more"
+      ],
+      "correctIndex": 2,
+      "explanation": "Fresh tap water, boiled and left no more than 30 minutes, so it's still 70°C or more.",
+      "provenance": {
+        "sourceURL": "https://www.cambspborochildrenshealth.nhs.uk/feeding-and-eating/bottle-feeding/making-up-a-feed/",
+        "sourceTitle": "Cambridgeshire and Peterborough NHS: Making up a feed",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.formula.2",
+      "quizID": "formula",
+      "prompt": "What do you do with milk left in the bottle after a feed?",
+      "choices": [
+        "Throw it away",
+        "Keep it in the fridge for the next feed",
+        "Top it up next time"
+      ],
+      "correctIndex": 0,
+      "explanation": "Make one feed at a time and throw away anything left over.",
+      "provenance": {
+        "sourceURL": "https://www.cambspborochildrenshealth.nhs.uk/feeding-and-eating/bottle-feeding/making-up-a-feed/",
+        "sourceTitle": "Cambridgeshire and Peterborough NHS: Making up a feed",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.formula.3",
+      "quizID": "formula",
+      "prompt": "Until what age should you sterilise feeding equipment?",
+      "choices": [
+        "6 weeks",
+        "12 months",
+        "3 months"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sterilise bottles, teats and other feeding equipment until the baby is 12 months old.",
+      "provenance": {
+        "sourceURL": "https://www.cambspborochildrenshealth.nhs.uk/feeding-and-eating/bottle-feeding/bottle-hygiene-and-equipment-sterilisation/",
+        "sourceTitle": "Cambridgeshire and Peterborough NHS: Sterilising bottles",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.nappy-and-bath.1",
+      "quizID": "nappy-and-bath",
+      "prompt": "How many nappy changes a day should you expect at first?",
+      "choices": [
+        "About 3 or 4",
+        "About 10 to 12",
+        "About 20"
+      ],
+      "correctIndex": 1,
+      "explanation": "About 10 to 12 a day, which is 70 to 80 nappies a week.",
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/baby/caring-for-a-newborn",
+        "sourceTitle": "NHS: Caring for a newborn",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.nappy-and-bath.2",
+      "quizID": "nappy-and-bath",
+      "prompt": "What should you wash the baby with in the first month?",
+      "choices": [
+        "Plain water",
+        "Baby bubble bath",
+        "Diluted shower gel"
+      ],
+      "correctIndex": 0,
+      "explanation": "Plain water only for the first month.",
+      "provenance": {
+        "sourceURL": "https://www.healthiertogether.nhs.uk/new-parent-and-baby/washing-and-bathing-your-baby",
+        "sourceTitle": "Healthier Together NHS: Washing and bathing your baby",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.nappy-and-bath.3",
+      "quizID": "nappy-and-bath",
+      "prompt": "How do you check the bath water?",
+      "choices": [
+        "With your fingertips",
+        "If no steam is rising it's fine",
+        "With your elbow: it should feel about 37°C"
+      ],
+      "correctIndex": 2,
+      "explanation": "Test with your elbow, and never leave the baby in water, even for a second.",
+      "provenance": {
+        "sourceURL": "https://www.healthiertogether.nhs.uk/new-parent-and-baby/washing-and-bathing-your-baby",
+        "sourceTitle": "Healthier Together NHS: Washing and bathing your baby",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.swaddle-and-sling.1",
+      "quizID": "swaddle-and-sling",
+      "prompt": "When should you stop swaddling?",
+      "choices": [
+        "At 6 months",
+        "When the baby starts trying to roll",
+        "When they sleep through the night"
+      ],
+      "correctIndex": 1,
+      "explanation": "Stop at the first signs of rolling, which can be around 2 months.",
+      "provenance": {
+        "sourceURL": "https://www.healthychildren.org/english/ages-stages/baby/diapers-clothing/pages/swaddling-is-it-safe.aspx",
+        "sourceTitle": "HealthyChildren.org (AAP): Swaddling, is it safe?",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.swaddle-and-sling.2",
+      "quizID": "swaddle-and-sling",
+      "prompt": "How should a swaddle fit around the hips?",
+      "choices": [
+        "Loose, so the legs can bend",
+        "Tight, so the legs stay straight",
+        "It doesn't matter"
+      ],
+      "correctIndex": 0,
+      "explanation": "Loose around the hips. Tight swaddling there risks the baby's hip development.",
+      "provenance": {
+        "sourceURL": "https://www.healthychildren.org/english/ages-stages/baby/diapers-clothing/pages/swaddling-is-it-safe.aspx",
+        "sourceTitle": "HealthyChildren.org (AAP): Swaddling, is it safe?",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.swaddle-and-sling.3",
+      "quizID": "swaddle-and-sling",
+      "prompt": "In the TICKS sling check, what does C stand for?",
+      "choices": [
+        "Covered from the cold",
+        "Carried on the chest",
+        "Close enough to kiss"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tight, In view at all times, Close enough to kiss, Keep chin off chest, Supported back.",
+      "provenance": {
+        "sourceURL": "https://theburydirectory.co.uk/storage/2937/safe_sleep_products_checklist.pdf",
+        "sourceTitle": "Bury Directory: Safe sleep products checklist",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.soothing-and-feeding.1",
+      "quizID": "soothing-and-feeding",
+      "prompt": "Which of these is a late feeding cue?",
+      "choices": [
+        "Rooting",
+        "Crying",
+        "Hands to mouth"
+      ],
+      "correctIndex": 1,
+      "explanation": "Crying is a late cue. Calm the baby first, then feed.",
+      "provenance": {
+        "sourceURL": "https://www.justonenorfolk.nhs.uk/healthy-lifestyles/infant-feeding/breastfeeding/feeding-cues/",
+        "sourceTitle": "Just One Norfolk NHS: Feeding cues",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.soothing-and-feeding.2",
+      "quizID": "soothing-and-feeding",
+      "prompt": "How often do newborns usually feed?",
+      "choices": [
+        "8 to 12 or more times in 24 hours",
+        "Exactly every 4 hours",
+        "3 times a day"
+      ],
+      "correctIndex": 0,
+      "explanation": "Newborns feed 8 to 12 or more times in 24 hours, and cluster feeding in the evening is normal.",
+      "provenance": {
+        "sourceURL": "https://www.justonenorfolk.nhs.uk/healthy-lifestyles/infant-feeding/breastfeeding/feeding-cues/",
+        "sourceTitle": "Just One Norfolk NHS: Feeding cues",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.soothing-and-feeding.3",
+      "quizID": "soothing-and-feeding",
+      "prompt": "Which of these is never OK, however long the crying goes on?",
+      "choices": [
+        "A walk in the pram",
+        "White noise",
+        "Shaking the baby"
+      ],
+      "correctIndex": 2,
+      "explanation": "Never shake a baby. Try feeding, holding, rocking, white noise, a walk or a warm bath.",
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/baby/caring-for-a-newborn/soothing-a-crying-baby/",
+        "sourceTitle": "NHS: Soothing a crying baby",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.when-to-call.1",
+      "quizID": "when-to-call",
+      "prompt": "Contractions are regular and coming every 5 minutes. What now?",
+      "choices": [
+        "Wait until they're 3 minutes apart",
+        "Call the maternity unit",
+        "Drive in without calling"
+      ],
+      "correctIndex": 1,
+      "explanation": "NHS advice: call when contractions are regular and every 5 minutes or more often. Phone before you go in.",
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
+        "sourceTitle": "NHS: Signs that labour has begun",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.when-to-call.2",
+      "quizID": "when-to-call",
+      "prompt": "Her waters break at 2am and there are no contractions. What do you do?",
+      "choices": [
+        "Call the maternity unit now",
+        "Wait until morning",
+        "Wait for contractions to start"
+      ],
+      "correctIndex": 0,
+      "explanation": "Always call when the waters break, even at night. Use a pad so the colour can be checked.",
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
+        "sourceTitle": "NHS: Signs that labour has begun",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.when-to-call.3",
+      "quizID": "when-to-call",
+      "prompt": "At 11pm she says the baby is moving less than usual. What do you do?",
+      "choices": [
+        "Wait and see in the morning",
+        "Use a home doppler",
+        "Call the maternity unit now"
+      ],
+      "correctIndex": 2,
+      "explanation": "Call straight away, at any hour. Don't use a home doppler.",
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/keeping-well/your-babys-movements/",
+        "sourceTitle": "NHS: Your baby's movements",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "quiz.when-to-call.4",
+      "quizID": "when-to-call",
+      "prompt": "At home she suddenly has a strong urge to push. What do you do?",
+      "choices": [
+        "Call 999",
+        "Drive to the hospital",
+        "Call the unit in the morning"
+      ],
+      "correctIndex": 0,
+      "explanation": "A strong urge to push means the baby may be coming now: call 999.",
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
+        "sourceTitle": "NHS: Signs that labour has begun",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    }
+  ]
+}

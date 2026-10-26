@@ -61,4 +61,5 @@ Then open `MissionControl.xcodeproj`. Simulator builds need no signing. For a de
 
 - Phase 0 (research, plan, scaffold) complete.
 - Phase 1 (go/no-go engine and event-sourced tap log) complete: `GoNoGoEngine`, `ContractionMetrics`, hysteresis, NHS-worded state copy, `EventLog` and `EventMerger`, with 26 scripted labours and property tests.
-- Next: Phase 2, the pregnancy calendar and UK content v1. See `docs/plan.md` section B10 for the full phase list.
+- Phase 2 (calendar and UK content v1) complete: `PregnancyCalendar` (gestational age, expected week of childbirth, qualifying week, deadlines and reminders), `ContentLoader`, `HumourResolver` and `GlossaryIndex` search; 134 checklist items in 12 modules, 94 glossary terms, 17 coaching cards, 12 story beats, 22 quiz questions and 35 badges.
+- Next: Phase 3, iOS labour mode. See `docs/plan.md` section B10 for the full phase list.
