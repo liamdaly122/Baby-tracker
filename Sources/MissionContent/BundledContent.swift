@@ -39,4 +39,12 @@ public enum BundledContent {
     public static func thresholdTable(for region: ContentRegion) throws -> ThresholdTable {
         try ThresholdTable(file: envelope(ThresholdItem.self, kind: .thresholds, region: region))
     }
+
+    /// Every content file for the region. Kinds not shipped for the region load as empty.
+    public static func library(for region: ContentRegion) throws -> ContentLibrary {
+        try ContentLoader.load(region: region) { kind in
+            guard let url = url(for: kind, region: region) else { return nil }
+            return try Data(contentsOf: url)
+        }
+    }
 }
