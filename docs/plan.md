@@ -376,3 +376,15 @@ Roughly 11–13 weeks for one developer. Phases 0–2 are fully achievable in th
 3. Phase 1: engine and merger with the full test matrix, green under `swift test` on Linux.
 4. Phase 2: content v1 authored from A1/A2 with provenance, CAPCOM/Flight Surgeon copy variants, story beats.
 5. Push after each phase.
+
+## B13. Amendments after approval (26 October 2026)
+
+Agreed with the user before Phase 0 started. Where these conflict with the sections above, these win.
+
+1. **Toolchain.** Development moved to a Mac with Xcode 27.1 and Swift 6.4, so every phase can be built and tested locally, not just Phases 0 to 2. The package uses `swift-tools-version: 6.0` and Swift 6 language mode (not "Swift 5.10+"). CI's Linux job uses the `swift:6.2-noble` image. `swift format` ships with the toolchain; XcodeGen and SwiftLint come from Homebrew.
+2. **UK duration threshold.** `adviceDurationSec` defaults to 0 in the UK, which means "no duration requirement". Its 30 to 90 second bounds apply only when it is switched on (`allowsDisabled` in thresholds.json). 0 is allowed in both regions because switching the rule off can only make the app suggest calling sooner.
+3. **Open contractions past 2 minutes.** An open contraction that passes `urgentSingleDurationSec` still raises `callNow` (a false alarm is the safer error), with its own reason code so the UI can say "Over 2 minutes? If it's still going, call now. If you forgot to stop, fix it." The "still going?" nudge moves from 5 minutes to `urgentSingleDurationSec` (2 minutes by default). The 5-minute forgot-to-stop rule still excludes the contraction from duration statistics and flags it for editing.
+4. **Branches.** `main` was created from `claude/sleepy-goldberg-ra4cso`. Work happens on feature branches with PRs into `main`, which is what the CI `mac` job is gated on.
+5. **Identifiers.** Bundle ID `com.liamdaly.missioncontrol` (watch `.watchkitapp`, widgets `.widgets`) and App Group `group.com.liamdaly.missioncontrol` replace `uk.leeds.missioncontrol`. Placeholders until the Apple Developer team is known; set `DEVELOPMENT_TEAM` in `Configs/Signing.local.xcconfig`.
+6. **Package name.** The Swift package is called `MissionKit` so it doesn't clash with the `MissionControl` app target. Its products keep the planned names (`MissionCore`, `MissionContent`, `MissionUI`).
+7. **Lint self-tests.** `Scripts/test_content_lint.py` checks that the content lint catches what it should; CI runs it next to the lint.

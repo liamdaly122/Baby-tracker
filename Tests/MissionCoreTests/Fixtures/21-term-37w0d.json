@@ -1,0 +1,22 @@
+{
+  "name": "37+0 weeks with no contractions yet",
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 259,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "patterns": [],
+  "contractions": [],
+  "evaluateAtSec": 60,
+  "expect": {
+    "state": "early",
+    "reasons": [
+      "notEnoughContractions"
+    ],
+    "needsEditCount": 0
+  }
+}

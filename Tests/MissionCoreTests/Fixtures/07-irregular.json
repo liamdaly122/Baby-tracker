@@ -1,0 +1,43 @@
+{
+  "name": "Irregular intervals of 3, 9, 4 and 12 min",
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 280,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "patterns": [],
+  "contractions": [
+    {
+      "startSec": 0,
+      "durationSec": 45
+    },
+    {
+      "startSec": 180,
+      "durationSec": 45
+    },
+    {
+      "startSec": 720,
+      "durationSec": 45
+    },
+    {
+      "startSec": 960,
+      "durationSec": 45
+    },
+    {
+      "startSec": 1680,
+      "durationSec": 45
+    }
+  ],
+  "evaluateAtSec": 1700,
+  "expect": {
+    "state": "early",
+    "reasons": [
+      "noRegularPattern"
+    ],
+    "needsEditCount": 0
+  }
+}

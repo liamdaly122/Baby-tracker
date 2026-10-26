@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "2026.10.26-1",
+  "region": "us",
+  "items": [
+    {
+      "id": "adviceIntervalSec",
+      "default": 300,
+      "min": 180,
+      "max": 420,
+      "allowsDisabled": false,
+      "unit": "seconds",
+      "note": "5-1-1: call when contractions come every 5 minutes. Measured start to start.",
+      "provenance": {
+        "sourceURL": "https://my.clevelandclinic.org/health/articles/9676-labor-delivery",
+        "sourceTitle": "Cleveland Clinic: Labor and delivery",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "adviceDurationSec",
+      "default": 60,
+      "min": 30,
+      "max": 90,
+      "allowsDisabled": true,
+      "unit": "seconds",
+      "note": "5-1-1: each contraction lasting about 1 minute. 0 switches the duration rule off.",
+      "provenance": {
+        "sourceURL": "https://my.clevelandclinic.org/health/articles/9676-labor-delivery",
+        "sourceTitle": "Cleveland Clinic: Labor and delivery",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "patternWindowSec",
+      "default": 3600,
+      "min": 1800,
+      "max": 3600,
+      "allowsDisabled": false,
+      "unit": "seconds",
+      "note": "5-1-1: the pattern holds for at least 1 hour. Can be shortened, never lengthened.",
+      "provenance": {
+        "sourceURL": "https://my.clevelandclinic.org/health/articles/9676-labor-delivery",
+        "sourceTitle": "Cleveland Clinic: Labor and delivery",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "urgentSingleDurationSec",
+      "default": 120,
+      "min": 90,
+      "max": 120,
+      "allowsDisabled": false,
+      "unit": "seconds",
+      "note": "The US profile reuses the NHS urgent rules because ACOG publishes no numeric rule. Any contraction longer than 2 minutes means call now. Can be tightened, never relaxed.",
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
+        "sourceTitle": "NHS: Signs that labour has begun",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "urgentCountIn10Min",
+      "default": 6,
+      "min": 5,
+      "max": 6,
+      "allowsDisabled": false,
+      "unit": "count",
+      "note": "The US profile reuses the NHS urgent rules. 6 or more contractions in 10 minutes means call now.",
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
+        "sourceTitle": "NHS: Signs that labour has begun",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "regularityCV",
+      "default": 0.35,
+      "min": 0.25,
+      "max": 0.5,
+      "allowsDisabled": false,
+      "unit": "ratio",
+      "note": "App-defined, for midwife review. Turns 'regular' into a number: the spread of start-to-start intervals (interquartile range) divided by the median interval.",
+      "provenance": {
+        "sourceURL": "https://my.clevelandclinic.org/health/articles/9676-labor-delivery",
+        "sourceTitle": "Cleveland Clinic: Labor and delivery",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "earlyCallerWindowSec",
+      "default": 1800,
+      "min": 1800,
+      "max": 1800,
+      "allowsDisabled": false,
+      "unit": "seconds",
+      "note": "Second and later babies, a previous fast labour or a journey over 30 minutes: call earlier rather than waiting the full hour. Not editable in v1.",
+      "provenance": {
+        "sourceURL": "https://my.clevelandclinic.org/health/articles/9676-labor-delivery",
+        "sourceTitle": "Cleveland Clinic: Labor and delivery",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "travelEarlyCallMinutes",
+      "default": 30,
+      "min": 30,
+      "max": 30,
+      "allowsDisabled": false,
+      "unit": "minutes",
+      "note": "A journey to the unit longer than this makes the user an early caller. Not editable in v1.",
+      "provenance": {
+        "sourceURL": "https://my.clevelandclinic.org/health/articles/9676-labor-delivery",
+        "sourceTitle": "Cleveland Clinic: Labor and delivery",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    }
+  ]
+}
