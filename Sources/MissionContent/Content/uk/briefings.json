@@ -1,0 +1,259 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "2026.10.26-1",
+  "region": "uk",
+  "items": [
+    {
+      "id": "briefing.w04-drafted",
+      "week": 4,
+      "act": "recruitment",
+      "speaker": "capcom",
+      "title": {
+        "off": "Welcome to Mission Control",
+        "full": "You've been drafted"
+      },
+      "body": {
+        "off": "The due date is T-0 and the countdown has started. Your job for the next 9 months: support the Commander, learn the systems and hit the deadlines. Each week brings a short briefing and a few things to do. Nothing needs doing today except reading this.",
+        "mild": "CAPCOM here. You're the Flight Director now: the Commander flies the ship and you run everything around it. T-0 is the due date. Each week brings a short briefing and a few things to do.",
+        "full": "CAPCOM here. Congratulations: you've been drafted. Your role is Flight Director, which sounds senior until you notice the Commander is doing all the actual flying. T-0 is the due date. Each week brings a short briefing and a few things to do. For the record, CAPCOM has never held a baby. We'll learn together."
+      },
+      "provenance": null
+    },
+    {
+      "id": "briefing.w08-the-ship",
+      "week": 8,
+      "act": "recruitment",
+      "speaker": "capcom",
+      "title": {
+        "off": "Learn the ship",
+        "full": "Familiarisation with the vessel"
+      },
+      "body": {
+        "off": "The booking appointment happens between 8 and 12 weeks. Go if you can: they'll ask about your family history too. Sickness often peaks around now, so the strong-smelling cooking is yours. And start the baby budget: the first year costs roughly £8,000 to £10,000 before childcare.",
+        "full": "The booking appointment happens between 8 and 12 weeks. Go if you can: they'll ask about your family history too. Sickness often peaks around now, which brings us to Mission Control's first standing order: if it smells, you cook it. Also start the baby budget. The first year costs roughly £8,000 to £10,000 before childcare, and CAPCOM checked twice."
+      },
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/your-pregnancy-care/your-antenatal-appointments/",
+        "sourceTitle": "NHS: Your antenatal appointments",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "briefing.w12-first-contact",
+      "week": 12,
+      "act": "recruitment",
+      "speaker": "capcom",
+      "title": {
+        "off": "First contact",
+        "full": "First contact: visual on the Payload"
+      },
+      "body": {
+        "off": "The dating scan, between 11 and 14 weeks, confirms the due date. You have the right to unpaid time off for 2 antenatal appointments, so this is a good place to use one. After it, many couples start telling people. Start a names shortlist while you're at it.",
+        "full": "The dating scan, between 11 and 14 weeks, gives you the first visual on the Payload and a confirmed T-0. You have the right to unpaid time off for 2 antenatal appointments; spend one here. After it, many couples start telling people, and somebody will ask about names. Open the shortlist. Expect vetoes."
+      },
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/your-pregnancy-care/your-antenatal-appointments/",
+        "sourceTitle": "NHS: Your antenatal appointments",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "briefing.w16-paperwork",
+      "week": 16,
+      "act": "systemsCheck",
+      "speaker": "veteran",
+      "title": {
+        "off": "Things I got wrong: the paperwork"
+      },
+      "body": {
+        "off": "I assumed paternity leave was something you sorted out when the baby came. It isn't. Notice is due at about 25 weeks, and leave isn't the same as pay: Statutory Paternity Pay needs 26 weeks with your employer by then. Check both now. The app has your exact date.",
+        "full": "Veteran here. I assumed paternity leave was something you sorted out when the baby came, roughly when I also assumed the car seat would fit itself. Neither is true. Notice is due at about 25 weeks, and leave isn't the same as pay: Statutory Paternity Pay needs 26 weeks with your employer by then. Check both now. The app has your exact date."
+      },
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/paternity-pay-leave/eligibility",
+        "sourceTitle": "GOV.UK: Paternity pay and leave eligibility",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "briefing.w20-systems-check",
+      "week": 20,
+      "act": "systemsCheck",
+      "speaker": "capcom",
+      "title": {
+        "off": "Systems check",
+        "full": "Halfway: full systems check"
+      },
+      "body": {
+        "off": "The 20-week scan checks for 11 physical conditions. It isn't 'the gender scan', and staff may not tell you the sex. This is also the week to book NCT classes if you want them, talk about where she'd like to give birth, and start the birth plan together.",
+        "full": "Halfway to T-0. The 20-week scan is a full systems check of the Payload: 11 physical conditions. It is not 'the gender scan', however many group chats say otherwise. This is also the week to book NCT classes if you want them (they fill up), talk about where she'd like to give birth, and start drafting the Flight Plan together."
+      },
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/your-pregnancy-care/your-antenatal-appointments/",
+        "sourceTitle": "NHS: Your antenatal appointments",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "briefing.w25-deadline",
+      "week": 25,
+      "act": "systemsCheck",
+      "speaker": "capcom",
+      "title": {
+        "off": "The deadline nobody mentions",
+        "full": "Priority transmission: the deadline nobody mentions"
+      },
+      "body": {
+        "off": "Paternity leave notice is due by the end of the 15th week before the week the baby is due, which is about now. She has to tell her employer by the same date. If it's done, well done. If not, today's the day.",
+        "full": "Priority transmission. Paternity leave notice is due by the end of the 15th week before the week the baby is due, which is about now. She has to tell her employer by the same date. If it's done: outstanding work, Flight Director. If not: today is the day, and CAPCOM will be watching."
+      },
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/paternity-pay-leave/how-to-claim",
+        "sourceTitle": "GOV.UK: Paternity pay and leave, how to claim",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "briefing.w28-countdown",
+      "week": 28,
+      "act": "countdown",
+      "speaker": "capcom",
+      "title": {
+        "off": "Countdown begins",
+        "full": "Third trimester: countdown sequence initiated"
+      },
+      "body": {
+        "off": "The third trimester starts now. The 28-week appointment brings blood tests and the RSV vaccine. It's time to decide on the car seat, pram and sleep space, order anything with a long wait, and sort out a will and life insurance.",
+        "full": "The third trimester starts now and the countdown is official. The 28-week appointment brings blood tests and the RSV vaccine. Your hardware decisions are due: car seat, pram and sleep space. Order anything with a long lead time. Then the grown-up one: a will and life insurance. CAPCOM finds it sobering too."
+      },
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/your-pregnancy-care/your-antenatal-appointments/",
+        "sourceTitle": "NHS: Your antenatal appointments",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "briefing.w32-dress-rehearsal",
+      "week": 32,
+      "act": "countdown",
+      "speaker": "veteran",
+      "title": {
+        "off": "Dress rehearsal"
+      },
+      "body": {
+        "off": "Drive to the hospital at rush hour and again at 3am, and find the entrance they use at night. Start the bags. Fit the car seat: mine was still in its box in the boot when we needed it. Batch-cook now, and deep clean now, not at 39 weeks.",
+        "full": "Veteran here. Drive to the hospital at rush hour and again at 3am, and find the entrance they use at night. Start the bags. Fit the car seat: mine was still in its box in the boot when we needed it, and a midwife watched me wrestle it in the car park. Batch-cook now. Deep clean now, not at 39 weeks, when you will have other priorities."
+      },
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/preparing-for-the-birth/pack-your-bag-for-labour/",
+        "sourceTitle": "NHS: Pack your bag for labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    },
+    {
+      "id": "briefing.w36-preflight",
+      "week": 36,
+      "act": "countdown",
+      "speaker": "flightSurgeon",
+      "title": {
+        "off": "Pre-flight safety briefing"
+      },
+      "body": {
+        "off": "Call your maternity unit if contractions are regular and every 5 minutes or more often, if her waters break, if there's bleeding, if she's under 37 weeks, or if you're worried. Call them straight away, at any hour, if the baby is moving less than usual. Call 999 if she has a strong urge to push, you can see the head or cord, there's heavy bleeding, or she has a seizure or collapses."
+      },
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
+        "sourceTitle": "NHS: Signs that labour has begun",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "briefing.w37-hold",
+      "week": 37,
+      "act": "holdAtTMinus",
+      "speaker": "capcom",
+      "title": {
+        "off": "Hold at T-minus",
+        "full": "Hold, hold, hold"
+      },
+      "body": {
+        "off": "The baby is term from 37 weeks and could come any day. Stay within about an hour of home, keep your phone on loud, and tell work you might leave mid-shift. A membrane sweep is offered from about 39 to 40 weeks and induction is discussed at 41. When it starts, press LAUNCH.",
+        "full": "All stations, we are holding at T-minus. The Payload is term from 37 weeks and could launch any day. Stay within about an hour of home, keep your phone on loud, and tell work you may leave mid-shift. A membrane sweep is offered from about 39 to 40 weeks and induction is discussed at 41. When it begins, press LAUNCH. CAPCOM will be quiet from then on. You won't need jokes."
+      },
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/inducing-labour/",
+        "sourceTitle": "NHS: Inducing labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "briefing.launch",
+      "week": 37,
+      "act": "launch",
+      "speaker": "flightSurgeon",
+      "title": {
+        "off": "Launch"
+      },
+      "body": {
+        "off": "From here the app shows only what helps: the timer, when to call, her birth plan, what to say and what the jargon means. Your midwife's advice always comes first. Stay with her, keep calm, and call if you're unsure."
+      },
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
+        "sourceTitle": "NHS: Signs that labour has begun",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "briefing.splashdown",
+      "week": 37,
+      "act": "splashdown",
+      "speaker": "capcom",
+      "title": {
+        "off": "Splashdown",
+        "full": "Splashdown confirmed"
+      },
+      "body": {
+        "off": "Welcome back. The next 2 weeks bring midwife visits, the day 5 heel prick test and the health visitor. Register the birth within 42 days, then claim Child Benefit and register with your GP. Know the warning signs for her and the baby, and check in on yourself every fortnight.",
+        "full": "Splashdown confirmed. Welcome back, Flight Director. The next 2 weeks bring midwife visits, the day 5 heel prick test and the health visitor. Register the birth within 42 days, then claim Child Benefit and register with your GP: Form Filler Supreme awaits. Know the warning signs for her and the baby, and check in on yourself every fortnight. Mission patch awarded. CAPCOM is proud of you."
+      },
+      "provenance": {
+        "sourceURL": "https://www.gov.uk/register-birth",
+        "sourceTitle": "GOV.UK: Register a birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": false
+      }
+    }
+  ]
+}

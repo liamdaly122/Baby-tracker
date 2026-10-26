@@ -1,0 +1,405 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "2026.10.26-1",
+  "region": "uk",
+  "items": [
+    {
+      "id": "coaching.latent.at-home",
+      "stage": "latent",
+      "title": "Early labour at home",
+      "doThis": [
+        "Keep her gently moving in the day and resting at night.",
+        "Bring drinks (isotonic ones help) and light snacks.",
+        "Run her a warm bath.",
+        "Paracetamol is safe in labour.",
+        "Rub her back and breathe slowly with her.",
+        "If it drags on, sleep in shifts so one of you is fresh later."
+      ],
+      "avoidThis": [
+        "Heading in too early: she may be sent home.",
+        "Both of you staying up all night."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/what-happens/the-stages-of-labour-and-birth/",
+        "sourceTitle": "NHS: The stages of labour and birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.latent.timing",
+      "stage": "latent",
+      "title": "Timing contractions",
+      "doThis": [
+        "Time a handful to see the pattern, then stop.",
+        "Time again when things change.",
+        "Measure from the start of one to the start of the next.",
+        "Note how long each one lasts, from start to end.",
+        "Real contractions get longer, stronger and closer together."
+      ],
+      "avoidThis": [
+        "Staring at the timer instead of at her.",
+        "Waiting on the numbers if you're worried: call the unit any time."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
+        "sourceTitle": "NHS: Signs that labour has begun",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.latent.induction",
+      "stage": "latent",
+      "title": "If she's being induced",
+      "doThis": [
+        "Expect it to take a long time: often 24 to 48 hours.",
+        "Pack food, chargers and something to do.",
+        "Ask what each step is and what comes next.",
+        "Use BRAIN at each step: it's her choice throughout.",
+        "Expect contractions on the drip to be stronger."
+      ],
+      "avoidThis": [
+        "Expecting a quick start.",
+        "Letting your own boredom show."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/inducing-labour/",
+        "sourceTitle": "NHS: Inducing labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.established.positions",
+      "stage": "established",
+      "title": "Positions that help",
+      "doThis": [
+        "Help her stay upright and moving: standing, leaning forward, kneeling, all fours or a birth ball.",
+        "With an epidural, help her lie on her side rather than flat.",
+        "Prompt a trip to the loo every 2 to 3 hours: a full bladder can slow things down."
+      ],
+      "avoidThis": [
+        "Letting her lie flat on her back."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nnuh.nhs.uk/publication/download/intrapartum-care-v13",
+        "sourceTitle": "Norfolk and Norwich University Hospitals: Intrapartum care guideline v13",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.established.back-pain",
+      "stage": "established",
+      "title": "Back pain and back-to-back babies",
+      "doThis": [
+        "Try forward-leaning and all-fours positions.",
+        "Press firmly on her lower back during contractions.",
+        "Try a double hip squeeze.",
+        "Use heat or ice on her back."
+      ],
+      "avoidThis": [
+        "Promising a position will turn the baby: it eases the pain, but there's no good evidence it turns baby."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nct.org.uk/labour-birth/getting-ready-for-birth/baby-positions-womb-birth",
+        "sourceTitle": "NCT: Baby positions in the womb and birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.established.comfort",
+      "stage": "established",
+      "title": "Hands-on comfort",
+      "doThis": [
+        "Cool flannel on her face and neck.",
+        "Water spray or a fan.",
+        "Sips from a bottle with a straw.",
+        "Lip balm and a hair tie within reach.",
+        "Firm lower-back massage, if she wants it."
+      ],
+      "avoidThis": [
+        "Taking it personally if she suddenly doesn't want to be touched."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nnuh.nhs.uk/publication/download/intrapartum-care-v13",
+        "sourceTitle": "Norfolk and Norwich University Hospitals: Intrapartum care guideline v13",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.established.breathing",
+      "stage": "established",
+      "title": "Breathe with her",
+      "doThis": [
+        "Breathe slowly with her, with a long breath out.",
+        "Keep your voice low and steady.",
+        "Hold eye contact through the peak if she wants it.",
+        "Help her change position when she wants to."
+      ],
+      "avoidThis": [
+        "Counting out loud unless she's asked you to."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/what-happens/tips-for-your-birth-partner/",
+        "sourceTitle": "NHS: Tips for your birth partner",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.established.the-room",
+      "stage": "established",
+      "title": "Guard the room",
+      "doThis": [
+        "Dim the lights and put her music on.",
+        "Keep the chatter down.",
+        "Handle the phone and the family updates.",
+        "Keep away any visitors she doesn't want."
+      ],
+      "avoidThis": [
+        "Inviting people in.",
+        "Texting the group chat in front of her."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nct.org.uk/labour-birth/dads-and-partners/ten-tips-for-birth-partners",
+        "sourceTitle": "NCT: Ten tips for birth partners",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.established.words",
+      "stage": "established",
+      "title": "What to say",
+      "doThis": [
+        "\"You're doing it.\"",
+        "\"That one's gone.\"",
+        "\"Every contraction brings the baby closer.\"",
+        "\"I'm so proud of you.\"",
+        "Don't ask, do: hold the straw to her lips rather than asking if she wants a drink."
+      ],
+      "avoidThis": [
+        "\"I know how you feel.\"",
+        "Mentioning that you're tired or hungry.",
+        "A stream of questions.",
+        "Letting panic show."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.pediatrix.com/about/for-media/news/how-to-support-your-partner-in-labor",
+        "sourceTitle": "Pediatrix: How to support your partner in labor",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.established.pain-relief",
+      "stage": "established",
+      "title": "Your job with pain relief",
+      "doThis": [
+        "TENS: put it on early, before the pain is strong. Not in water.",
+        "Gas and air: hand her the mouthpiece as a contraction starts. It takes 15 to 20 seconds to work.",
+        "Pethidine or diamorphine: watch for sickness. No pool for 2 hours afterwards.",
+        "Remifentanil: remind her to press the button as each contraction starts, and tell staff if she's very drowsy.",
+        "Epidural: help her curl up and stay still while it goes in, and remind her to change sides every hour."
+      ],
+      "avoidThis": [
+        "Using the gas and air yourself.",
+        "Watching the epidural needle if you're squeamish: look away, or step out if asked."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/what-happens/pain-relief-in-labour/",
+        "sourceTitle": "NHS: Pain relief in labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.established.speak-up",
+      "stage": "established",
+      "title": "Speaking up for her",
+      "doThis": [
+        "Use BRAIN: Benefits, Risks, Alternatives, Intuition, and what if we wait an hour?",
+        "Ask: \"Is this an emergency or a recommendation?\"",
+        "Ask: \"Can we have five minutes to decide?\"",
+        "Say: \"She can't take this in right now, give us a minute.\"",
+        "If something feels wrong: tell the midwife, use the call bell, ask for the coordinator or a doctor's review.",
+        "In England, ask for a Martha's Rule call if she's getting worse and you're not being heard."
+      ],
+      "avoidThis": [
+        "Agreeing to anything on her behalf: only she can consent.",
+        "Asking \"Am I allowed?\": staff need her permission, not the other way round."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.birthrights.org.uk/factsheets/consenting-to-treatment/",
+        "sourceTitle": "Birthrights: Consenting to treatment",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.established.self-care",
+      "stage": "established",
+      "title": "Look after yourself",
+      "doThis": [
+        "Eat and drink: bring your own snacks.",
+        "Sit down before you feel faint, and don't lock your knees.",
+        "Look away during the epidural or the incision if you need to.",
+        "Watch the midwife's face, not the floor: their calm tells you a lot.",
+        "Say \"I'm scared, tell me what to do.\""
+      ],
+      "avoidThis": [
+        "Eating strong-smelling food in the room.",
+        "Complaining that you're tired or hungry.",
+        "Popping home without asking the midwife how long you realistically have."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nct.org.uk/labour-birth/dads-and-partners/ten-tips-for-birth-partners",
+        "sourceTitle": "NCT: Ten tips for birth partners",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.transition.close",
+      "stage": "transition",
+      "title": "When she says she can't do it",
+      "doThis": [
+        "Stay close and stay calm.",
+        "Use short, firm phrases and eye contact.",
+        "Tell her this intensity means she's close.",
+        "Offer sips of water and a cool cloth.",
+        "Call the midwife if she feels like pushing."
+      ],
+      "avoidThis": [
+        "Taking swearing or shouting personally.",
+        "Leaving the room."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nnuh.nhs.uk/publication/download/intrapartum-care-v13",
+        "sourceTitle": "Norfolk and Norwich University Hospitals: Intrapartum care guideline v13",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.pushing.support",
+      "stage": "pushing",
+      "title": "Pushing",
+      "doThis": [
+        "Stand by her head or shoulder, where she can see you.",
+        "Support her leg or back in the position she's chosen.",
+        "Echo what the midwife says, calmly.",
+        "When the midwife says pant, pant with her."
+      ],
+      "avoidThis": [
+        "Counting loudly unless she's asked you to.",
+        "Taking photos or filming without her agreement beforehand."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/what-happens/the-stages-of-labour-and-birth/",
+        "sourceTitle": "NHS: The stages of labour and birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.goldenHour.first-hour",
+      "stage": "goldenHour",
+      "title": "The first hour",
+      "doThis": [
+        "Ask for baby straight onto her bare chest, before the cord is cut.",
+        "Keep skin-to-skin going for at least an hour, or until the first feed.",
+        "If she's on gas and air, drowsy, or in theatre under general anaesthetic, do skin-to-skin yourself.",
+        "Cut the cord after at least a minute, if you've agreed to.",
+        "Keep baby's face visible, and tell staff straight away if anything worries you."
+      ],
+      "avoidThis": [
+        "Rushing the weighing and the photos: they can wait."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.unicef.org.uk/babyfriendly/baby-friendly-resources/implementing-standards-resources/skin-to-skin-contact/",
+        "sourceTitle": "UNICEF UK Baby Friendly: Skin-to-skin contact",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.theatre.caesarean",
+      "stage": "theatre",
+      "title": "If she goes to theatre",
+      "doThis": [
+        "With a spinal, sit by her head behind the screen.",
+        "Baby is usually out in 5 to 10 minutes; the whole operation takes 40 to 50.",
+        "Ask about skin-to-skin in theatre.",
+        "Under general anaesthetic you'll be asked to wait nearby: ask where, and ask for baby for skin-to-skin in recovery."
+      ],
+      "avoidThis": [
+        "Watching the incision if you're squeamish: watch her face instead."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/conditions/caesarean-section/what-happens/",
+        "sourceTitle": "NHS: Caesarean section, what happens",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "coaching.theatre.category-1",
+      "stage": "theatre",
+      "title": "Emergency caesarean (Category 1)",
+      "doThis": [
+        "Expect it to be fast: birth within about 30 minutes of the decision.",
+        "Expect a lot of people and noise. That's the team working.",
+        "Go where you're asked to wait, and ask who will update you.",
+        "Ask for baby for skin-to-skin as soon as you can."
+      ],
+      "avoidThis": [
+        "Reading being asked to leave as bad news: partners can't be in theatre under general anaesthetic."
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng192/chapter/Recommendations",
+        "sourceTitle": "NICE NG192: Caesarean birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    }
+  ]
+}

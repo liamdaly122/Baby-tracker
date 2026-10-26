@@ -61,3 +61,22 @@ How the engine turns NHS wording into rules. The code is in `Sources/MissionCore
 | E14 | Engine copy is instructional ("Time to call your maternity unit"), never diagnostic. A test checks every line against "established labour", "active labour", "you are in labour" and "diagnos". | Sources shown under each line: NHS signs of labour; RCOG for the cord prolapse wording ("Don't touch it. Help her onto her knees with her bottom up, or onto her left side with her hips raised."). | Open |
 | E15 | The US profile says "your provider or labor and delivery unit" and 911. | | Open |
 | E16 | If the phone and watch both press start within 20 seconds with no stop between, it's one contraction. | | Open |
+
+## UK content v1 (Phase 2)
+
+`Sources/MissionContent/Content/uk/`: 134 checklist items in 12 modules, 94 glossary entries, 17 coaching cards, 12 story beats, 22 quiz questions in 7 quizzes, 35 badges. Every `sourceURL` is quoted in the research reports (the lint checks). Every clinical item's `reviewer` is null until the midwife review.
+
+| # | Item | Notes | Status |
+|---|---|---|---|
+| C1 | Paternity notice deadline is the end of the qualifying week (EWC minus 99 days, weeks running Sunday to Saturday). | Checked 26 Oct 2026 against Acas, "Taking paternity leave" (https://www.acas.org.uk/page-print/393): due 1 May 2026 → deadline Saturday 17 January 2026. | Confirmed |
+| C2 | Glossary worry levels (0 to 3) are judgement calls. 3: PPROM, cord prolapse, pre-eclampsia, PPH, shoulder dystocia, Category 1 caesarean. 2: meconium, SROM, PROM, decelerations, FBS, OASI, GA, SCBU, NICU. | Needs a midwife's view, especially where a high number could frighten. | Open |
+| C3 | The cord prolapse home positioning wording appears in the glossary and in the engine copy (E14). | Keep the two in step. | Open |
+| C4 | "Cephalic", "effaced", "fundal height", "cannula" and "TED stockings" cite the Cwm Taf Morgannwg (NHS Wales) abbreviations list. | Fine for definitions; a midwife may prefer an England source. | Open |
+| C5 | The handover entry says shifts change "often around 8am and 8pm" (NNUH). | Varies by trust. | Open |
+| C6 | Transition is described as "usually short" with no duration. | The 30 minutes to 2 hours figure is from consumer sources only. | Open |
+| C7 | Swaddling cites HealthyChildren.org (American Academy of Pediatrics). | The research found no UK source; a UK one would be better. | Open |
+| C8 | App-chosen checklist dates (not legal deadlines): bags, car seat and cot by 36 weeks; one-page birth plan by 36 weeks; NCT booked by 20 weeks; paternity start date confirmed by 34 weeks; whooping cough by 32 weeks (NHS "best before 32"); GP registration by birth + 14 days; hearing screen by birth + 35; 6 to 8 week checks by birth + 56; Child Benefit by birth + 90 (payments only backdate 3 months); funded childcare reminder at 23 weeks old. | Reminders are nudges, never alarms; none run in labour mode. | Open |
+| C9 | Leeds details appear in the content: Merrion House, "Preparation for Birth and Beyond", the partner overnight stay, Dad Matters Leeds. Maternity unit phone numbers do not; they're user-entered. | Needs hospital- or region-aware variants before release outside Leeds. | Open |
+| C10 | Some practical, non-clinical checklist items have no source (batch cooking, deep clean, route rehearsal, backup driver, playlist, grocery delivery, grandparents). | They come from the research's practical advice rather than a citable page; the lint only requires provenance on clinical items. | Open |
+| C11 | Things deliberately left out for lack of a primary source: newborn resuscitation percentages, transition duration, the ACOG "rest and drink water" test, Tommy's "up-breathing", "step away if crying gets too much", and a blanket over car seat straps. | | Open |
+| C12 | The baby red flags item says "get medical help urgently" without saying 999 or 111. | The research lists the signs but not which number for which. A midwife should split them. | Open |

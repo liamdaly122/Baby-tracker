@@ -4,12 +4,15 @@
 Checks every file in Sources/MissionContent/Content/<region>/<kind>.json for:
   - a valid envelope (schemaVersion, contentVersion, region matching its folder, items)
   - duplicate item IDs within a region
-  - provenance on every clinical item (reviewer sign-off required with --release)
-  - an "off" variant on every humour copy field
+  - provenance on every clinical item (reviewer sign-off required with --release), with a source
+    URL that appears in the research reports under docs/research/
+  - an "off" variant on every humour copy field, and no humour at all from the Flight Surgeon
   - forbidden diagnostic phrases ("established labour", "you are in labour", "diagnos", ...)
+  - the fields of each kind (modules, stages, weeks, deadlines, quiz answers, badge rules)
+  - references between files (checklist quizzes, badge targets, at least 3 questions per quiz)
   - threshold defaults inside their safe bounds, and the safety ceilings that can never be relaxed
 
-Usage: python3 -I Scripts/content-lint.py [--release] [--root PATH]
+Usage: python3 -I Scripts/content-lint.py [--release] [--root PATH] [--research PATH]
 Exits 1 if anything fails.
 """
 
@@ -22,6 +25,19 @@ from pathlib import Path
 SCHEMA_VERSION = 1
 REGIONS = {"uk", "us"}
 KINDS = {"briefings", "checklist", "glossary", "coaching", "quiz", "thresholds", "badges"}
+
+# Enum raw values, mirroring Sources/MissionCore/Content/ContentSchema.swift.
+MODULES = {
+    "adminAndLeave", "money", "appointments", "classes", "birthPlan", "hospitalBag", "vehicle",
+    "homeModule", "dayOfLogistics", "skillsTraining", "commanderSupport", "splashdown",
+}
+STAGES = {"latent", "established", "transition", "pushing", "thirdStage", "theatre", "goldenHour", "postnatal"}
+ACTS = {"recruitment", "systemsCheck", "countdown", "holdAtTMinus", "launch", "splashdown"}
+SPEAKERS = {"capcom", "flightSurgeon", "veteran"}
+ANCHORS = {"ewc", "edd", "birth"}
+BADGE_RULES = {"checklistItemsDone", "moduleComplete", "quizPassed", "streakDays"}
+MAX_WEEK = 42
+MIN_QUIZ_QUESTIONS = 3
 
 # Kinds whose items are always clinical and so always need provenance.
 ALWAYS_CLINICAL = {"glossary", "coaching", "thresholds"}
@@ -72,12 +88,25 @@ THRESHOLD_LIMITS = {
 }
 
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-DEFAULT_ROOT = Path(__file__).resolve().parent.parent / "Sources" / "MissionContent" / "Content"
+URL_RE = re.compile(r"https://[^\s)>;,`\"]+")
+REPO = Path(__file__).resolve().parent.parent
+DEFAULT_ROOT = REPO / "Sources" / "MissionContent" / "Content"
+DEFAULT_RESEARCH = REPO / "docs" / "research"
+
+
+def research_urls(folder):
+    """Every https URL quoted in the research reports, so content can't cite an invented source."""
+    urls = set()
+    for path in sorted(folder.glob("*.md")):
+        for match in URL_RE.findall(path.read_text(encoding="utf-8")):
+            urls.add(match.rstrip("."))
+    return urls
 
 
 class Lint:
-    def __init__(self, release):
+    def __init__(self, release, sources=None):
         self.release = release
+        self.sources = research_urls(DEFAULT_RESEARCH) if sources is None else sources
         self.errors = []
 
     def error(self, where, message):
@@ -85,16 +114,17 @@ class Lint:
 
     # Envelope and items
 
-    def check_file(self, path, region, kind, seen_ids):
+    def load_file(self, path, region):
+        """Returns the items list, or None if the envelope is unusable."""
         where = str(path)
         try:
             doc = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError) as exc:
             self.error(where, f"cannot parse JSON ({exc})")
-            return
+            return None
         if not isinstance(doc, dict):
             self.error(where, "top level must be an object")
-            return
+            return None
         if doc.get("schemaVersion") != SCHEMA_VERSION:
             self.error(where, f"schemaVersion must be {SCHEMA_VERSION}")
         if not isinstance(doc.get("contentVersion"), str) or not doc.get("contentVersion"):
@@ -104,8 +134,11 @@ class Lint:
         items = doc.get("items")
         if not isinstance(items, list):
             self.error(where, "items must be a list")
-            return
+            return None
+        return items
 
+    def check_items(self, path, kind, items, seen_ids):
+        where = str(path)
         for index, item in enumerate(items):
             item_where = f"{where} item {index}"
             if not isinstance(item, dict):
@@ -123,9 +156,16 @@ class Lint:
             self.check_provenance(item_where, kind, item)
             self.check_copy(item_where, kind, item)
             self.check_phrases(item_where, kind, item)
-            if kind == "glossary":
-                self.check_glossary(item_where, item)
-
+            checker = {
+                "checklist": self.check_checklist,
+                "glossary": self.check_glossary,
+                "coaching": self.check_coaching,
+                "briefings": self.check_briefings,
+                "quiz": self.check_quiz,
+                "badges": self.check_badges,
+            }.get(kind)
+            if checker:
+                checker(item_where, item)
         if kind == "thresholds":
             self.check_thresholds(where, items)
 
@@ -151,6 +191,8 @@ class Lint:
         url = provenance.get("sourceURL")
         if not isinstance(url, str) or not url.startswith("https://"):
             self.error(where, "provenance.sourceURL must be an https URL")
+        elif url not in self.sources:
+            self.error(where, f"provenance.sourceURL is not in the research reports: {url}")
         if not isinstance(provenance.get("sourceTitle"), str) or not provenance.get("sourceTitle"):
             self.error(where, "provenance.sourceTitle is missing")
         accessed = provenance.get("accessed")
@@ -192,15 +234,93 @@ class Lint:
                 if phrase in lowered:
                     self.error(where, f"forbidden phrase {phrase!r} in {'.'.join(map(str, path))}")
 
+    # Per-kind fields
+
+    def check_checklist(self, where, item):
+        if item.get("module") not in MODULES:
+            self.error(where, f"module must be one of {sorted(MODULES)}")
+        week = item.get("unlockWeek")
+        if not is_int(week) or not 0 <= week <= MAX_WEEK:
+            self.error(where, f"unlockWeek must be an integer from 0 to {MAX_WEEK}")
+        deadline = item.get("deadline")
+        if deadline is not None:
+            if not isinstance(deadline, dict) or deadline.get("anchor") not in ANCHORS:
+                self.error(where, f"deadline.anchor must be one of {sorted(ANCHORS)}")
+            elif not is_int(deadline.get("offsetDays")):
+                self.error(where, "deadline.offsetDays must be an integer")
+        reminders = item.get("reminderDaysBefore")
+        if not isinstance(reminders, list) or not all(is_int(d) and d >= 0 for d in reminders):
+            self.error(where, "reminderDaysBefore must be a list of whole days, 0 or more")
+        elif reminders and deadline is None:
+            self.error(where, "reminderDaysBefore needs a deadline")
+        if not is_int(item.get("xp")) or item["xp"] < 0:
+            self.error(where, "xp must be a whole number, 0 or more")
+        if item.get("quizID") is not None and not isinstance(item.get("quizID"), str):
+            self.error(where, "quizID must be a string or null")
+
     def check_glossary(self, where, item):
         worry = item.get("worryLevel")
-        if not isinstance(worry, int) or isinstance(worry, bool) or not 0 <= worry <= 3:
+        if not is_int(worry) or not 0 <= worry <= 3:
             self.error(where, "worryLevel must be an integer from 0 to 3")
         for key in ("term", "plainEnglish", "questionToAsk"):
             if not isinstance(item.get(key), str) or not item.get(key):
                 self.error(where, f"{key} must be a non-empty string")
         if not isinstance(item.get("aliases"), list):
             self.error(where, "aliases must be a list")
+        stages = item.get("stages")
+        if not isinstance(stages, list) or not all(stage in STAGES for stage in stages):
+            self.error(where, f"stages must be a list of {sorted(STAGES)}")
+
+    def check_coaching(self, where, item):
+        if item.get("stage") not in STAGES:
+            self.error(where, f"stage must be one of {sorted(STAGES)}")
+        if not isinstance(item.get("title"), str) or not item.get("title"):
+            self.error(where, "title must be a non-empty string")
+        do_this = item.get("doThis")
+        if not isinstance(do_this, list) or not do_this or not all(isinstance(line, str) for line in do_this):
+            self.error(where, "doThis must be a non-empty list of strings")
+        avoid = item.get("avoidThis")
+        if not isinstance(avoid, list) or not all(isinstance(line, str) for line in avoid):
+            self.error(where, "avoidThis must be a list of strings")
+
+    def check_briefings(self, where, item):
+        week = item.get("week")
+        if not is_int(week) or not 0 <= week <= MAX_WEEK:
+            self.error(where, f"week must be an integer from 0 to {MAX_WEEK}")
+        if item.get("act") not in ACTS:
+            self.error(where, f"act must be one of {sorted(ACTS)}")
+        if item.get("speaker") not in SPEAKERS:
+            self.error(where, f"speaker must be one of {sorted(SPEAKERS)}")
+        if item.get("speaker") == "flightSurgeon":
+            for field in ("title", "body"):
+                copy = item.get(field)
+                if isinstance(copy, dict) and (copy.get("mild") or copy.get("full")):
+                    self.error(where, f"the Flight Surgeon never jokes: {field} must only have 'off'")
+
+    def check_quiz(self, where, item):
+        for key in ("quizID", "prompt", "explanation"):
+            if not isinstance(item.get(key), str) or not item.get(key):
+                self.error(where, f"{key} must be a non-empty string")
+        choices = item.get("choices")
+        if not isinstance(choices, list) or len(choices) < 2 or not all(isinstance(c, str) and c for c in choices):
+            self.error(where, "choices must be a list of at least 2 non-empty strings")
+            return
+        answer = item.get("correctIndex")
+        if not is_int(answer) or not 0 <= answer < len(choices):
+            self.error(where, "correctIndex must point at one of the choices")
+
+    def check_badges(self, where, item):
+        if not isinstance(item.get("name"), str) or not item.get("name"):
+            self.error(where, "name must be a non-empty string")
+        rule = item.get("rule")
+        if not isinstance(rule, dict) or rule.get("kind") not in BADGE_RULES:
+            self.error(where, f"rule.kind must be one of {sorted(BADGE_RULES)}")
+            return
+        targets = rule.get("targetIDs")
+        if not isinstance(targets, list) or not all(isinstance(t, str) for t in targets):
+            self.error(where, "rule.targetIDs must be a list of strings")
+        if rule.get("count") is not None and (not is_int(rule["count"]) or rule["count"] < 1):
+            self.error(where, "rule.count must be a whole number, 1 or more")
 
     # Thresholds
 
@@ -241,6 +361,40 @@ class Lint:
         for field in sorted(THRESHOLD_FIELDS - seen):
             self.error(where, f"missing threshold field {field}")
 
+    # References between files
+
+    def check_references(self, region_dir, files):
+        def items_of(kind):
+            return [item for item in files.get(kind, []) if isinstance(item, dict)]
+
+        quiz_counts = {}
+        for question in items_of("quiz"):
+            if isinstance(question.get("quizID"), str):
+                quiz_counts[question["quizID"]] = quiz_counts.get(question["quizID"], 0) + 1
+        for quiz_id, count in sorted(quiz_counts.items()):
+            if count < MIN_QUIZ_QUESTIONS:
+                self.error(f"{region_dir}/quiz.json", f"quiz {quiz_id!r} has {count} question(s), needs {MIN_QUIZ_QUESTIONS}")
+
+        checklist_ids = {item.get("id") for item in items_of("checklist")}
+        for item in items_of("checklist"):
+            quiz_id = item.get("quizID")
+            if isinstance(quiz_id, str) and quiz_id not in quiz_counts:
+                self.error(f"{region_dir}/checklist.json [{item.get('id')}]", f"quiz {quiz_id!r} not found in quiz.json")
+
+        valid_targets = {
+            "checklistItemsDone": checklist_ids,
+            "moduleComplete": MODULES,
+            "quizPassed": set(quiz_counts),
+            "streakDays": set(),
+        }
+        for badge in items_of("badges"):
+            rule = badge.get("rule")
+            if not isinstance(rule, dict) or rule.get("kind") not in valid_targets:
+                continue
+            for target in rule.get("targetIDs") or []:
+                if target not in valid_targets[rule["kind"]]:
+                    self.error(f"{region_dir}/badges.json [{badge.get('id')}]", f"target {target!r} not found")
+
     # Entry point
 
     def run(self, root):
@@ -253,13 +407,19 @@ class Lint:
                 self.error(str(region_dir), f"unknown region folder (expected one of {sorted(REGIONS)})")
                 continue
             seen_ids = {}
+            files = {}
             for path in sorted(region_dir.iterdir()):
                 if path.name.startswith("."):
                     continue
                 if path.suffix != ".json" or path.stem not in KINDS:
                     self.error(str(path), f"unexpected file (expected <kind>.json, kinds: {sorted(KINDS)})")
                     continue
-                self.check_file(path, region, path.stem, seen_ids)
+                items = self.load_file(path, region)
+                if items is None:
+                    continue
+                files[path.stem] = items
+                self.check_items(path, path.stem, items, seen_ids)
+            self.check_references(region_dir, files)
 
 
 def iter_strings(value, path=()):
@@ -277,13 +437,18 @@ def is_number(value):
     return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
+def is_int(value):
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Lint Mission Control content JSON.")
     parser.add_argument("--release", action="store_true", help="require midwife sign-off on clinical items")
     parser.add_argument("--root", type=Path, default=DEFAULT_ROOT, help="content folder to lint")
+    parser.add_argument("--research", type=Path, default=DEFAULT_RESEARCH, help="research reports folder")
     args = parser.parse_args(argv)
 
-    lint = Lint(release=args.release)
+    lint = Lint(release=args.release, sources=research_urls(args.research))
     lint.run(args.root)
     if lint.errors:
         for line in lint.errors:

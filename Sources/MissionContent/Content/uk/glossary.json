@@ -1,0 +1,2257 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "2026.10.26-1",
+  "region": "uk",
+  "items": [
+    {
+      "id": "glossary.tightenings",
+      "term": "Tightenings",
+      "aliases": [
+        "tightening",
+        "surges"
+      ],
+      "plainEnglish": "Midwife-speak for contractions, especially early or irregular ones.",
+      "worryLevel": 0,
+      "questionToAsk": "Are these worth timing yet?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
+        "sourceTitle": "NHS: Signs that labour has begun",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.braxton-hicks",
+      "term": "Braxton Hicks",
+      "aliases": [
+        "practice contractions",
+        "false labour"
+      ],
+      "plainEnglish": "Practice contractions. They're usually painless, short and infrequent, and they don't build up. Real contractions get longer, stronger and closer together.",
+      "worryLevel": 0,
+      "questionToAsk": "Do these sound like practice contractions to you?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
+        "sourceTitle": "NHS: Signs that labour has begun",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.show",
+      "term": "Show",
+      "aliases": [
+        "the show",
+        "mucus plug",
+        "bloody show"
+      ],
+      "plainEnglish": "Sticky, jelly-like mucus, often pink-tinged. Labour may follow in hours or days. More blood than a small pink tinge means phone the unit straight away.",
+      "worryLevel": 0,
+      "questionToAsk": "Is this amount of blood normal?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
+        "sourceTitle": "NHS: Signs that labour has begun",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.latent-phase",
+      "term": "Latent phase",
+      "aliases": [
+        "early labour",
+        "latent labour",
+        "latent first stage"
+      ],
+      "plainEnglish": "Painful contractions while the cervix softens and opens up to 4 cm. It can take hours or even days and is usually the longest part. Many couples are advised to stay at home through it.",
+      "worryLevel": 0,
+      "questionToAsk": "What should we do at home, and when should we call back?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng235/chapter/Recommendations",
+        "sourceTitle": "NICE NG235: Intrapartum care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.established-labour",
+      "term": "Established labour",
+      "aliases": [
+        "active labour",
+        "active labor",
+        "established"
+      ],
+      "plainEnglish": "Regular painful contractions with the cervix opening steadily from 4 cm (US hospitals count from 6 cm). For a first baby this part lasts about 8 hours on average and is unlikely to go past 18; for later babies about 5 hours.",
+      "worryLevel": 0,
+      "questionToAsk": "What changes for us now?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng235/chapter/Recommendations",
+        "sourceTitle": "NICE NG235: Intrapartum care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.dilated",
+      "term": "Dilated",
+      "aliases": [
+        "dilation",
+        "dilatation",
+        "she's 6",
+        "6 cm",
+        "centimetres",
+        "how many centimetres"
+      ],
+      "plainEnglish": "How open the cervix is, from 0 to 10 cm. It's a progress marker, not a score. Once things are going, about 2 cm every 4 hours is expected.",
+      "worryLevel": 0,
+      "questionToAsk": "How has that changed since the last check?",
+      "stages": [
+        "latent",
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng235/chapter/Recommendations",
+        "sourceTitle": "NICE NG235: Intrapartum care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.fully-dilated",
+      "term": "Fully dilated",
+      "aliases": [
+        "fully",
+        "FD",
+        "10 cm",
+        "she's fully"
+      ],
+      "plainEnglish": "The cervix is fully open at 10 cm, so the pushing stage can begin. Good news.",
+      "worryLevel": 0,
+      "questionToAsk": "Should she push now or wait for the urge?",
+      "stages": [
+        "transition",
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/what-happens/the-stages-of-labour-and-birth/",
+        "sourceTitle": "NHS: The stages of labour and birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.effaced",
+      "term": "Effaced",
+      "aliases": [
+        "effacement",
+        "thinned",
+        "per cent effaced"
+      ],
+      "plainEnglish": "The cervix has thinned and shortened, often given as a percentage. A good sign.",
+      "worryLevel": 0,
+      "questionToAsk": "Is that progress since last time?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://ctmuhb.nhs.wales/services/maternity/tips-for-birth-partner/common-abbreviations-used-in-pregnancy/",
+        "sourceTitle": "Cwm Taf Morgannwg UHB: Common abbreviations used in pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.station",
+      "term": "Station",
+      "aliases": [
+        "minus 2",
+        "-2",
+        "station 0",
+        "plus 1",
+        "+1",
+        "how low"
+      ],
+      "plainEnglish": "How low baby's head is in the pelvis, measured against two bony points. 0 means level with them; plus numbers mean lower. Lower is better.",
+      "worryLevel": 0,
+      "questionToAsk": "Is the head moving down?",
+      "stages": [
+        "established",
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://ctmuhb.nhs.wales/services/maternity/tips-for-birth-partner/common-abbreviations-used-in-pregnancy/",
+        "sourceTitle": "Cwm Taf Morgannwg UHB: Common abbreviations used in pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.engaged",
+      "term": "Engaged",
+      "aliases": [
+        "3/5 palpable",
+        "2/5 palpable",
+        "fifths palpable",
+        "head engaged"
+      ],
+      "plainEnglish": "How much of baby's head the midwife can still feel above the pelvis, in fifths. 2/5 or less means the head is engaged, which is normal.",
+      "worryLevel": 0,
+      "questionToAsk": "Has the head engaged?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://ctmuhb.nhs.wales/services/maternity/tips-for-birth-partner/common-abbreviations-used-in-pregnancy/",
+        "sourceTitle": "Cwm Taf Morgannwg UHB: Common abbreviations used in pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.cephalic",
+      "term": "Cephalic",
+      "aliases": [
+        "ceph",
+        "vertex",
+        "head down"
+      ],
+      "plainEnglish": "Baby is head down, crown first. The ideal position.",
+      "worryLevel": 0,
+      "questionToAsk": "Is baby head down?",
+      "stages": [
+        "latent",
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://ctmuhb.nhs.wales/services/maternity/tips-for-birth-partner/common-abbreviations-used-in-pregnancy/",
+        "sourceTitle": "Cwm Taf Morgannwg UHB: Common abbreviations used in pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.occiput-anterior",
+      "term": "Occiput anterior",
+      "aliases": [
+        "OA",
+        "LOA",
+        "ROA",
+        "back to front"
+      ],
+      "plainEnglish": "Baby's back is towards her front (left or right). The ideal position for birth.",
+      "worryLevel": 0,
+      "questionToAsk": "Which way is baby facing?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nct.org.uk/labour-birth/getting-ready-for-birth/baby-positions-womb-birth",
+        "sourceTitle": "NCT: Baby positions in the womb and birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.back-to-back",
+      "term": "Back to back",
+      "aliases": [
+        "OP",
+        "occiput posterior",
+        "back-to-back",
+        "LOP",
+        "ROP"
+      ],
+      "plainEnglish": "Baby's back is against her back. Labour is often longer with more backache and assisted birth is more likely, but it isn't dangerous. Forward-leaning and all-fours positions ease the backache.",
+      "worryLevel": 1,
+      "questionToAsk": "Which positions would help with the back pain?",
+      "stages": [
+        "established",
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nct.org.uk/labour-birth/getting-ready-for-birth/baby-positions-womb-birth",
+        "sourceTitle": "NCT: Baby positions in the womb and birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.srom",
+      "term": "SROM",
+      "aliases": [
+        "spontaneous rupture of membranes",
+        "SRM",
+        "waters broke",
+        "waters went",
+        "membranes ruptured"
+      ],
+      "plainEnglish": "Her waters broke on their own. Always call the maternity unit when this happens, and tell them straight away if the fluid is green, brown, smelly or bloody. Use a pad, not a tampon, so the colour can be checked.",
+      "worryLevel": 2,
+      "questionToAsk": "Do you need to see the waters or the pad?",
+      "stages": [
+        "latent",
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
+        "sourceTitle": "NHS: Signs that labour has begun",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.arm",
+      "term": "ARM",
+      "aliases": [
+        "artificial rupture of membranes",
+        "breaking the waters",
+        "amniotomy",
+        "the hook"
+      ],
+      "plainEnglish": "The midwife breaks the waters with a small hook. It shortens labour by about an hour but makes contractions stronger and more painful. She can say no.",
+      "worryLevel": 1,
+      "questionToAsk": "What are the benefits for her and the baby, and what if we wait?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng235/chapter/Recommendations",
+        "sourceTitle": "NICE NG235: Intrapartum care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.prom",
+      "term": "PROM",
+      "aliases": [
+        "pre-labour rupture of membranes",
+        "prelabour rupture",
+        "term PROM",
+        "waters broke before labour"
+      ],
+      "plainEnglish": "Waters break at term before contractions start. About 60% of women go into labour within 24 hours; if not, induction is usually offered. While waiting, check her temperature every 4 hours while awake.",
+      "worryLevel": 2,
+      "questionToAsk": "When will we be seen, and what's the plan if labour doesn't start?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng235/chapter/Recommendations",
+        "sourceTitle": "NICE NG235: Intrapartum care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.pprom",
+      "term": "PPROM",
+      "aliases": [
+        "preterm pre-labour rupture of membranes",
+        "waters broke early",
+        "waters before 37 weeks"
+      ],
+      "plainEnglish": "Waters break before 37 weeks. She needs to go to hospital now.",
+      "worryLevel": 3,
+      "questionToAsk": "We're on our way: is there anything we should do first?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
+        "sourceTitle": "NHS: Signs that labour has begun",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.meconium",
+      "term": "Meconium",
+      "aliases": [
+        "mec",
+        "green waters",
+        "brown waters",
+        "meconium-stained liquor",
+        "MSL"
+      ],
+      "plainEnglish": "Baby's first poo in the waters, turning them green or brown. Significant meconium means the labour ward, continuous monitoring and the baby doctors at the birth, then baby is watched closely for 12 hours.",
+      "worryLevel": 2,
+      "questionToAsk": "Does this change where she gives birth or how baby is monitored?",
+      "stages": [
+        "established",
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng235/chapter/Recommendations",
+        "sourceTitle": "NICE NG235: Intrapartum care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.ve",
+      "term": "VE",
+      "aliases": [
+        "vaginal examination",
+        "internal examination",
+        "internal",
+        "examination"
+      ],
+      "plainEnglish": "An internal check of the cervix, usually every 4 hours. She can say no to any examination.",
+      "worryLevel": 0,
+      "questionToAsk": "What will this tell you, and can it wait?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.birthrights.org.uk/factsheets/consenting-to-treatment/",
+        "sourceTitle": "Birthrights: Consenting to treatment",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.primip-multip",
+      "term": "Primip / multip",
+      "aliases": [
+        "primip",
+        "multip",
+        "primigravida",
+        "multipara",
+        "first baby"
+      ],
+      "plainEnglish": "Primip means a first birth; multip means she's had a baby before. Later labours are usually quicker, so you call earlier.",
+      "worryLevel": 0,
+      "questionToAsk": "Does that change when we should call?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://ctmuhb.nhs.wales/services/maternity/tips-for-birth-partner/common-abbreviations-used-in-pregnancy/",
+        "sourceTitle": "Cwm Taf Morgannwg UHB: Common abbreviations used in pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.gravida-para",
+      "term": "Gravida and para",
+      "aliases": [
+        "G2P1",
+        "G1P0",
+        "gravida",
+        "para"
+      ],
+      "plainEnglish": "Gravida is the number of pregnancies; para is the number of previous births. G2P1 means a second pregnancy with one previous birth.",
+      "worryLevel": 0,
+      "questionToAsk": "Is that right in her notes?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://ctmuhb.nhs.wales/services/maternity/tips-for-birth-partner/common-abbreviations-used-in-pregnancy/",
+        "sourceTitle": "Cwm Taf Morgannwg UHB: Common abbreviations used in pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.fundal-height",
+      "term": "Fundal height",
+      "aliases": [
+        "SFH",
+        "symphysis fundal height",
+        "bump measurement"
+      ],
+      "plainEnglish": "Her bump measured in centimetres, roughly matching the number of weeks. A routine check.",
+      "worryLevel": 0,
+      "questionToAsk": "Is the growth on track?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://ctmuhb.nhs.wales/services/maternity/tips-for-birth-partner/common-abbreviations-used-in-pregnancy/",
+        "sourceTitle": "Cwm Taf Morgannwg UHB: Common abbreviations used in pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.obs",
+      "term": "Obs",
+      "aliases": [
+        "observations",
+        "MEOWS",
+        "early warning score",
+        "sats",
+        "vitals"
+      ],
+      "plainEnglish": "Temperature, pulse, blood pressure, breathing and oxygen. MEOWS adds them into an early-warning score; it only matters if staff say it's going up.",
+      "worryLevel": 1,
+      "questionToAsk": "Are her obs all normal?",
+      "stages": [
+        "established",
+        "postnatal"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nnuh.nhs.uk/publication/download/intrapartum-care-v13",
+        "sourceTitle": "Norfolk and Norwich University Hospitals: Intrapartum care guideline v13",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.blood-pressure",
+      "term": "Blood pressure",
+      "aliases": [
+        "BP",
+        "high blood pressure",
+        "raised BP"
+      ],
+      "plainEnglish": "Checked throughout. 140/90 or more twice, or 160/110 or more once, brings in the doctors.",
+      "worryLevel": 2,
+      "questionToAsk": "Is her blood pressure OK, and what happens if it's high?",
+      "stages": [
+        "established",
+        "postnatal"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nnuh.nhs.uk/publication/download/intrapartum-care-v13",
+        "sourceTitle": "Norfolk and Norwich University Hospitals: Intrapartum care guideline v13",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.triage",
+      "term": "Triage",
+      "aliases": [
+        "MAU",
+        "DAU",
+        "MAC",
+        "maternity assessment unit",
+        "maternity assessment centre",
+        "day assessment unit"
+      ],
+      "plainEnglish": "The maternity assessment unit and its phone line. Phone before you set off; they'll ask about the contractions, baby's movements in the last 24 hours and any waters or bleeding.",
+      "worryLevel": 0,
+      "questionToAsk": "Should we come in now or stay at home for a while?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nnuh.nhs.uk/publication/download/intrapartum-care-v13",
+        "sourceTitle": "Norfolk and Norwich University Hospitals: Intrapartum care guideline v13",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.ctg",
+      "term": "CTG",
+      "aliases": [
+        "the trace",
+        "trace",
+        "monitoring",
+        "continuous monitoring",
+        "the belts",
+        "cardiotocograph",
+        "EFM"
+      ],
+      "plainEnglish": "Two belts on her bump record baby's heart rate and her contractions. Used when there are risk factors, such as an epidural, the drip or meconium. Staff grade the trace as normal, suspicious or pathological.",
+      "worryLevel": 1,
+      "questionToAsk": "Is the trace normal, suspicious or pathological?",
+      "stages": [
+        "established",
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng229/chapter/Recommendations",
+        "sourceTitle": "NICE NG229: Fetal monitoring in labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.intermittent-auscultation",
+      "term": "Intermittent auscultation",
+      "aliases": [
+        "IA",
+        "listening in",
+        "doppler",
+        "Pinard",
+        "intermittent monitoring"
+      ],
+      "plainEnglish": "The midwife listens to baby's heart with a handheld device for at least a minute after a contraction: every 15 minutes at first and every 5 minutes when she's pushing. Standard for a low-risk labour.",
+      "worryLevel": 0,
+      "questionToAsk": "How does the heart rate sound?",
+      "stages": [
+        "established",
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng229/chapter/Recommendations",
+        "sourceTitle": "NICE NG229: Fetal monitoring in labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.baseline",
+      "term": "Baseline heart rate",
+      "aliases": [
+        "baseline",
+        "fetal heart rate",
+        "FHR",
+        "heart rate"
+      ],
+      "plainEnglish": "Baby's average heart rate on the trace. 110 to 160 beats a minute is normal.",
+      "worryLevel": 1,
+      "questionToAsk": "Is the baseline in the normal range?",
+      "stages": [
+        "established",
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng229/chapter/Recommendations",
+        "sourceTitle": "NICE NG229: Fetal monitoring in labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.variability",
+      "term": "Variability",
+      "aliases": [
+        "accelerations",
+        "accels",
+        "beat-to-beat variability"
+      ],
+      "plainEnglish": "The small wobble in baby's heart rate (5 to 25 beats) and brief rises. Both are reassuring. Low variability for a long time is something staff will act on.",
+      "worryLevel": 1,
+      "questionToAsk": "Is the variability reassuring?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng229/chapter/Recommendations",
+        "sourceTitle": "NICE NG229: Fetal monitoring in labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.decelerations",
+      "term": "Decelerations",
+      "aliases": [
+        "decels",
+        "dips",
+        "early decels",
+        "late decels",
+        "variable decels"
+      ],
+      "plainEnglish": "Dips in baby's heart rate. Early dips are a normal squeeze on the head; variable ones suggest the cord is being squeezed; late or long dips mean staff will act.",
+      "worryLevel": 2,
+      "questionToAsk": "What kind of dips are these, and what's the plan?",
+      "stages": [
+        "established",
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng229/chapter/Recommendations",
+        "sourceTitle": "NICE NG229: Fetal monitoring in labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.fse",
+      "term": "FSE",
+      "aliases": [
+        "fetal scalp electrode",
+        "scalp clip",
+        "clip"
+      ],
+      "plainEnglish": "A small clip on baby's scalp for a clearer heart-rate trace when the belts aren't picking it up. Removed at birth. It means they want certainty, not that something is wrong.",
+      "worryLevel": 1,
+      "questionToAsk": "Why do you need a clearer trace?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng229/chapter/Recommendations",
+        "sourceTitle": "NICE NG229: Fetal monitoring in labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.fbs",
+      "term": "FBS",
+      "aliases": [
+        "fetal blood sample",
+        "fetal blood sampling",
+        "scalp blood test",
+        "lactate",
+        "pH test"
+      ],
+      "plainEnglish": "A tiny blood sample from baby's scalp to check oxygen levels when the trace looks abnormal. It helps decide whether baby is coping or needs to be born sooner.",
+      "worryLevel": 2,
+      "questionToAsk": "What will you do with the result?",
+      "stages": [
+        "established",
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://cochranelibrary.com/cdsr/doi/10.1002/14651858.CD006174.pub2/full",
+        "sourceTitle": "Cochrane: Fetal scalp blood sampling, lactate versus pH",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.ketones",
+      "term": "Ketones",
+      "aliases": [
+        "urinalysis",
+        "dipstick",
+        "ketones in her urine"
+      ],
+      "plainEnglish": "A urine test showing she's running on empty. Usually it just means eat and drink.",
+      "worryLevel": 1,
+      "questionToAsk": "Can she eat and drink now?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nnuh.nhs.uk/publication/download/intrapartum-care-v13",
+        "sourceTitle": "Norfolk and Norwich University Hospitals: Intrapartum care guideline v13",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.induction",
+      "term": "Induction",
+      "aliases": [
+        "IOL",
+        "induction of labour",
+        "being induced"
+      ],
+      "plainEnglish": "Starting labour artificially: a sweep, then a pessary, gel or balloon, then breaking the waters and the drip. About 1 in 3 UK labours. It can take 24 to 48 hours or more and is usually more painful. Her choice throughout.",
+      "worryLevel": 1,
+      "questionToAsk": "Why is it recommended, and what are the alternatives?",
+      "stages": [
+        "latent",
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/inducing-labour/",
+        "sourceTitle": "NHS: Inducing labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.sweep",
+      "term": "Membrane sweep",
+      "aliases": [
+        "sweep",
+        "stretch and sweep"
+      ],
+      "plainEnglish": "The midwife runs a finger around the cervix to try to start labour, offered from about 39 weeks. Cramping and spotting afterwards are normal.",
+      "worryLevel": 0,
+      "questionToAsk": "What happens if this doesn't work?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/inducing-labour/",
+        "sourceTitle": "NHS: Inducing labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.prostaglandin",
+      "term": "Prostaglandin",
+      "aliases": [
+        "prostin",
+        "propess",
+        "pessary",
+        "gel",
+        "dinoprostone",
+        "misoprostol"
+      ],
+      "plainEnglish": "Induction medicine given as a gel, a tablet, or a pessary that can stay in for up to 24 hours, to soften and open the cervix.",
+      "worryLevel": 0,
+      "questionToAsk": "How long until you check again?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng207/chapter/Recommendations",
+        "sourceTitle": "NICE NG207: Inducing labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.balloon",
+      "term": "Balloon catheter",
+      "aliases": [
+        "balloon",
+        "Cook balloon",
+        "Foley",
+        "mechanical induction"
+      ],
+      "plainEnglish": "A small balloon in the cervix that gently opens it. A drug-free way to start induction.",
+      "worryLevel": 0,
+      "questionToAsk": "How long will the balloon stay in?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng207/chapter/Recommendations",
+        "sourceTitle": "NICE NG207: Inducing labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.failed-induction",
+      "term": "Failed induction",
+      "aliases": [
+        "induction not working"
+      ],
+      "plainEnglish": "Labour hasn't started after one round of treatment. The options are rest and try again, wait, further attempts, or a caesarean.",
+      "worryLevel": 1,
+      "questionToAsk": "What are all the options from here?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng207/chapter/Recommendations",
+        "sourceTitle": "NICE NG207: Inducing labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.syntocinon",
+      "term": "Syntocinon",
+      "aliases": [
+        "oxytocin",
+        "the drip",
+        "synto",
+        "hormone drip",
+        "augmentation"
+      ],
+      "plainEnglish": "A synthetic hormone drip to start or strengthen contractions. Contractions get stronger, so baby is monitored continuously. It brings the birth forward but doesn't change how baby is born.",
+      "worryLevel": 1,
+      "questionToAsk": "Why now, and what if we wait?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng235/chapter/Recommendations",
+        "sourceTitle": "NICE NG235: Intrapartum care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.partogram",
+      "term": "Partogram",
+      "aliases": [
+        "action line",
+        "partograph",
+        "crossed the action line"
+      ],
+      "plainEnglish": "A chart of how labour is going. Crossing the action line prompts a review, not a crisis.",
+      "worryLevel": 1,
+      "questionToAsk": "What will the review look at?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nnuh.nhs.uk/publication/download/intrapartum-care-v13",
+        "sourceTitle": "Norfolk and Norwich University Hospitals: Intrapartum care guideline v13",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.four-hours",
+      "term": "\"We'll see how things go in 4 hours\"",
+      "aliases": [
+        "check again in 4 hours",
+        "next VE",
+        "4 hours"
+      ],
+      "plainEnglish": "The usual gap between internal checks. They're expecting around 2 cm of progress.",
+      "worryLevel": 0,
+      "questionToAsk": "What would change the plan before then?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://rightdecisions.scot.nhs.uk/media/2b2aculj/delay-in-labour-pathway-v1-1165.pdf",
+        "sourceTitle": "NHS Greater Glasgow and Clyde: Delay in labour pathway",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.delay",
+      "term": "Delay in labour",
+      "aliases": [
+        "failure to progress",
+        "slow progress",
+        "not progressing",
+        "FTP"
+      ],
+      "plainEnglish": "Less than 2 cm in 4 hours. The usual steps are breaking the waters, then the drip, then a review about a caesarean if things still don't move. Common, and a good moment to use BRAIN.",
+      "worryLevel": 1,
+      "questionToAsk": "Is this an emergency or a recommendation, and what if we wait an hour?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng235/chapter/Recommendations",
+        "sourceTitle": "NICE NG235: Intrapartum care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.transition",
+      "term": "Transition",
+      "aliases": [
+        "I can't do this",
+        "the last bit"
+      ],
+      "plainEnglish": "The intense stretch before pushing: shaking, feeling sick, hot and cold, \"I can't do this\", asking for an epidural. It's normal and usually short, and it means she's close.",
+      "worryLevel": 0,
+      "questionToAsk": "Should I call you if she feels like pushing?",
+      "stages": [
+        "transition"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nnuh.nhs.uk/publication/download/intrapartum-care-v13",
+        "sourceTitle": "Norfolk and Norwich University Hospitals: Intrapartum care guideline v13",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.second-stage",
+      "term": "Second stage",
+      "aliases": [
+        "pushing",
+        "pushing stage",
+        "active second stage",
+        "passive second stage"
+      ],
+      "plainEnglish": "From fully dilated to the birth. For a first baby, birth is expected within 3 hours of active pushing (2 hours for later babies). With an epidural she may rest for up to 2 hours first while baby moves down.",
+      "worryLevel": 0,
+      "questionToAsk": "How long can she rest before pushing?",
+      "stages": [
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng235/chapter/Recommendations",
+        "sourceTitle": "NICE NG235: Intrapartum care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.crowning",
+      "term": "Crowning",
+      "aliases": [
+        "ring of fire",
+        "the head's out",
+        "pant"
+      ],
+      "plainEnglish": "The widest part of baby's head stretching her open. The midwife will ask her to stop pushing and pant so the head comes slowly, which reduces tearing. It lasts seconds to minutes.",
+      "worryLevel": 0,
+      "questionToAsk": "Shall I pant with her?",
+      "stages": [
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/what-happens/the-stages-of-labour-and-birth/",
+        "sourceTitle": "NHS: The stages of labour and birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.episiotomy",
+      "term": "Episiotomy",
+      "aliases": [
+        "cut",
+        "epis"
+      ],
+      "plainEnglish": "A cut to make the opening bigger, for example if baby needs to be born quickly or forceps are used. Stitched afterwards.",
+      "worryLevel": 1,
+      "questionToAsk": "Why is it needed now?",
+      "stages": [
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/what-happens/episiotomy-and-perineal-tears/",
+        "sourceTitle": "NHS: Episiotomy and perineal tears",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.perineal-tear",
+      "term": "Perineal tear",
+      "aliases": [
+        "tear",
+        "first degree tear",
+        "second degree tear",
+        "graze",
+        "stitches"
+      ],
+      "plainEnglish": "Up to 9 in 10 first-time mothers tear, graze or have a cut. First- and second-degree tears are skin and muscle, and are stitched in the room.",
+      "worryLevel": 0,
+      "questionToAsk": "Will she have local anaesthetic for the stitches?",
+      "stages": [
+        "thirdStage"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/what-happens/episiotomy-and-perineal-tears/",
+        "sourceTitle": "NHS: Episiotomy and perineal tears",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.oasi",
+      "term": "OASI",
+      "aliases": [
+        "third degree tear",
+        "fourth degree tear",
+        "3rd degree",
+        "4th degree",
+        "OASIS",
+        "sphincter tear"
+      ],
+      "plainEnglish": "A tear into the muscle around the back passage (third degree) or its lining (fourth degree), in about 3 in 100 vaginal births. Repaired in theatre, with follow-up; 6 to 8 in 10 have no lasting problems.",
+      "worryLevel": 2,
+      "questionToAsk": "What follow-up will she get?",
+      "stages": [
+        "thirdStage",
+        "theatre"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.rcog.org.uk/for-the-public/browse-our-patient-information/care-of-a-third-or-fourth-degree-tear-that-occurred-during-childbirth-also-known-as-obstetric-anal-sphincter-injury-oasi/",
+        "sourceTitle": "RCOG: Third- or fourth-degree tear (OASI)",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.ventouse",
+      "term": "Ventouse",
+      "aliases": [
+        "kiwi",
+        "vacuum",
+        "suction cup",
+        "assisted birth",
+        "instrumental birth"
+      ],
+      "plainEnglish": "A suction cup on baby's head to help with the birth. Assisted births happen in about 1 in 8 births and 1 in 3 first babies. You can usually stay.",
+      "worryLevel": 1,
+      "questionToAsk": "Can I stay with her?",
+      "stages": [
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.rcog.org.uk/for-the-public/browse-our-patient-information/assisted-vaginal-birth-ventouse-or-forceps/",
+        "sourceTitle": "RCOG: Assisted vaginal birth (ventouse or forceps)",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.forceps",
+      "term": "Forceps",
+      "aliases": [
+        "instrumental",
+        "assisted delivery",
+        "rotational forceps"
+      ],
+      "plainEnglish": "Smooth curved blades around baby's head to help with the birth, sometimes to turn baby. An episiotomy is more likely. You can usually stay.",
+      "worryLevel": 1,
+      "questionToAsk": "Why forceps rather than ventouse?",
+      "stages": [
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.rcog.org.uk/for-the-public/browse-our-patient-information/assisted-vaginal-birth-ventouse-or-forceps/",
+        "sourceTitle": "RCOG: Assisted vaginal birth (ventouse or forceps)",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.trial-in-theatre",
+      "term": "Trial in theatre",
+      "aliases": [
+        "trial of instrumental",
+        "trial of forceps"
+      ],
+      "plainEnglish": "An assisted birth tried in the operating theatre so a caesarean can follow straight away if it doesn't work.",
+      "worryLevel": 2,
+      "questionToAsk": "Can I come into theatre?",
+      "stages": [
+        "pushing",
+        "theatre"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.rcog.org.uk/for-the-public/browse-our-patient-information/assisted-vaginal-birth-ventouse-or-forceps/",
+        "sourceTitle": "RCOG: Assisted vaginal birth (ventouse or forceps)",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.shoulder-dystocia",
+      "term": "Shoulder dystocia",
+      "aliases": [
+        "shoulders stuck",
+        "McRoberts"
+      ],
+      "plainEnglish": "Baby's head is born but a shoulder is stuck, in about 1 in 150 births. Expect the buzzer, extra staff, \"stop pushing\" and her legs being pulled back. The team rehearse it.",
+      "worryLevel": 3,
+      "questionToAsk": "Is baby OK, and who can tell me what's happening?",
+      "stages": [
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.rcog.org.uk/for-the-public/browse-our-patient-information/shoulder-dystocia/",
+        "sourceTitle": "RCOG: Shoulder dystocia",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.cord-prolapse",
+      "term": "Cord prolapse",
+      "aliases": [
+        "prolapsed cord",
+        "cord coming first"
+      ],
+      "plainEnglish": "The cord comes down before the baby. At home: call 999, help her onto her knees with her bottom up or onto her left side with her hips raised, and don't touch the cord. In hospital it usually means an immediate caesarean.",
+      "worryLevel": 3,
+      "questionToAsk": "What should she do while we wait?",
+      "stages": [
+        "latent",
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.rcog.org.uk/for-the-public/browse-our-patient-information/umbilical-cord-prolapse-in-late-pregnancy/",
+        "sourceTitle": "RCOG: Umbilical cord prolapse in late pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.theatre",
+      "term": "Theatre",
+      "aliases": [
+        "operating theatre",
+        "OT",
+        "going to theatre"
+      ],
+      "plainEnglish": "The operating room, used for caesareans, some assisted births and repairs. With a spinal, one partner can usually come in.",
+      "worryLevel": 1,
+      "questionToAsk": "Can I come in, and where do I wait?",
+      "stages": [
+        "theatre"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/conditions/caesarean-section/what-happens/",
+        "sourceTitle": "NHS: Caesarean section, what happens",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.spinal",
+      "term": "Spinal",
+      "aliases": [
+        "spinal block",
+        "spinal anaesthetic",
+        "regional anaesthetic",
+        "epidural top-up"
+      ],
+      "plainEnglish": "An injection in her back that numbs her from the chest down so she's awake for a caesarean. You sit by her head; baby is usually out in 5 to 10 minutes and the whole operation takes 40 to 50.",
+      "worryLevel": 1,
+      "questionToAsk": "Where should I sit, and can we do skin-to-skin?",
+      "stages": [
+        "theatre"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/conditions/caesarean-section/what-happens/",
+        "sourceTitle": "NHS: Caesarean section, what happens",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.general-anaesthetic",
+      "term": "General anaesthetic",
+      "aliases": [
+        "GA",
+        "put to sleep",
+        "asleep"
+      ],
+      "plainEnglish": "She's fully asleep for the operation. Partners normally can't be in theatre; you wait nearby and usually get baby for skin-to-skin in recovery.",
+      "worryLevel": 2,
+      "questionToAsk": "Where do I wait, and can I have baby for skin-to-skin?",
+      "stages": [
+        "theatre"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/conditions/caesarean-section/",
+        "sourceTitle": "NHS: Caesarean section",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.cat-1",
+      "term": "Category 1 caesarean",
+      "aliases": [
+        "Cat 1",
+        "cat one",
+        "category one",
+        "emergency section",
+        "crash section"
+      ],
+      "plainEnglish": "The most urgent caesarean, when there's an immediate threat to her or the baby. Birth usually within 30 minutes of the decision. It's fast and loud, and you may be asked to wait outside. Most babies are fine.",
+      "worryLevel": 3,
+      "questionToAsk": "Where should I wait, and who will update me?",
+      "stages": [
+        "theatre"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng192/chapter/Recommendations",
+        "sourceTitle": "NICE NG192: Caesarean birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.cat-2",
+      "term": "Category 2 caesarean",
+      "aliases": [
+        "Cat 2",
+        "cat two",
+        "category two"
+      ],
+      "plainEnglish": "Urgent but not immediately life-threatening. Birth usually within 75 minutes of the decision.",
+      "worryLevel": 2,
+      "questionToAsk": "Why is it needed, and will she have a spinal?",
+      "stages": [
+        "theatre"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng192/chapter/Recommendations",
+        "sourceTitle": "NICE NG192: Caesarean birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.planned-caesarean",
+      "term": "Planned caesarean",
+      "aliases": [
+        "elective caesarean",
+        "elective section",
+        "C-section",
+        "section",
+        "Cat 3",
+        "Cat 4"
+      ],
+      "plainEnglish": "A caesarean booked ahead, usually from 39 weeks, or timed to suit when there's no urgency. Most mothers go home after 1 to 2 days. If labour starts before the date, call the unit.",
+      "worryLevel": 0,
+      "questionToAsk": "What happens if labour starts before the date?",
+      "stages": [
+        "theatre"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/conditions/caesarean-section/",
+        "sourceTitle": "NHS: Caesarean section",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.cannula",
+      "term": "Cannula",
+      "aliases": [
+        "drip line",
+        "venflon",
+        "line"
+      ],
+      "plainEnglish": "A thin plastic tube in the back of her hand for fluids or medicines. Routine.",
+      "worryLevel": 0,
+      "questionToAsk": "What is it for?",
+      "stages": [
+        "established",
+        "theatre"
+      ],
+      "provenance": {
+        "sourceURL": "https://ctmuhb.nhs.wales/services/maternity/tips-for-birth-partner/common-abbreviations-used-in-pregnancy/",
+        "sourceTitle": "Cwm Taf Morgannwg UHB: Common abbreviations used in pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.catheter",
+      "term": "Catheter",
+      "aliases": [
+        "bladder catheter",
+        "urinary catheter"
+      ],
+      "plainEnglish": "A tube to drain her bladder, usual with an epidural or a caesarean. A full bladder can slow labour.",
+      "worryLevel": 0,
+      "questionToAsk": "When will it come out?",
+      "stages": [
+        "established",
+        "theatre"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nnuh.nhs.uk/publication/download/intrapartum-care-v13",
+        "sourceTitle": "Norfolk and Norwich University Hospitals: Intrapartum care guideline v13",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.ted-stockings",
+      "term": "TED stockings",
+      "aliases": [
+        "TEDs",
+        "compression stockings",
+        "anti-clot stockings"
+      ],
+      "plainEnglish": "Tight stockings that help prevent blood clots, usual after a caesarean.",
+      "worryLevel": 0,
+      "questionToAsk": "How long should she wear them?",
+      "stages": [
+        "theatre",
+        "postnatal"
+      ],
+      "provenance": {
+        "sourceURL": "https://ctmuhb.nhs.wales/services/maternity/tips-for-birth-partner/common-abbreviations-used-in-pregnancy/",
+        "sourceTitle": "Cwm Taf Morgannwg UHB: Common abbreviations used in pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.vbac",
+      "term": "VBAC",
+      "aliases": [
+        "vaginal birth after caesarean"
+      ],
+      "plainEnglish": "A vaginal birth after a previous caesarean. About 3 in 4 succeed. Continuous monitoring, a cannula and a hospital birth are advised.",
+      "worryLevel": 1,
+      "questionToAsk": "What would make you recommend a repeat caesarean?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.rcog.org.uk/for-the-public/browse-our-patient-information/birth-after-previous-caesarean/",
+        "sourceTitle": "RCOG: Birth after previous caesarean",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.breech",
+      "term": "Breech",
+      "aliases": [
+        "bottom first",
+        "feet first",
+        "ECV",
+        "transverse",
+        "sideways"
+      ],
+      "plainEnglish": "Baby is bottom or feet first, in 3 to 4 in 100 at term. ECV is an attempt to turn baby by hand and works about half the time. A baby lying sideways (transverse) means a caesarean.",
+      "worryLevel": 1,
+      "questionToAsk": "What are the options for turning baby or for the birth?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.rcog.org.uk/for-the-public/browse-our-patient-information/breech-baby-at-the-end-of-pregnancy/",
+        "sourceTitle": "RCOG: Breech baby at the end of pregnancy",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.gas-and-air",
+      "term": "Gas and air",
+      "aliases": [
+        "Entonox",
+        "gas",
+        "laughing gas"
+      ],
+      "plainEnglish": "Breathed through a mouthpiece. It takes 15 to 20 seconds to work, so she starts it as a contraction begins. It can make her light-headed or sick, and she can't do skin-to-skin while using it.",
+      "worryLevel": 0,
+      "questionToAsk": "When should she start breathing it?",
+      "stages": [
+        "established",
+        "transition",
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/what-happens/pain-relief-in-labour/",
+        "sourceTitle": "NHS: Pain relief in labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.tens",
+      "term": "TENS",
+      "aliases": [
+        "TENS machine"
+      ],
+      "plainEnglish": "Sticky pads on her back with a hand control that sends tingling pulses. Most useful early on and for back pain. Not in water.",
+      "worryLevel": 0,
+      "questionToAsk": "Should she keep it on now?",
+      "stages": [
+        "latent"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/what-happens/pain-relief-in-labour/",
+        "sourceTitle": "NHS: Pain relief in labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.pethidine",
+      "term": "Pethidine or diamorphine",
+      "aliases": [
+        "pethidine",
+        "diamorphine",
+        "opioid injection",
+        "the injection"
+      ],
+      "plainEnglish": "An injection that takes about 20 minutes to work and lasts 2 to 4 hours. It can make her woozy or sick and baby drowsy, and she can't use the pool for 2 hours afterwards.",
+      "worryLevel": 1,
+      "questionToAsk": "Is it too close to pushing for this?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/what-happens/pain-relief-in-labour/",
+        "sourceTitle": "NHS: Pain relief in labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.remifentanil",
+      "term": "Remifentanil PCA",
+      "aliases": [
+        "remi",
+        "PCA",
+        "the button"
+      ],
+      "plainEnglish": "Pain relief through a drip that she controls with a button, pressed as each contraction starts. She'll wear a finger clip to check her oxygen. Tell staff if she's very drowsy.",
+      "worryLevel": 1,
+      "questionToAsk": "What should I watch out for?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/what-happens/pain-relief-in-labour/",
+        "sourceTitle": "NHS: Pain relief in labour",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.epidural",
+      "term": "Epidural",
+      "aliases": [
+        "epi",
+        "top-up",
+        "PCEA",
+        "mobile epidural"
+      ],
+      "plainEnglish": "Pain relief through a fine tube in her back, put in by an anaesthetist on the labour ward. About 10 minutes to put in and 10 to 15 to work. It doesn't work well in about 1 in 8. She'll need continuous monitoring and probably a catheter.",
+      "worryLevel": 0,
+      "questionToAsk": "How long until the anaesthetist can come?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.liverpoolwomens.nhs.uk/media/1944/epidural-information-card-epidurals-in-labour.pdf",
+        "sourceTitle": "OAA: Epidurals in labour information card",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.birth-pool",
+      "term": "Birth pool",
+      "aliases": [
+        "pool",
+        "water birth",
+        "the pool"
+      ],
+      "plainEnglish": "Warm water, 37.5°C or below, once contractions are well under way. She'll be asked to get out if there's meconium, a worry about baby's heart rate, or within 2 hours of pethidine or diamorphine.",
+      "worryLevel": 0,
+      "questionToAsk": "Is the pool free, and when can she get in?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.rightdecisions.scot.nhs.uk/nhs-borders-clinical-guidelines/obstetrics-gynaecology/maternity/intrapartum-care-and-complications/pool-use-in-labour-and-birth/",
+        "sourceTitle": "NHS Borders: Pool use in labour and birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.third-stage",
+      "term": "Third stage",
+      "aliases": [
+        "active management",
+        "physiological third stage",
+        "managed third stage",
+        "injection for the placenta"
+      ],
+      "plainEnglish": "Delivering the placenta. Active: an injection in her thigh and gentle pulling, usually within 30 minutes, with less heavy bleeding. Physiological: no drug and she pushes it out, which can take up to an hour. Her choice.",
+      "worryLevel": 0,
+      "questionToAsk": "Which did she choose in her birth plan?",
+      "stages": [
+        "thirdStage"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng235/chapter/Recommendations",
+        "sourceTitle": "NICE NG235: Intrapartum care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.retained-placenta",
+      "term": "Retained placenta",
+      "aliases": [
+        "placenta not coming",
+        "manual removal"
+      ],
+      "plainEnglish": "The placenta hasn't come within 30 minutes (active) or 60 minutes (physiological). It's removed in theatre with a spinal. Manageable.",
+      "worryLevel": 2,
+      "questionToAsk": "Can baby stay with me while she's in theatre?",
+      "stages": [
+        "thirdStage",
+        "theatre"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng235/chapter/Recommendations",
+        "sourceTitle": "NICE NG235: Intrapartum care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.pph",
+      "term": "PPH",
+      "aliases": [
+        "postpartum haemorrhage",
+        "heavy bleeding",
+        "the bell",
+        "emergency buzzer",
+        "pulling the bell"
+      ],
+      "plainEnglish": "Heavy bleeding after birth: 500 ml or more is minor, over 1,000 ml is major. The buzzer brings a team quickly. It looks scary, but they rehearse it.",
+      "worryLevel": 3,
+      "questionToAsk": "What's happening, and who can stay with baby?",
+      "stages": [
+        "thirdStage"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.rcog.org.uk/for-the-public/browse-our-patient-information/heavy-bleeding-after-birth-postpartum-haemorrhage/",
+        "sourceTitle": "RCOG: Heavy bleeding after birth (postpartum haemorrhage)",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.cord-clamping",
+      "term": "Delayed cord clamping",
+      "aliases": [
+        "cord clamping",
+        "cutting the cord",
+        "optimal cord clamping"
+      ],
+      "plainEnglish": "Waiting at least 1 minute before clamping the cord, unless there are concerns. You may be able to cut it if you've agreed beforehand.",
+      "worryLevel": 0,
+      "questionToAsk": "Can I cut the cord?",
+      "stages": [
+        "thirdStage"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/QS105/chapter/quality-statement-6-delayed-cord-clamping",
+        "sourceTitle": "NICE QS105: Delayed cord clamping",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.skin-to-skin",
+      "term": "Skin-to-skin",
+      "aliases": [
+        "golden hour",
+        "kangaroo care"
+      ],
+      "plainEnglish": "Baby on her bare chest straight after birth, for at least an hour or until the first feed. If she can't, you can do it.",
+      "worryLevel": 0,
+      "questionToAsk": "Can the weighing wait until after the first feed?",
+      "stages": [
+        "goldenHour"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.unicef.org.uk/babyfriendly/baby-friendly-resources/implementing-standards-resources/skin-to-skin-contact/",
+        "sourceTitle": "UNICEF UK Baby Friendly: Skin-to-skin contact",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.apgar",
+      "term": "Apgar score",
+      "aliases": [
+        "Apgar",
+        "Apgars"
+      ],
+      "plainEnglish": "A 0 to 10 check on baby at 1 and 5 minutes (sometimes 10), done on her chest. 7 or more is fine, and the 1-minute score is often lower.",
+      "worryLevel": 0,
+      "questionToAsk": "What were the Apgar scores?",
+      "stages": [
+        "goldenHour"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng235/chapter/Recommendations",
+        "sourceTitle": "NICE NG235: Intrapartum care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.cord-gases",
+      "term": "Cord gases",
+      "aliases": [
+        "cord bloods",
+        "cord blood gas"
+      ],
+      "plainEnglish": "A blood test from the cord after an eventful birth. A routine check.",
+      "worryLevel": 0,
+      "questionToAsk": "What did the cord gases show?",
+      "stages": [
+        "goldenHour"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nice.org.uk/guidance/ng235/chapter/Recommendations",
+        "sourceTitle": "NICE NG235: Intrapartum care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.vitamin-k",
+      "term": "Vitamin K",
+      "aliases": [
+        "vit K"
+      ],
+      "plainEnglish": "Given to prevent a rare bleeding problem, as one injection or as several doses by mouth. Routine.",
+      "worryLevel": 0,
+      "questionToAsk": "Is it in her birth plan as an injection or by mouth?",
+      "stages": [
+        "goldenHour"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/after-the-birth/what-happens-straight-after/",
+        "sourceTitle": "NHS: What happens straight after the birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.baby-doctors",
+      "term": "Baby doctors",
+      "aliases": [
+        "paediatrician",
+        "neonatal team",
+        "paeds",
+        "resuscitaire",
+        "resus table"
+      ],
+      "plainEnglish": "Neonatal staff come routinely for meconium, assisted births, caesareans under general anaesthetic, prematurity or any concern. Some babies need a little help to start breathing and are brought back to you.",
+      "worryLevel": 1,
+      "questionToAsk": "Why have the baby doctors been called?",
+      "stages": [
+        "pushing",
+        "theatre",
+        "goldenHour"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/after-the-birth/what-happens-straight-after/",
+        "sourceTitle": "NHS: What happens straight after the birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.colostrum",
+      "term": "Colostrum",
+      "aliases": [
+        "first milk",
+        "hand expressing",
+        "EBM",
+        "expressed breast milk"
+      ],
+      "plainEnglish": "The first concentrated milk, about a teaspoon a feed. Hand expressing is squeezing it out by hand; the midwife can show you both.",
+      "worryLevel": 0,
+      "questionToAsk": "Can you show us how to hand express?",
+      "stages": [
+        "goldenHour",
+        "postnatal"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/conditions/baby/breastfeeding-and-bottle-feeding/breastfeeding/the-first-few-days/",
+        "sourceTitle": "NHS: Breastfeeding, the first few days",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.nipe",
+      "term": "NIPE",
+      "aliases": [
+        "newborn check",
+        "baby check",
+        "newborn physical examination"
+      ],
+      "plainEnglish": "A full check of baby within 72 hours: eyes, heart, hips and testes. Repeated at 6 to 8 weeks.",
+      "worryLevel": 0,
+      "questionToAsk": "When will the newborn check be done?",
+      "stages": [
+        "postnatal"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/conditions/baby/newborn-screening/physical-examination/",
+        "sourceTitle": "NHS: Newborn physical examination",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.jaundice",
+      "term": "Jaundice",
+      "aliases": [
+        "bili",
+        "bilirubin",
+        "yellow",
+        "phototherapy",
+        "the lights"
+      ],
+      "plainEnglish": "Yellowing of the skin and eyes, common around day 3 and usually gone in about 2 weeks. Treated with light if levels are high. Jaundice in the first 24 hours is not normal: get help urgently.",
+      "worryLevel": 1,
+      "questionToAsk": "Does baby need a bilirubin test?",
+      "stages": [
+        "postnatal"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/conditions/jaundice-newborn/",
+        "sourceTitle": "NHS: Newborn jaundice",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.transitional-care",
+      "term": "Transitional care",
+      "aliases": [
+        "TC"
+      ],
+      "plainEnglish": "Baby stays with her on the ward with some extra care.",
+      "worryLevel": 1,
+      "questionToAsk": "What extra care does baby need?",
+      "stages": [
+        "postnatal"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.bliss.org.uk/different-levels-of-care",
+        "sourceTitle": "Bliss: Different levels of neonatal care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.scbu",
+      "term": "SCBU",
+      "aliases": [
+        "special care",
+        "special care baby unit",
+        "LNU",
+        "local neonatal unit"
+      ],
+      "plainEnglish": "Special care (level 1) or a local neonatal unit (level 2), for babies who need more help than the ward can give.",
+      "worryLevel": 2,
+      "questionToAsk": "Why does baby need to go, and when can we be with them?",
+      "stages": [
+        "postnatal"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.bliss.org.uk/different-levels-of-care",
+        "sourceTitle": "Bliss: Different levels of neonatal care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.nicu",
+      "term": "NICU",
+      "aliases": [
+        "neonatal intensive care",
+        "intensive care",
+        "level 3"
+      ],
+      "plainEnglish": "Neonatal intensive care (level 3), for babies who need the most support.",
+      "worryLevel": 2,
+      "questionToAsk": "Who will update us, and when can we see baby?",
+      "stages": [
+        "postnatal"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.bliss.org.uk/different-levels-of-care",
+        "sourceTitle": "Bliss: Different levels of neonatal care",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.mlu",
+      "term": "Midwife-led unit",
+      "aliases": [
+        "MLU",
+        "birth centre",
+        "alongside unit",
+        "freestanding unit"
+      ],
+      "plainEnglish": "A unit run by midwives for low-risk births. A freestanding unit has no epidural and she'd transfer if complications came up.",
+      "worryLevel": 0,
+      "questionToAsk": "How long would a transfer take, and to where?",
+      "stages": [
+        "latent",
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/preparing-for-the-birth/where-to-give-birth-the-options/",
+        "sourceTitle": "NHS: Where to give birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.labour-ward",
+      "term": "Labour ward",
+      "aliases": [
+        "CLU",
+        "consultant-led unit",
+        "obstetric unit",
+        "delivery suite",
+        "high risk"
+      ],
+      "plainEnglish": "The ward with obstetricians, anaesthetists and epidurals on hand. \"High risk\" means she needs doctors available, not that she's in danger.",
+      "worryLevel": 0,
+      "questionToAsk": "Why has she been advised to give birth here?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/preparing-for-the-birth/where-to-give-birth-the-options/",
+        "sourceTitle": "NHS: Where to give birth",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.doctors-review",
+      "term": "Doctors' review",
+      "aliases": [
+        "the reg",
+        "registrar",
+        "the consultant",
+        "obstetric review"
+      ],
+      "plainEnglish": "A senior obstetrician is asked to look at how things are going.",
+      "worryLevel": 1,
+      "questionToAsk": "What are you reviewing, and why?",
+      "stages": [
+        "established",
+        "pushing"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nnuh.nhs.uk/publication/download/intrapartum-care-v13",
+        "sourceTitle": "Norfolk and Norwich University Hospitals: Intrapartum care guideline v13",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.handover",
+      "term": "Handover",
+      "aliases": [
+        "shift change",
+        "new midwife"
+      ],
+      "plainEnglish": "Staff change shifts, often around 8am and 8pm. A new midwife takes over, so go over her preferences together.",
+      "worryLevel": 0,
+      "questionToAsk": "Have you had a chance to read her birth plan?",
+      "stages": [
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nnuh.nhs.uk/publication/download/intrapartum-care-v13",
+        "sourceTitle": "Norfolk and Norwich University Hospitals: Intrapartum care guideline v13",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.pre-eclampsia",
+      "term": "Pre-eclampsia",
+      "aliases": [
+        "PET",
+        "eclampsia",
+        "high blood pressure in pregnancy"
+      ],
+      "plainEnglish": "A blood pressure condition that can also start after the birth. A severe headache, problems with her vision, pain under her ribs, sudden swelling or vomiting need reporting straight away.",
+      "worryLevel": 3,
+      "questionToAsk": "Can you check her blood pressure now?",
+      "stages": [
+        "latent",
+        "postnatal"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.nhs.uk/conditions/pre-eclampsia/",
+        "sourceTitle": "NHS: Pre-eclampsia",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.gbs",
+      "term": "Group B strep",
+      "aliases": [
+        "GBS",
+        "strep B"
+      ],
+      "plainEnglish": "A common bacteria that 20 to 40% of women carry. If she's positive, she'll be offered antibiotics through a drip as soon as labour starts or her waters break, and induction straight away if her waters break at term.",
+      "worryLevel": 1,
+      "questionToAsk": "When should the antibiotics start?",
+      "stages": [
+        "latent",
+        "established"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.rcog.org.uk/for-the-public/browse-our-patient-information/group-b-streptococcus-gbs-in-pregnancy-and-newborn-babies/",
+        "sourceTitle": "RCOG: Group B streptococcus (GBS) in pregnancy and newborn babies",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.brain",
+      "term": "BRAIN",
+      "aliases": [
+        "benefits risks alternatives",
+        "using your BRAIN"
+      ],
+      "plainEnglish": "Five questions for any decision: Benefits, Risks, Alternatives, Intuition, and what if we do Nothing (or wait an hour)?",
+      "worryLevel": 0,
+      "questionToAsk": "Is this an emergency or a recommendation?",
+      "stages": [
+        "latent",
+        "established",
+        "transition",
+        "pushing",
+        "theatre"
+      ],
+      "provenance": {
+        "sourceURL": "https://lamaze.org/Giving-Birth-with-Confidence/GBWC-Post/use-your-brain-when-communicating-with-your-care-provider-about-birth-1",
+        "sourceTitle": "Lamaze: Use your BRAIN",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.consent",
+      "term": "Consent",
+      "aliases": [
+        "sign the form",
+        "agree",
+        "decline"
+      ],
+      "plainEnglish": "Only she can agree to a procedure. She can say no, or change her mind even partway through. You can't consent for her, but you can ask for time or a clearer explanation.",
+      "worryLevel": 0,
+      "questionToAsk": "Can we have five minutes to decide?",
+      "stages": [
+        "latent",
+        "established",
+        "transition",
+        "pushing",
+        "theatre"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.birthrights.org.uk/factsheets/consenting-to-treatment/",
+        "sourceTitle": "Birthrights: Consenting to treatment",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    },
+    {
+      "id": "glossary.marthas-rule",
+      "term": "Martha's Rule",
+      "aliases": [
+        "Martha's Rule call",
+        "critical care review"
+      ],
+      "plainEnglish": "In England, if you think she's getting worse and your concerns aren't being dealt with, you can ask for an urgent independent review by the critical care team, 24 hours a day. Say \"Martha's Rule call\". It isn't a complaints route.",
+      "worryLevel": 2,
+      "questionToAsk": "How do I make a Martha's Rule call on this ward?",
+      "stages": [
+        "established",
+        "postnatal"
+      ],
+      "provenance": {
+        "sourceURL": "https://www.ouh.nhs.uk/patient-guide/marthas-rule/",
+        "sourceTitle": "Oxford University Hospitals: Martha's Rule",
+        "accessed": "2026-10-26",
+        "reviewer": null,
+        "reviewedOn": null,
+        "clinical": true
+      }
+    }
+  ]
+}
