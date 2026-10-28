@@ -6,7 +6,8 @@ import SwiftData
 /// Receives every engine evaluation so it can post and schedule notifications.
 @MainActor
 protocol LabourAlerting: AnyObject {
-    func engineDidUpdate(sessionID: UUID, previous: EngineStateSnapshot?, input: EngineInput, output: EngineOutput)
+    func engineDidUpdate(
+        sessionID: UUID, previous: EngineStateSnapshot?, input: EngineInput, output: EngineOutput, watersBrokeAt: Date?)
     func sessionDidEnd(sessionID: UUID)
 }
 
@@ -40,6 +41,8 @@ final class LabourSessionModel {
         case endedOrNew(elapsedSec: TimeInterval)
         /// He started a new one without stopping the last: how long did that one last?
         case fixForgotten(contractionID: UUID, elapsedSec: TimeInterval)
+        /// He just said her waters broke: when did they go? Triage and the 24-hour reminder use it.
+        case watersWhen
     }
 
     private let context: ModelContext
@@ -59,6 +62,8 @@ final class LabourSessionModel {
     private(set) var notice: (text: String, until: Date)?
     /// The last start he said was still coming, so the "are they still coming?" question goes away.
     var quietAcknowledgedFor: Date?
+    /// The contraction just stopped, so he can say how strong it was.
+    private(set) var justStopped: (id: UUID, until: Date)?
 
     init(context: ModelContext, deviceID: String, now: @escaping () -> Date = Date.init) {
         self.context = context
@@ -137,6 +142,7 @@ final class LabourSessionModel {
     func applyThresholds(_ thresholds: ThresholdProfile) {
         guard var start = core?.start else { return }
         start.thresholds = thresholds
+        start.revision += 1
         core?.update(start)
         session?.start = start
         save()
@@ -156,6 +162,9 @@ final class LabourSessionModel {
             prompt = nil
             stored([event], undoLabel: "start")
         case .stopped(let event, _):
+            if let id = event.target {
+                justStopped = (id, now().addingTimeInterval(20))
+            }
             stored([event], undoLabel: "stop")
         case .askIfEndedOrNew(_, let elapsed):
             prompt = .endedOrNew(elapsedSec: elapsed)
@@ -199,6 +208,38 @@ final class LabourSessionModel {
 
     func setRedFlag(_ flag: RedFlag, isOn: Bool) {
         perform(isOn ? "flag" : "flag off") { $0.setRedFlag(flag, isOn: isOn, at: $1) }
+    }
+
+    /// When her waters went, `secondsAgo` before now. "Just now" is an answer too: it confirms the tap time.
+    func setWatersTime(secondsAgo: TimeInterval) {
+        setWatersTime(now().addingTimeInterval(-max(0, secondsAgo)))
+    }
+
+    /// When her waters went, as a time today or yesterday. Only while the flag is on: an answer
+    /// can't turn the waters back on.
+    func setWatersTime(_ time: Date) {
+        if prompt == .watersWhen {
+            prompt = nil
+        }
+        perform("waters time") { $0.setFlagTime(.watersBroken, happenedAt: time, at: $1) }
+    }
+
+    /// When her waters went the last time the flag was on, if it was turned off and on again, and
+    /// whether he gave that time or it was only the tap.
+    var earlierWaters: FlagEpisode? {
+        log.redFlags[.watersBroken]?.earlier.last
+    }
+
+    /// "I've called them", and what they said.
+    func logCall(_ outcome: CallOutcome) {
+        perform("call") { $0.logCall(outcome, at: $1) }
+    }
+
+    /// How strong the contraction he just stopped felt.
+    func rateLast(_ strength: ContractionStrength) {
+        guard let justStopped else { return }
+        self.justStopped = nil
+        perform(nil) { $0.rate(justStopped.id, strength, at: $1) }
     }
 
     func logMovement() {
@@ -263,9 +304,13 @@ final class LabourSessionModel {
         if remote.sessionID == current.sessionID {
             current.update(remote)
             core = current
-            session?.start = remote
+            session?.start = current.start
             save()
             refresh()
+            if remote.revision < current.start.revision {
+                // The watch has an older copy (its launch context, or a crossing catch-up): send ours again.
+                sync?.sessionDidStart(current.start)
+            }
             return
         }
         let winner = SessionStart.winner(current.start, remote)
@@ -327,14 +372,26 @@ final class LabourSessionModel {
         if let notice, notice.until <= moment {
             self.notice = nil
         }
+        if let justStopped, justStopped.until <= moment {
+            self.justStopped = nil
+        }
+        // "When did her waters go?" stays until he answers, whichever device the flag went on from,
+        // and goes as soon as the flag is off. Other questions come first.
+        let watersNeedTime = core.log.redFlags[.watersBroken].map { $0.isOn && !$0.timeGiven } ?? false
+        if watersNeedTime && prompt == nil {
+            prompt = .watersWhen
+        } else if !watersNeedTime && prompt == .watersWhen {
+            prompt = nil
+        }
         let previous = session.alertedSnapshot
         alerting?.engineDidUpdate(
             sessionID: core.sessionID,
             previous: previous,
             input: core.engineInput(at: moment, previous: previous),
-            output: result
+            output: result,
+            watersBrokeAt: core.watersBrokeAt
         )
-        if previous?.state != result.snapshot.state || previous?.reasonCodes != result.snapshot.reasonCodes {
+        if LabourAlertPlanner.shouldKeep(result.snapshot, over: previous) {
             session.alertedSnapshot = result.snapshot
             save()
         }
@@ -342,9 +399,13 @@ final class LabourSessionModel {
 
     func triageScript(calendar: Calendar = .current) -> TriageScript? {
         guard let output, let core else { return nil }
+        // GBS and a planned caesarean as fixed at the start, the same as the advice uses.
+        var details = detailsProvider(core.start.profile.gestationalAgeDays)
+        details.gbsPositive = core.start.profile.gbsPositive
+        details.plannedCaesarean = core.start.profile.plannedCaesarean
         return TriageScript.build(
             TriageScript.Inputs(
-                details: detailsProvider(core.start.profile.gestationalAgeDays),
+                details: details,
                 output: output,
                 log: core.log,
                 now: now(),

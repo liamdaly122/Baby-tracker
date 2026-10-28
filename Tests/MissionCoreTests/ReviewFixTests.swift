@@ -175,7 +175,7 @@ struct ReviewFixTests {
             TriageScript.Inputs(
                 details: TriageDetails(), output: output, log: ReducedLog(), now: at(200), calendar: .current))
         let line = script.lines.first { $0.label == "Longest" }
-        #expect(line?.value == "121 sec in the last hour")
+        #expect(line?.value == "2 min 1 sec in the last hour")
         #expect(line?.isUrgent == true)
     }
 

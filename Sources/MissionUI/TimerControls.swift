@@ -138,6 +138,7 @@ public struct ContractionRow: View {
             }
         }
         .frame(minHeight: 44)
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
     }
 }

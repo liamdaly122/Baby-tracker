@@ -9,6 +9,8 @@ struct TimerTab: View {
     @State private var bannerExpanded = false
     @State private var showsEmergency = false
     @State private var showsAllFlags = false
+    /// A lit flag he tapped: turning it off needs a second, deliberate tap.
+    @State private var confirmingOff: RedFlag?
     @State private var expandedRow: UUID?
 
     private var labour: LabourSessionModel { model.labour }
@@ -49,6 +51,7 @@ struct TimerTab: View {
                 }
             }
             .frame(height: max(180, height * 0.34))
+            StrengthRow()
             HStack {
                 Label("History below", systemImage: "chevron.compact.up")
                     .font(.footnote)
@@ -76,7 +79,7 @@ struct TimerTab: View {
             let thresholds = output.thresholds
             StateBanner(
                 state: output.state,
-                headline: StateCopy.headline(for: output.state, region: labour.region),
+                headline: StateCopy.headline(for: output, region: labour.region),
                 detail: StateCopy.detail(for: output, region: labour.region, thresholds: thresholds),
                 reasonLines: output.reasons.filter { $0 != .noRecentTaps }.map {
                     StateCopy.reasonLine(
@@ -110,9 +113,7 @@ struct TimerTab: View {
         return VStack(spacing: 10) {
             HStack(spacing: 10) {
                 ForEach(pinned, id: \.self) { flag in
-                    FlagButton(flag: flag, isOn: active.contains(flag)) {
-                        labour.setRedFlag(flag, isOn: !active.contains(flag))
-                    }
+                    FlagButton(flag: flag, isOn: active.contains(flag)) { toggle(flag, active: active) }
                 }
             }
             HStack(spacing: 10) {
@@ -146,12 +147,34 @@ struct TimerTab: View {
                     columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10
                 ) {
                     ForEach(others, id: \.self) { flag in
-                        FlagButton(flag: flag, isOn: active.contains(flag)) {
-                            labour.setRedFlag(flag, isOn: !active.contains(flag))
-                        }
+                        FlagButton(flag: flag, isOn: active.contains(flag)) { toggle(flag, active: active) }
                     }
                 }
             }
+        }
+        .confirmationDialog(
+            "Turn off “\(confirmingOff?.label ?? "")”?",
+            isPresented: Binding(get: { confirmingOff != nil }, set: { if !$0 { confirmingOff = nil } }),
+            titleVisibility: .visible, presenting: confirmingOff
+        ) { flag in
+            Button("Turn it off", role: .destructive) { labour.setRedFlag(flag, isOn: false) }
+            Button("Keep it on", role: .cancel) {}
+        } message: { flag in
+            Text(
+                flag.state == .call999
+                    ? "Only if it was tapped by mistake. 999 stays on screen for a minute in case."
+                    : "Only if it was tapped by mistake. It stays in the call script either way."
+            )
+        }
+    }
+
+    /// On at once; off only after "Turn it off", so one stray tap can't lower the advice.
+    private func toggle(_ flag: RedFlag, active: Set<RedFlag>) {
+        if active.contains(flag) {
+            confirmingOff = flag
+        } else {
+            confirmingOff = nil
+            labour.setRedFlag(flag, isOn: true)
         }
     }
 }
@@ -167,23 +190,36 @@ private struct FlagButton: View {
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             action()
         } label: {
-            Label(flag.label, systemImage: isOn ? "checkmark.circle.fill" : flag.icon)
-                .font(.subheadline.weight(.semibold))
-                .multilineTextAlignment(.leading)
-                .foregroundStyle(isOn ? Color.white : LabourTheme.primaryText)
-                .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
-                .padding(.horizontal, 8)
-                .background(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(isOn ? LabourTheme.color(for: flag.state) : LabourTheme.surface)
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .strokeBorder(LabourTheme.color(for: flag.state).opacity(isOn ? 0 : 0.6), lineWidth: 1.5)
-                )
+            Label {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(flag.label)
+                        .font(.subheadline.weight(.semibold))
+                    if let detail = flag.detail {
+                        Text(detail)
+                            .font(.caption)
+                            .opacity(0.85)
+                    }
+                }
+            } icon: {
+                Image(systemName: isOn ? "checkmark.circle.fill" : flag.icon)
+            }
+            .multilineTextAlignment(.leading)
+            .foregroundStyle(isOn ? Color.white : LabourTheme.primaryText)
+            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
+            .padding(.horizontal, 8)
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(isOn ? LabourTheme.color(for: flag.state) : LabourTheme.surface)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(LabourTheme.color(for: flag.state).opacity(isOn ? 0 : 0.6), lineWidth: 1.5)
+            )
         }
         .buttonStyle(.plain)
         .accessibilityValue(isOn ? "On" : "Off")
+        .accessibilityHint(isOn ? "Asks before turning it off" : "")
     }
 }
 
@@ -216,7 +252,7 @@ private func every(_ metrics: ContractionMetrics, _ thresholds: ThresholdProfile
     if StateCopy.isUneven(metrics, thresholds), let shortest = metrics.recentShortestIntervalSec,
         let longest = metrics.recentLongestIntervalSec
     {
-        return "\(StateCopy.clock(shortest, threshold: limit))–\(StateCopy.clock(longest, threshold: limit))"
+        return StateCopy.clockRange(shortest, longest, threshold: limit)
     }
     return (metrics.recentMedianIntervalSec ?? metrics.medianIntervalSec).map {
         StateCopy.clock($0, threshold: limit)
@@ -350,5 +386,46 @@ private struct RowEditor: View {
         }
         .buttonStyle(.plain)
         .foregroundStyle(role == .destructive ? LabourTheme.urgent : LabourTheme.primaryText)
+    }
+}
+
+/// "How strong was that one?" for 20 seconds after a stop. Triage asks how strong they are.
+private struct StrengthRow: View {
+    @Environment(AppModel.self) private var model
+
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 1)) { context in
+            if let stopped = model.labour.justStopped, stopped.until > context.date {
+                HStack(spacing: 8) {
+                    Text("How strong?")
+                        .font(.subheadline)
+                        .foregroundStyle(LabourTheme.secondaryText)
+                    ForEach(ContractionStrength.allCases, id: \.self) { strength in
+                        Button {
+                            model.labour.rateLast(strength)
+                        } label: {
+                            Text(strength.label)
+                                .font(.subheadline.weight(.semibold))
+                                .padding(.horizontal, 12)
+                                .frame(minHeight: 44)
+                                .background(Capsule().fill(LabourTheme.surface))
+                                .foregroundStyle(LabourTheme.primaryText)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .transition(.opacity)
+            }
+        }
+    }
+}
+
+extension ContractionStrength {
+    var label: String {
+        switch self {
+        case .mild: "Mild"
+        case .moderate: "Moderate"
+        case .strong: "Strong"
+        }
     }
 }

@@ -28,9 +28,16 @@ struct MissionProfileForm: View {
                 TextField("Her name", text: $profile.motherName)
                     .textContentType(.givenName)
                 TextField("Hospital number (from her notes)", text: $profile.hospitalNumber)
-                TextField("Anything they should know, e.g. GBS positive", text: $profile.notes, axis: .vertical)
+                Toggle("GBS positive (group B strep)", isOn: $profile.gbsPositive)
+                Toggle("A caesarean is planned", isOn: $profile.plannedCaesarean)
+                TextField("Anything else they should know", text: $profile.notes, axis: .vertical)
             } header: {
                 Text("For the triage call")
+            } footer: {
+                Text(
+                    "With GBS, call the unit as soon as labour starts or her waters go: antibiotics should "
+                        + "start then. With a caesarean planned, call them as soon as labour seems to start."
+                )
             }
 
             Section {

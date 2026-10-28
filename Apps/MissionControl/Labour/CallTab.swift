@@ -20,6 +20,7 @@ struct CallTab: View {
                     EmergencyCallButton(region: labour.region)
                 }
                 unitCard(profile: profile)
+                AfterCallCard()
                 FallbackList(
                     steps: CallFallback.steps(
                         region: labour.region, unit: profile.triageNumber, labourWard: profile.labourWardNumber)
@@ -116,6 +117,7 @@ struct CallTab: View {
             .background(
                 RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(LabourTheme.amber, lineWidth: 2)
             )
+            .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         }
         .buttonStyle(.plain)
     }
@@ -144,6 +146,90 @@ struct CallTab: View {
             }
             .padding(.vertical, 12)
             .overlay(alignment: .top) { Rectangle().fill(LabourTheme.primaryText.opacity(0.14)).frame(height: 1) }
+        }
+    }
+}
+
+/// "I've called them": what they said. While nothing new happens, the advice says so; anything
+/// new after it says call them back.
+private struct AfterCallCard: View {
+    @Environment(AppModel.self) private var model
+    /// Asked before logging: a stray tap would otherwise replace "call now" with what they said.
+    @State private var confirming: CallOutcome?
+
+    var body: some View {
+        let labour = model.labour
+        let last = labour.log.lastCall
+        VStack(alignment: .leading, spacing: 10) {
+            Text("AFTER THE CALL")
+                .font(.caption.weight(.semibold).monospaced())
+                .tracking(1)
+                .foregroundStyle(LabourWorld.call.accent)
+            if let last {
+                Text(
+                    "Logged at \(last.at.formatted(date: .omitted, time: .shortened)): \(Self.said(last.note.outcome))."
+                )
+                .font(.headline)
+                .foregroundStyle(LabourTheme.primaryText)
+                if case .callBack = labour.output?.call {
+                    Label("Something has changed since. Call them back.", systemImage: "phone.arrow.up.right.fill")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(LabourTheme.urgent)
+                }
+            }
+            Text(last == nil ? "What did they say?" : "Called again? What did they say?")
+                .font(.subheadline)
+                .foregroundStyle(LabourTheme.secondaryText)
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) { buttons() }
+                VStack(spacing: 8) { buttons() }
+            }
+        }
+        .padding(.vertical, 4)
+        .confirmationDialog(
+            confirming.map { "Log that \(Self.said($0))?" } ?? "",
+            isPresented: Binding(get: { confirming != nil }, set: { if !$0 { confirming = nil } }),
+            titleVisibility: .visible, presenting: confirming
+        ) { outcome in
+            Button("Log the call") { labour.logCall(outcome) }
+            Button("Cancel", role: .cancel) {}
+        } message: { _ in
+            Text("The advice on screen changes to what they told you, until something new happens.")
+        }
+    }
+
+    @ViewBuilder
+    private func buttons() -> some View {
+        ForEach(CallOutcome.allCases, id: \.self) { outcome in
+            Button {
+                confirming = outcome
+            } label: {
+                Text(Self.button(outcome))
+                    .font(.subheadline.weight(.semibold))
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity, minHeight: 44)
+                    .padding(.horizontal, 8)
+                    .foregroundStyle(LabourTheme.primaryText)
+                    .background(Capsule().fill(LabourTheme.primaryText.opacity(0.1)))
+                    .overlay(Capsule().strokeBorder(LabourTheme.primaryText.opacity(0.3), lineWidth: 1))
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
+    static func button(_ outcome: CallOutcome) -> String {
+        switch outcome {
+        case .comeIn: "Come in"
+        case .stayHome: "Stay at home for now"
+        case .other: "Something else"
+        }
+    }
+
+    static func said(_ outcome: CallOutcome) -> String {
+        switch outcome {
+        case .comeIn: "they said come in"
+        case .stayHome: "they said stay at home for now"
+        case .other: "you called them"
         }
     }
 }

@@ -19,9 +19,45 @@ public enum StateCopy {
         }
     }
 
+    /// The headline for an evaluation: after a logged call, what they said, or "call them back" if
+    /// something has changed since.
+    public static func headline(for output: EngineOutput, region: ContentRegion) -> String {
+        switch output.call {
+        case .acknowledged(let call):
+            switch call.note.outcome {
+            case .comeIn: return "They said come in"
+            case .stayHome: return "They said stay at home for now"
+            case .other: return "You've called \(unit(region))"
+            }
+        case .callBack:
+            return "Call \(unit(region)) back"
+        case nil:
+            return headline(for: output.state, region: region)
+        }
+    }
+
     /// The detail line for an evaluation. Like `detail(for:region:thresholds:)`, but when the pattern
-    /// still has to hold it says how long is left, and after "they've stopped" it says what to do.
+    /// still has to hold it says how long is left, after "they've stopped" it says what to do, and
+    /// after a logged call it says when to call back.
     public static func detail(for output: EngineOutput, region: ContentRegion, thresholds: ThresholdProfile) -> String {
+        switch output.call {
+        case .acknowledged(let call):
+            return calledDetail(call, output: output, region: region)
+        case .callBack(let call, let fresh):
+            let minutes = Int(output.evaluatedAt.timeIntervalSince(call.at) / 60)
+            let since = "Something has changed since you called \(minutes < 1 ? "just now" : "\(minutes) min ago")."
+            // Name what's new if it has gone from the reasons showing (a long contraction that has
+            // left the hour, say), or nothing on screen would say what to tell them.
+            let shown = Set(output.reasons.map(GoNoGoEngine.longKey))
+            if let lead = fresh.first, !shown.contains(GoNoGoEngine.longKey(lead)) {
+                let line = reasonLine(
+                    for: lead, metrics: output.metrics, thresholds: output.thresholds, now: output.evaluatedAt)
+                return "\(since) \(line) Phone them back and tell them."
+            }
+            return "\(since) Phone them back and tell them what's new."
+        case nil:
+            break
+        }
         let remaining = output.requiredSustainedSec - output.metrics.patternSustainedSec
         if output.reasons.contains(.patternNotYetSustained) && remaining > 0 {
             let minutesLeft = Int((remaining / 60).rounded(.up))
@@ -31,7 +67,49 @@ public enum StateCopy {
         if output.state == .early && output.reasons.contains(.contractionsStopped) {
             return "Time them again if they come back. You can call \(unit(region)) any time you're worried."
         }
+        // GBS with labour starting: antibiotics (RCOG), not the usual "they may say stay at home".
+        if output.state == .callTriage && output.reasons.contains(.gbsInLabour)
+            && !output.reasons.contains(.regularPatternSustained)
+        {
+            switch region {
+            case .uk:
+                return "Phone before you set off and tell them she's GBS positive. They may ask her to come in so "
+                    + "antibiotics can start."
+            case .us:
+                return "Call before you set off and tell them she's GBS positive. They'll tell you whether to come in "
+                    + "for antibiotics."
+            }
+        }
         return detail(for: output.state, region: region, thresholds: thresholds)
+    }
+
+    /// After a call the advice covers: what to do now, and when to call back.
+    static func calledDetail(_ call: LoggedCall, output: EngineOutput, region: ContentRegion) -> String {
+        switch call.note.outcome {
+        case .comeIn:
+            return "Head in now. Take her notes and the bags. Call them back if anything changes on the way."
+        case .stayHome:
+            var text =
+                "Keep timing. Call them back if anything changes or you're worried: the app tells you when "
+                + "it's time to call again."
+            if let broke = output.watersBrokeAt {
+                text +=
+                    " With her waters gone, check her temperature every 4 hours while she's awake. Call back "
+                    + "if it's over 37.5°C, the waters change colour or smell, or the baby moves less."
+                if output.evaluatedAt.timeIntervalSince(broke) >= EngineConstants.watersReminderSec {
+                    // A time to go in (induction around 24 hours) is term advice (NICE NG235).
+                    let term = !output.reasons.contains(.preterm) && !output.reasons.contains(.gestationUnknown)
+                    text +=
+                        term
+                        ? " It's been over 24 hours since her waters went. If you haven't been given a time to go "
+                            + "in, call them."
+                        : " It's been over 24 hours since her waters went. Call them and tell them."
+                }
+            }
+            return text
+        case .other:
+            return "Do what they told you. Call them back if anything changes or you're worried."
+        }
     }
 
     public static func detail(for state: LabourState, region: ContentRegion, thresholds: ThresholdProfile) -> String {
@@ -76,7 +154,15 @@ public enum StateCopy {
             guard hasRate(metrics) else {
                 return "They were close to the call point earlier. Nothing recent to measure yet."
             }
-            return "\(lead(metrics, thresholds)), \(patternSummary(metrics, thresholds: thresholds)) so far."
+            // The time at this rate, and the whole run too when it started slower: the whole run is
+            // what the countdown to the hold uses, so the two add up.
+            let held = metrics.rateHeldSec ?? metrics.patternSustainedSec
+            guard metrics.patternSustainedSec - held >= 60 else {
+                return "\(lead(metrics, thresholds)), \(patternSummary(metrics, thresholds: thresholds)) so far."
+            }
+            let all = Int((metrics.patternSustainedSec / 60).rounded())
+            return "\(lead(metrics, thresholds)), \(intervalSummary(metrics, thresholds: thresholds)), for the last "
+                + "\(Int((held / 60).rounded())) min (\(all) min in all) so far."
         case .patternBuilding:
             guard hasRate(metrics) else { return "They were building earlier. Nothing recent to measure yet." }
             return "About \(intervalSummary(metrics, thresholds: thresholds)). Not at the call point yet."
@@ -117,7 +203,24 @@ public enum StateCopy {
             return "The cord can be felt or seen. Don't touch it. Help her onto her knees with her bottom up, "
                 + "or onto her left side with her hips raised."
         case .heavyBleeding:
-            return "Heavy bleeding."
+            return "Heavy bleeding: soaking a pad soon after putting it on, or bleeding with severe pain, "
+                + "or she feels faint or dizzy."
+        case .headVisible:
+            return "You can see the baby's head. Call 999 now: they'll talk you through what to do."
+        case .emergencyJustCleared:
+            return "You've just turned this off. It stays up for a minute in case that was a mistake. "
+                + "If it's still happening, call 999."
+        case .severePain:
+            return "Constant or severe pain, with no break between contractions."
+        case .preEclampsiaSigns:
+            return "A bad headache that painkillers don't help, vision changes such as blurring or flashing "
+                + "lights, pain below the ribs, sudden swelling, or feeling very unwell. These need checking now."
+        case .gbsWithWaters, .gbsWithWatersPreterm, .gbsInLabour:
+            return gbsLine(reason)
+        case .bleedingWithSeverePain:
+            return "She's bleeding and has constant or severe pain. Bleeding with severe tummy pain needs 999."
+        case .plannedCaesarean:
+            return "A caesarean is planned and labour seems to have started. Call them now: don't wait for a pattern."
         case .seizureCollapse:
             return "She's had a seizure or collapsed."
         case .patternEasing:
@@ -127,10 +230,35 @@ public enum StateCopy {
         }
     }
 
+    /// GBS (RCOG): antibiotics once labour begins or the waters go. Induction straight away is term
+    /// advice (NICE NG207), so it's left out under 37 weeks or when the weeks aren't known.
+    private static func gbsLine(_ reason: ReasonCode) -> String {
+        switch reason {
+        case .gbsWithWaters:
+            "She's GBS positive and her waters have gone. Tell them: antibiotics and induction are usually "
+                + "offered straight away."
+        case .gbsInLabour:
+            "She's GBS positive and contractions have started. Tell them now: antibiotics should start once "
+                + "labour begins."
+        default:
+            "She's GBS positive and her waters have gone. Tell them both."
+        }
+    }
+
     public static func source(for reason: ReasonCode, region: ContentRegion) -> CopySource {
         switch reason {
         case .cordVisible:
             return rcogCordProlapse
+        case .heavyBleeding, .bleedingWithSeverePain:
+            return nhsBleeding
+        case .preEclampsiaSigns:
+            return nhsPreEclampsia
+        case .severePain:
+            return nhsStomachPain
+        case .gbsWithWaters, .gbsWithWatersPreterm, .gbsInLabour:
+            return rcogGBS
+        case .plannedCaesarean:
+            return nhsCaesarean
         case .regularPatternSustained, .patternNotYetSustained, .patternBuilding, .notEnoughContractions,
             .noRegularPattern:
             return region == .us ? clevelandClinic : nhsSignsOfLabour
@@ -189,10 +317,29 @@ public enum StateCopy {
                 && metrics.recentShortestIntervalSec.map { $0 <= thresholds.adviceIntervalSec } ?? false)
     }
 
-    /// "every 4 min, lasting about 50 sec, for 65 min"
+    /// "every 4 min, lasting about 50 sec, for 65 min". The time is how long this rate has held,
+    /// not the whole run, so two slow hours don't read as two hours at this rate.
     static func patternSummary(_ metrics: ContractionMetrics, thresholds: ThresholdProfile) -> String {
-        let minutes = Int((metrics.patternSustainedSec / 60).rounded())
+        let held = metrics.rateHeldSec ?? metrics.patternSustainedSec
+        let minutes = Int((held / 60).rounded())
         return "\(intervalSummary(metrics, thresholds: thresholds)), for \(minutes) min"
+    }
+
+    /// "about every 10 min for 2 h before", if the run was slower before the current rate.
+    public static func earlierSummary(_ metrics: ContractionMetrics) -> String? {
+        guard let median = metrics.earlierMedianIntervalSec, let span = metrics.earlierSpanSec, span >= 600 else {
+            return nil
+        }
+        return "about every \(spoken(median)) for \(duration(span)) before"
+    }
+
+    /// "40 min", "2 h", "2 h 15 min".
+    public static func duration(_ seconds: Double) -> String {
+        let minutes = Int((seconds / 60).rounded())
+        if minutes < 60 { return "\(minutes) min" }
+        let hours = minutes / 60
+        let rest = minutes % 60
+        return rest == 0 ? "\(hours) h" : "\(hours) h \(rest) min"
     }
 
     /// False while advice is held and the current log has too few contractions to measure.
@@ -208,10 +355,10 @@ public enum StateCopy {
         if isUneven(metrics, thresholds), let shortest = metrics.recentShortestIntervalSec,
             let longest = metrics.recentLongestIntervalSec
         {
-            text = "every \(clock(shortest, threshold: limit)) to \(clock(longest, threshold: limit))"
+            text = "every \(spoken(shortest, threshold: limit)) to \(spoken(longest, threshold: limit))"
         } else {
             let median = metrics.recentMedianIntervalSec ?? metrics.medianIntervalSec ?? 0
-            text = "every \(clock(median, threshold: limit))"
+            text = "every \(spoken(median, threshold: limit))"
         }
         if let duration = metrics.medianDurationSec {
             let rule = thresholds.adviceDurationSec > 0 ? thresholds.adviceDurationSec : nil
@@ -228,6 +375,24 @@ public enum StateCopy {
         let rest = whole % 60
         if minutes == 0 { return "\(rest) sec" }
         return rest == 0 ? "\(minutes) min" : String(format: "%d:%02d", minutes, rest)
+    }
+
+    /// A range of gaps for a tile, in one format at both ends: "4–11 min", or "4:00–11:15" when
+    /// either end has seconds.
+    public static func clockRange(_ low: Double, _ high: Double, threshold: Double? = nil) -> String {
+        let ends = [low, high].map { Int(guardedRound($0, step: 5, threshold: threshold)) }
+        if ends.allSatisfy({ $0 % 60 == 0 }) { return "\(ends[0] / 60)–\(ends[1] / 60) min" }
+        return ends.map { String(format: "%d:%02d", $0 / 60, $0 % 60) }.joined(separator: "–")
+    }
+
+    /// The same gap in a sentence: "4 min", "5 min 20 sec". "5:20" is kept for tiles, where it can't be
+    /// read as a time of day.
+    public static func spoken(_ seconds: Double, threshold: Double? = nil) -> String {
+        let whole = Int(guardedRound(seconds, step: 5, threshold: threshold))
+        let minutes = whole / 60
+        let rest = whole % 60
+        if minutes == 0 { return "\(rest) sec" }
+        return rest == 0 ? "\(minutes) min" : "\(minutes) min \(rest) sec"
     }
 
     /// Rounds to the nearest `step`, then moves to the step on the right side of `threshold` if
@@ -253,6 +418,40 @@ public enum StateCopy {
         title: "Cleveland Clinic: Labor and delivery",
         url: URL(string: "https://my.clevelandclinic.org/health/articles/9676-labor-delivery")
             ?? URL(fileURLWithPath: "/")
+    )
+
+    private static let nhsBleeding = CopySource(
+        title: "NHS: Vaginal bleeding in pregnancy",
+        url: URL(string: "https://www.nhs.uk/pregnancy/common-symptoms/vaginal-bleeding/") ?? URL(fileURLWithPath: "/")
+    )
+
+    private static let nhsPreEclampsia = CopySource(
+        title: "NHS: Pre-eclampsia",
+        url: URL(string: "https://www.nhs.uk/conditions/pre-eclampsia/") ?? URL(fileURLWithPath: "/")
+    )
+
+    private static let nhsStomachPain = CopySource(
+        title: "NHS: Stomach pain in pregnancy",
+        url: URL(string: "https://www.nhs.uk/pregnancy/common-symptoms/stomach-pain/") ?? URL(fileURLWithPath: "/")
+    )
+
+    private static let rcogGBS = CopySource(
+        title: "RCOG: Group B streptococcus (GBS) in pregnancy and newborn babies",
+        url: URL(
+            string:
+                "https://www.rcog.org.uk/for-the-public/browse-our-patient-information/group-b-streptococcus-gbs-in-pregnancy-and-newborn-babies/"
+        ) ?? URL(fileURLWithPath: "/")
+    )
+
+    private static let nhsCaesarean = CopySource(
+        title: "NHS: Caesarean section",
+        url: URL(string: "https://www.nhs.uk/conditions/caesarean-section/") ?? URL(fileURLWithPath: "/")
+    )
+
+    /// For the reminder 24 hours after the waters go.
+    public static let niceInduction = CopySource(
+        title: "NICE NG235: Intrapartum care",
+        url: URL(string: "https://www.nice.org.uk/guidance/ng235/chapter/Recommendations") ?? URL(fileURLWithPath: "/")
     )
 
     private static let rcogCordProlapse = CopySource(

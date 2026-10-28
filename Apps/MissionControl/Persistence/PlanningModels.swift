@@ -16,6 +16,8 @@ final class MissionProfile {
     var unitName: String = ""
     var triagePhone: String = ""
     var labourWardPhone: String = ""
+    var gbsPositive: Bool = false
+    var plannedCaesarean: Bool = false
     var parkingNotes: String = ""
     var afterHoursEntrance: String = ""
     var partnerCanStayOvernight: Bool = false
@@ -82,6 +84,8 @@ extension MissionProfile {
             unitName: unitName,
             triage: triageNumber,
             labourWard: labourWardNumber,
+            gbsPositive: gbsPositive,
+            plannedCaesarean: plannedCaesarean,
             updatedAt: now
         )
     }
@@ -95,7 +99,9 @@ extension MissionProfile {
             parity: parity,
             previousFastLabour: previousFastLabour,
             travelMinutes: travelMinutes,
-            notes: notes
+            notes: notes,
+            gbsPositive: gbsPositive,
+            plannedCaesarean: plannedCaesarean
         )
     }
 
