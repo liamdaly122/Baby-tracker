@@ -113,13 +113,21 @@ struct ContractionMetricsTests {
         #expect(metrics.patternSustainedSec == 2460)
     }
 
-    @Test("The pattern goes stale three median intervals after the last start")
+    @Test("The log goes quiet 3 median intervals after the last start, and stale after 5")
     func staleness() {
         let log = regular(count: 10, every: 240, duration: 50)  // last start 2160
-        let justBefore = ContractionMetrics.compute(log, thresholds: thresholds, now: at(2880))
+        let beforeQuiet = ContractionMetrics.compute(log, thresholds: thresholds, now: at(2880))
+        #expect(!beforeQuiet.isQuiet)
+        #expect(beforeQuiet.quietAt == at(2880))
+        let quiet = ContractionMetrics.compute(log, thresholds: thresholds, now: at(2881))
+        #expect(quiet.isQuiet)
+        #expect(!quiet.isStale)
+        #expect(quiet.analysedCount == 10)
+
+        let justBefore = ContractionMetrics.compute(log, thresholds: thresholds, now: at(3360))
         #expect(!justBefore.isStale)
-        #expect(justBefore.staleAt == at(2880))
-        let after = ContractionMetrics.compute(log, thresholds: thresholds, now: at(2881))
+        #expect(justBefore.staleAt == at(3360))
+        let after = ContractionMetrics.compute(log, thresholds: thresholds, now: at(3361))
         #expect(after.isStale)
         #expect(after.analysedCount == 0)
         #expect(after.patternSustainedSec == 0)

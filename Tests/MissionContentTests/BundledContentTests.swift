@@ -37,7 +37,7 @@ struct BundledContentTests {
         let defaults = try BundledContent.thresholdTable(for: .uk).defaults
         #expect(defaults.adviceIntervalSec == 300)
         #expect(defaults.adviceDurationSec == 0)
-        #expect(defaults.patternWindowSec == 3600)
+        #expect(defaults.patternWindowSec == 0)
         #expect(defaults.urgentSingleDurationSec == 120)
         #expect(defaults.urgentCountIn10Min == 6)
     }

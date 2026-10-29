@@ -1,5 +1,5 @@
 {
-  "name": "Previous fast labour: same pattern for 35 min",
+  "name": "With a midwife's hour: previous fast labour: same pattern for 35 min",
   "region": "uk",
   "profile": {
     "parity": 0,
@@ -7,7 +7,9 @@
     "gestationalAgeDays": 280,
     "travelMinutes": 20
   },
-  "thresholdOverrides": {},
+  "thresholdOverrides": {
+    "patternWindowSec": 3600
+  },
   "redFlags": [],
   "patterns": [
     {

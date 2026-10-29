@@ -26,10 +26,14 @@ public struct PendingDrop: Codable, Sendable, Hashable {
 }
 
 /// Rises are immediate. A drop needs the lower state's conditions to hold for
-/// `EngineConstants.demotionDwellSec`; meanwhile the UI shows "pattern easing".
+/// `EngineConstants.demotionDwellSec`; meanwhile the UI shows "pattern easing". `dropNow` skips the
+/// dwell, for when he has said the contractions have stopped.
 enum Hysteresis {
-    static func apply(raw: Advice, previous: HeldAdvice?, now: Date) -> HeldAdvice {
+    static func apply(raw: Advice, previous: HeldAdvice?, now: Date, dropNow: Bool = false) -> HeldAdvice {
         guard let previous else {
+            return HeldAdvice(advice: raw, enteredAt: now, pendingDrop: nil)
+        }
+        if dropNow && raw.state < previous.advice.state {
             return HeldAdvice(advice: raw, enteredAt: now, pendingDrop: nil)
         }
         if raw.state > previous.advice.state {

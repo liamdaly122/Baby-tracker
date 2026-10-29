@@ -13,6 +13,28 @@ public struct ContentLibrary: Sendable {
     /// The contentVersion of each file that loaded.
     public var versions: [ContentKind: String]
 
+    public init(
+        region: ContentRegion,
+        checklist: [ChecklistItem] = [],
+        glossary: [GlossaryEntry] = [],
+        coaching: [CoachingCard] = [],
+        briefings: [Briefing] = [],
+        quiz: [QuizQuestion] = [],
+        badges: [BadgeDefinition] = [],
+        thresholds: ThresholdTable,
+        versions: [ContentKind: String] = [:]
+    ) {
+        self.region = region
+        self.checklist = checklist
+        self.glossary = glossary
+        self.coaching = coaching
+        self.briefings = briefings
+        self.quiz = quiz
+        self.badges = badges
+        self.thresholds = thresholds
+        self.versions = versions
+    }
+
     public func checklistItem(id: String) -> ChecklistItem? {
         checklist.first { $0.id == id }
     }

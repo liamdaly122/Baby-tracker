@@ -16,7 +16,7 @@ struct GoNoGoEngineTests {
 
     @Test("Red flags map to the NHS levels")
     func redFlagLevels() {
-        let call999: Set<RedFlag> = [.urgeToPush, .cordVisible, .seizureCollapse, .heavyBleeding]
+        let call999: Set<RedFlag> = [.urgeToPush, .cordVisible, .seizureCollapse, .heavyBleeding, .headVisible]
         for flag in RedFlag.allCases {
             #expect(flag.state == (call999.contains(flag) ? .call999 : .callNow), "\(flag)")
         }
@@ -51,10 +51,37 @@ struct GoNoGoEngineTests {
         #expect(output.reasons == [.bleeding, .tooManyInTenMinutes])
     }
 
-    @Test("Unknown gestation never triggers the preterm rule")
+    @Test("Unknown weeks mean call now, until she's confirmed 37 or more")
     func unknownGestation() {
-        let output = GoNoGoEngine.evaluate(ukInput([], profile: LabourProfile(region: .uk), now: 60))
-        #expect(output.state == .early)
+        let unknown = GoNoGoEngine.evaluate(ukInput([], profile: LabourProfile(region: .uk), now: 60))
+        #expect(unknown.state == .callNow)
+        #expect(unknown.reasons == [.gestationUnknown])
+
+        let notSure = LabourProfile(region: .uk, termAnswer: .notSure)
+        #expect(GoNoGoEngine.evaluate(ukInput([], profile: notSure, now: 60)).reasons == [.gestationUnknown])
+
+        let under = LabourProfile(region: .uk, termAnswer: .preterm)
+        #expect(GoNoGoEngine.evaluate(ukInput([], profile: under, now: 60)).reasons == [.preterm])
+
+        let term = LabourProfile(region: .uk, termAnswer: .term)
+        #expect(GoNoGoEngine.evaluate(ukInput([], profile: term, now: 60)).state == .early)
+    }
+
+    @Test("A known due date wins over the answer")
+    func gestationBeatsAnswer() {
+        let profile = LabourProfile(region: .uk, gestationalAgeDays: 250, termAnswer: .term)
+        #expect(GoNoGoEngine.evaluate(ukInput([], profile: profile, now: 60)).reasons == [.preterm])
+    }
+
+    @Test("Preterm advice doesn't flip at midnight: gestation is fixed at the start of the session")
+    func pretermIsFrozen() {
+        let profile = LabourProfile(region: .uk, gestationalAgeDays: 258)
+        let early = GoNoGoEngine.evaluate(ukInput([], profile: profile, now: 60))
+        let twoDaysLater = GoNoGoEngine.evaluate(
+            ukInput([], profile: profile, previous: early.snapshot, now: 2 * 86_400))
+        #expect(twoDaysLater.state == .callNow)
+        #expect(twoDaysLater.reasons == [.preterm])
+        #expect(twoDaysLater.enteredAt == at(60))
     }
 
     // MARK: Hysteresis
@@ -72,27 +99,78 @@ struct GoNoGoEngineTests {
         #expect(urgent.enteredAt == at(710))
     }
 
-    @Test("Advice holds for 15 minutes after the pattern eases, then drops")
+    @Test("A quiet log asks if they're still coming, then holds for 15 minutes once stale, then drops")
     func dropAfterDwell() {
         let log = regular(count: 17, every: 240, duration: 50)  // last start at 3840
         var output = GoNoGoEngine.evaluate(ukInput(log, now: 3900))
         #expect(output.state == .callTriage)
+        #expect(output.nextReviewAt.map { $0 <= at(3840 + 720.001) } == true)
 
-        // The pattern goes stale 3 median intervals (720 s) after the last start.
+        // Quiet 3 median intervals (720 s) after the last start: ask, but don't drop.
         output = GoNoGoEngine.evaluate(ukInput(log, previous: output.snapshot, now: 4561))
         #expect(output.state == .callTriage)
-        #expect(output.isEasing)
-        #expect(output.reasons == [.regularPatternSustained, .patternEasing])
-        #expect(output.nextReviewAt == at(4561 + 900))
+        #expect(!output.isEasing)
+        #expect(output.reasons == [.regularPatternSustained, .noRecentTaps])
+        #expect(output.nextReviewAt.map { $0 <= at(3840 + 1200.001) } == true)
 
-        output = GoNoGoEngine.evaluate(ukInput(log, previous: output.snapshot, now: 4561 + 600))
+        // Stale 5 median intervals (1200 s) after the last start: the 15-minute hold starts.
+        output = GoNoGoEngine.evaluate(ukInput(log, previous: output.snapshot, now: 5041))
+        #expect(output.state == .callTriage)
+        #expect(output.isEasing)
+        #expect(output.reasons == [.regularPatternSustained, .patternEasing, .noRecentTaps])
+        #expect(output.nextReviewAt.map { $0 <= at(5041 + 900) } == true)
+
+        output = GoNoGoEngine.evaluate(ukInput(log, previous: output.snapshot, now: 5041 + 600))
         #expect(output.state == .callTriage)
         #expect(output.isEasing)
 
-        output = GoNoGoEngine.evaluate(ukInput(log, previous: output.snapshot, now: 4561 + 900))
+        output = GoNoGoEngine.evaluate(ukInput(log, previous: output.snapshot, now: 5041 + 900))
         #expect(output.state == .early)
         #expect(!output.isEasing)
-        #expect(output.enteredAt == at(4561 + 900))
+        #expect(output.enteredAt == at(5041 + 900))
+        #expect(output.snapshot.callRuleMetAt == at(3900))
+    }
+
+    @Test("\"They've stopped\" drops non-urgent advice at once")
+    func theyveStopped() {
+        let log = regular(count: 17, every: 240, duration: 50)  // last start at 3840
+        let calling = GoNoGoEngine.evaluate(ukInput(log, now: 3900))
+        #expect(calling.state == .callTriage)
+        let stopped = GoNoGoEngine.evaluate(ukInput(log, previous: calling.snapshot, easedAt: 3950, now: 3960))
+        #expect(stopped.state == .early)
+        #expect(stopped.reasons == [.contractionsStopped])
+        #expect(!stopped.isEasing)
+        // Until the next contraction shows the stop was real, it might be a mis-tap: keep the time.
+        #expect(stopped.snapshot.callRuleMetAt == at(3900))
+
+        // Contractions after a real pause start a new run, which needs 4 to show a pattern.
+        let one = log + regular(count: 1, every: 240, duration: 50, first: 5000)
+        let waiting = GoNoGoEngine.evaluate(ukInput(one, previous: stopped.snapshot, easedAt: 3950, now: 5060))
+        #expect(waiting.state == .early)
+        #expect(waiting.reasons == [.notEnoughContractions])
+        // Now it's confirmed, the next run has to meet the call point again.
+        #expect(waiting.snapshot.callRuleMetAt == nil)
+        let four = log + regular(count: 4, every: 240, duration: 50, first: 5000)
+        let back = GoNoGoEngine.evaluate(ukInput(four, previous: waiting.snapshot, easedAt: 3950, now: 5780))
+        #expect(back.state == .callTriage)
+        #expect(back.snapshot.callRuleMetAt == at(5780))
+    }
+
+    @Test("\"They've stopped\" in the future (a clock ahead) is ignored")
+    func futureEased() {
+        let log = regular(count: 17, every: 240, duration: 50)
+        let output = GoNoGoEngine.evaluate(ukInput(log, easedAt: 3900 + 7200, now: 3900))
+        #expect(output.state == .callTriage)
+    }
+
+    @Test("\"They've stopped\" never clears an urgent rule")
+    func stoppedKeepsUrgent() {
+        let log = regular(count: 6, every: 100, duration: 40)
+        let urgent = GoNoGoEngine.evaluate(ukInput(log, now: 560))
+        #expect(urgent.state == .callNow)
+        let stopped = GoNoGoEngine.evaluate(ukInput(log, previous: urgent.snapshot, easedAt: 600, now: 610))
+        #expect(stopped.state == .callNow)
+        #expect(stopped.reasons == [.tooManyInTenMinutes])
     }
 
     @Test("Contractions picking up again cancel the drop")
@@ -162,7 +240,8 @@ struct GoNoGoEngineTests {
     func nonFinite() {
         let table = ThresholdTable.builtIn(for: .uk)
         #expect(table.profile(applying: [.adviceIntervalSec: .nan]).adviceIntervalSec == 300)
-        #expect(table.profile(applying: [.patternWindowSec: .infinity]).patternWindowSec == 3600)
+        #expect(table.profile(applying: [.patternWindowSec: .infinity]).patternWindowSec == 0)
+        #expect(ThresholdTable.builtIn(for: .us).profile(applying: [.patternWindowSec: .nan]).patternWindowSec == 3600)
     }
 
     @Test("Fixed fields are not editable")
@@ -179,9 +258,17 @@ struct GoNoGoEngineTests {
         let thresholds = ThresholdTable.builtIn(for: .uk).profile(applying: [.patternWindowSec: 1800])
         let everything = LabourProfile(region: .uk, parity: 2, previousFastLabour: true, travelMinutes: 90)
         #expect(GoNoGoEngine.requiredSustainedSec(profile: everything, thresholds: thresholds) == 1800)
+        #expect(GoNoGoEngine.requiredSustainedSec(profile: everything, thresholds: ukWithHour) == 1800)
+        #expect(GoNoGoEngine.requiredSustainedSec(profile: LabourProfile(region: .uk), thresholds: ukWithHour) == 3600)
+    }
+
+    @Test("UK: no hold by default, because the NHS gives no time")
+    func ukNoHold() {
         let defaults = ThresholdTable.builtIn(for: .uk).defaults
-        #expect(GoNoGoEngine.requiredSustainedSec(profile: everything, thresholds: defaults) == 1800)
-        #expect(GoNoGoEngine.requiredSustainedSec(profile: LabourProfile(region: .uk), thresholds: defaults) == 3600)
+        #expect(GoNoGoEngine.requiredSustainedSec(profile: LabourProfile(region: .uk), thresholds: defaults) == 0)
+        let output = GoNoGoEngine.evaluate(ukInput(regular(count: 5, every: 240, duration: 50), now: 1000))
+        #expect(output.state == .callTriage)
+        #expect(output.reasons == [.regularPatternSustained])
     }
 
     // MARK: Scheduling
@@ -196,7 +283,8 @@ struct GoNoGoEngineTests {
     @Test("Next review: a pattern reaching its required hour")
     func reviewSustained() {
         // Every 4 min from 0; at 59 min the last start is 56 min, so the hour is reachable at 60 min.
-        let output = GoNoGoEngine.evaluate(ukInput(regular(count: 15, every: 240, duration: 50), now: 3540))
+        let output = GoNoGoEngine.evaluate(
+            ukInput(regular(count: 15, every: 240, duration: 50), thresholds: ukWithHour, now: 3540))
         #expect(output.state == .establishing)
         #expect(output.nextReviewAt == at(3600))
     }

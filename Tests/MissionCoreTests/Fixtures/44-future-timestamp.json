@@ -1,0 +1,34 @@
+{
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 280,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "contractions": [
+    {
+      "startSec": 43200,
+      "durationSec": 50
+    }
+  ],
+  "name": "A contraction stamped 12 hours ahead (a clock or an edit gone wrong) doesn't stop a 4-minute pattern reaching the call point",
+  "patterns": [
+    {
+      "firstStartSec": 0,
+      "count": 17,
+      "everySec": 240,
+      "durationSec": 50
+    }
+  ],
+  "evaluateAtSec": 3900,
+  "expect": {
+    "state": "callTriage",
+    "reasons": [
+      "regularPatternSustained"
+    ],
+    "needsEditCount": 1
+  }
+}

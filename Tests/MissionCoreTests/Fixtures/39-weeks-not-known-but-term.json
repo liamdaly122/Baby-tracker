@@ -1,0 +1,23 @@
+{
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": null,
+    "travelMinutes": 20,
+    "termAnswer": "term"
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "contractions": [],
+  "name": "No due date, but he says she's 37 weeks or more",
+  "patterns": [],
+  "evaluateAtSec": 60,
+  "expect": {
+    "state": "early",
+    "reasons": [
+      "notEnoughContractions"
+    ],
+    "needsEditCount": 0
+  }
+}

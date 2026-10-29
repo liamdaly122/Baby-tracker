@@ -1,5 +1,5 @@
 {
-  "name": "UK: same pattern at 45 min is not yet sustained",
+  "name": "UK: every 4 min for 45 min is time to call, because the NHS sets no hour",
   "region": "uk",
   "profile": {
     "parity": 0,
@@ -20,9 +20,9 @@
   "contractions": [],
   "evaluateAtSec": 2700,
   "expect": {
-    "state": "establishing",
+    "state": "callTriage",
     "reasons": [
-      "patternNotYetSustained"
+      "regularPatternSustained"
     ],
     "needsEditCount": 0
   }

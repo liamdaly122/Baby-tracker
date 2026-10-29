@@ -1,0 +1,71 @@
+{
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 280,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "contractions": [],
+  "name": "Every 10 min, then every 4 min: building after two, time to call after three, and never drops while speeding up",
+  "patterns": [
+    {
+      "firstStartSec": 0,
+      "count": 6,
+      "everySec": 600,
+      "durationSec": 45
+    },
+    {
+      "firstStartSec": 3240,
+      "count": 10,
+      "everySec": 240,
+      "durationSec": 50
+    }
+  ],
+  "checks": [
+    {
+      "atSec": 3060,
+      "state": "early",
+      "reasons": [
+        "noRegularPattern"
+      ]
+    },
+    {
+      "atSec": 3300,
+      "state": "early",
+      "reasons": [
+        "noRegularPattern"
+      ]
+    },
+    {
+      "atSec": 3540,
+      "state": "establishing",
+      "reasons": [
+        "patternBuilding"
+      ]
+    },
+    {
+      "atSec": 3780,
+      "state": "callTriage",
+      "reasons": [
+        "regularPatternSustained"
+      ]
+    },
+    {
+      "atSec": 4500,
+      "state": "callTriage",
+      "reasons": [
+        "regularPatternSustained"
+      ]
+    },
+    {
+      "atSec": 5400,
+      "state": "callTriage",
+      "reasons": [
+        "regularPatternSustained"
+      ]
+    }
+  ]
+}

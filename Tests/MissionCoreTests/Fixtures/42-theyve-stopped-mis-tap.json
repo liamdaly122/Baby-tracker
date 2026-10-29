@@ -1,0 +1,45 @@
+{
+  "region": "uk",
+  "profile": {
+    "parity": 0,
+    "previousFastLabour": false,
+    "gestationalAgeDays": 280,
+    "travelMinutes": 20
+  },
+  "thresholdOverrides": {},
+  "redFlags": [],
+  "contractions": [],
+  "name": "\"They've stopped\" tapped by mistake: the next contraction on rhythm cancels it and the advice comes straight back",
+  "patterns": [
+    {
+      "firstStartSec": 0,
+      "count": 14,
+      "everySec": 240,
+      "durationSec": 50
+    }
+  ],
+  "easedAtSec": 2460,
+  "checks": [
+    {
+      "atSec": 2420,
+      "state": "callTriage",
+      "reasons": [
+        "regularPatternSustained"
+      ]
+    },
+    {
+      "atSec": 2470,
+      "state": "early",
+      "reasons": [
+        "contractionsStopped"
+      ]
+    },
+    {
+      "atSec": 2700,
+      "state": "callTriage",
+      "reasons": [
+        "regularPatternSustained"
+      ]
+    }
+  ]
+}
