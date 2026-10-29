@@ -2,7 +2,58 @@ import Foundation
 
 public struct RedFlagStatus: Codable, Sendable, Hashable {
     public var isOn: Bool
+    /// When it was last switched: the tap.
     public var changedAt: Date
+    /// When it last went on, by what he said (her waters went 40 minutes ago), or the tap time if
+    /// he didn't say. Kept after it's turned off, so the call script can mention it.
+    public var happenedAt: Date?
+    /// He said when it happened, so `happenedAt` isn't just the tap.
+    public var timeGiven: Bool
+    /// Earlier times it was on and then turned off, oldest first, so the call script keeps them
+    /// when it goes on again.
+    public var earlier: [FlagEpisode]
+
+    public init(
+        isOn: Bool, changedAt: Date, happenedAt: Date? = nil, timeGiven: Bool = false, earlier: [FlagEpisode] = []
+    ) {
+        self.isOn = isOn
+        self.changedAt = changedAt
+        self.happenedAt = happenedAt
+        self.timeGiven = timeGiven
+        self.earlier = earlier
+    }
+}
+
+/// A time a red flag was on: when it happened, and when he turned it off.
+public struct FlagEpisode: Codable, Sendable, Hashable {
+    public var onAt: Date
+    public var offAt: Date
+    /// He said when it happened, so `onAt` isn't just the tap.
+    public var timeGiven: Bool
+
+    public init(onAt: Date, offAt: Date, timeGiven: Bool = false) {
+        self.onAt = onAt
+        self.offAt = offAt
+        self.timeGiven = timeGiven
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        onAt = try container.decode(Date.self, forKey: .onAt)
+        offAt = try container.decode(Date.self, forKey: .offAt)
+        timeGiven = try container.decodeIfPresent(Bool.self, forKey: .timeGiven) ?? false
+    }
+}
+
+/// A call to the unit as logged.
+public struct LoggedCall: Sendable, Hashable {
+    public var at: Date
+    public var note: CallNote
+
+    public init(at: Date, note: CallNote) {
+        self.at = at
+        self.note = note
+    }
 }
 
 /// The state derived from a session's tap events.
@@ -17,23 +68,36 @@ public struct ReducedLog: Sendable, Hashable {
     public var easedAt: Date?
     /// The latest answer to "Is she 37 weeks or more?".
     public var termAnswer: TermAnswer?
+    /// The latest call to the unit he logged.
+    public var lastCall: LoggedCall?
+    /// How strong contractions felt, by contraction ID, where he said.
+    public var strengths: [UUID: ContractionStrength]
 
     public init(
         contractions: [Contraction] = [],
         redFlags: [RedFlag: RedFlagStatus] = [:],
         lastMovementAt: Date? = nil,
         easedAt: Date? = nil,
-        termAnswer: TermAnswer? = nil
+        termAnswer: TermAnswer? = nil,
+        lastCall: LoggedCall? = nil,
+        strengths: [UUID: ContractionStrength] = [:]
     ) {
         self.contractions = contractions
         self.redFlags = redFlags
         self.lastMovementAt = lastMovementAt
         self.easedAt = easedAt
         self.termAnswer = termAnswer
+        self.lastCall = lastCall
+        self.strengths = strengths
     }
 
     public var activeRedFlags: Set<RedFlag> {
         Set(redFlags.filter(\.value.isOn).keys)
+    }
+
+    /// Flags that were on and have been turned off, with when they were turned off.
+    public var clearedRedFlags: [RedFlag: Date] {
+        redFlags.filter { !$0.value.isOn && $0.value.happenedAt != nil }.mapValues(\.changedAt)
     }
 
     /// The latest contraction, if it's still being timed. An earlier one without an end is a
@@ -58,6 +122,7 @@ public enum EventLog {
         var startDevice: [UUID: String] = [:]
         var aliases: [UUID: UUID] = [:]
         var notes = Annotations()
+        var strengths: [UUID: ContractionStrength] = [:]
 
         func resolve(_ id: UUID?) -> Int? {
             guard var id else { return nil }
@@ -115,7 +180,11 @@ public enum EventLog {
                 }
                 aliases[merged.id] = contractions[previous].id
                 contractions.remove(at: index)
-            case .redFlag, .movement, .eased, .termAnswer, .undo, .unknown:
+            case .strength:
+                if let index = resolve(event.target), let strength = event.payload?.strength {
+                    strengths[contractions[index].id] = strength
+                }
+            case .redFlag, .movement, .eased, .termAnswer, .called, .undo, .unknown:
                 break
             }
         }
@@ -125,7 +194,9 @@ public enum EventLog {
             redFlags: notes.redFlags,
             lastMovementAt: notes.lastMovementAt,
             easedAt: notes.easedAt,
-            termAnswer: notes.termAnswer
+            termAnswer: notes.termAnswer,
+            lastCall: notes.lastCall,
+            strengths: strengths.filter { id, _ in contractions.contains { $0.id == id } }
         )
     }
 
@@ -154,13 +225,18 @@ private struct Annotations {
     var lastMovementAt: Date?
     var easedAt: Date?
     var termAnswer: TermAnswer?
+    var lastCall: LoggedCall?
 
     /// Applies `event` if it's an annotation, and says whether it was.
     mutating func apply(_ event: TapEvent) -> Bool {
         switch event.kind {
         case .redFlag:
-            if let flag = event.payload?.flag, let isOn = event.payload?.isOn {
-                redFlags[flag] = RedFlagStatus(isOn: isOn, changedAt: event.at)
+            if let flag = event.payload?.flag {
+                applyFlag(flag, event)
+            }
+        case .called:
+            if let note = event.payload?.call, lastCall.map({ event.at >= $0.at }) ?? true {
+                lastCall = LoggedCall(at: event.at, note: note)
             }
         case .movement:
             lastMovementAt = max(lastMovementAt ?? event.at, event.at)
@@ -170,9 +246,49 @@ private struct Annotations {
             if let term = event.payload?.term {
                 termAnswer = term
             }
-        case .start, .stop, .editStart, .editStop, .delete, .merge, .undo, .unknown:
+        case .start, .stop, .editStart, .editStop, .delete, .merge, .strength, .undo, .unknown:
             return false
         }
         return true
+    }
+
+    /// On, off, or a time on its own. A second "on" for the same episode (from the other device)
+    /// can only move it earlier, to the first tap, whichever sorts first: it can't have happened
+    /// after anyone tapped it. Only a time he gave marks it as given. A time on its own never turns
+    /// a flag back on that was turned off meanwhile. Turning a flag on again after it was off is a
+    /// new tap with a new time; the earlier episode is kept.
+    private mutating func applyFlag(_ flag: RedFlag, _ event: TapEvent) {
+        let previous = redFlags[flag]
+        let time = event.payload?.time.map { min($0, event.at) }
+        let wasOn = previous?.isOn ?? false
+        switch (event.payload?.isOn, wasOn) {
+        case (nil, _), (true?, true):
+            guard var status = previous, status.isOn else { break }
+            if event.payload?.isOn == true, event.at > (status.earlier.last?.offAt ?? .distantPast) {
+                status.changedAt = min(status.changedAt, event.at)
+                status.happenedAt = min(status.happenedAt ?? event.at, event.at)
+            }
+            if let time {
+                status.happenedAt = min(time, status.changedAt)
+                status.timeGiven = true
+            }
+            redFlags[flag] = status
+        case (true?, false):
+            var earlier = previous?.earlier ?? []
+            if let previous, let onAt = previous.happenedAt {
+                earlier.append(FlagEpisode(onAt: onAt, offAt: previous.changedAt, timeGiven: previous.timeGiven))
+            }
+            redFlags[flag] = RedFlagStatus(
+                isOn: true, changedAt: event.at, happenedAt: time ?? event.at, timeGiven: time != nil,
+                earlier: earlier)
+        case (false?, true):
+            if var status = previous {
+                status.isOn = false
+                status.changedAt = event.at
+                redFlags[flag] = status
+            }
+        case (false?, false):
+            break  // Already off.
+        }
     }
 }

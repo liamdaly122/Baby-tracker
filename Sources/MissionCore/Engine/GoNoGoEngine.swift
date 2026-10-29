@@ -9,6 +9,12 @@ public struct EngineInput: Sendable, Hashable {
     public var previous: EngineStateSnapshot?
     /// When he said the contractions have stopped, if he has since the last one started.
     public var easedAt: Date?
+    /// Red flags that were on and have been turned off, with when. A 999 flag stays up for a minute.
+    public var clearedRedFlags: [RedFlag: Date]
+    /// The latest call to the unit he logged, and what it was about.
+    public var lastCall: LoggedCall?
+    /// When each flag last switched, and when it happened. A flag turned on after a call is news.
+    public var redFlagStatus: [RedFlag: RedFlagStatus]
     public var now: Date
 
     public init(
@@ -18,6 +24,9 @@ public struct EngineInput: Sendable, Hashable {
         thresholds: ThresholdProfile,
         previous: EngineStateSnapshot? = nil,
         easedAt: Date? = nil,
+        clearedRedFlags: [RedFlag: Date] = [:],
+        lastCall: LoggedCall? = nil,
+        redFlagStatus: [RedFlag: RedFlagStatus] = [:],
         now: Date
     ) {
         self.contractions = contractions
@@ -26,6 +35,9 @@ public struct EngineInput: Sendable, Hashable {
         self.thresholds = thresholds
         self.previous = previous
         self.easedAt = easedAt
+        self.clearedRedFlags = clearedRedFlags
+        self.lastCall = lastCall
+        self.redFlagStatus = redFlagStatus
         self.now = now
     }
 
@@ -47,8 +59,19 @@ public struct EngineInput: Sendable, Hashable {
             thresholds: thresholds,
             previous: previous,
             easedAt: log.easedAt,
+            clearedRedFlags: log.clearedRedFlags,
+            lastCall: log.lastCall,
+            redFlagStatus: log.redFlags,
             now: now
         )
+    }
+
+    /// When her waters went, if the flag is on: what he said, or the tap.
+    public var watersBrokeAt: Date? {
+        guard redFlags.contains(.watersBroken), let status = redFlagStatus[.watersBroken], status.isOn else {
+            return nil
+        }
+        return status.happenedAt ?? status.changedAt
     }
 }
 
@@ -66,6 +89,12 @@ public struct EngineStateSnapshot: Codable, Sendable, Hashable {
     public var lastStart: Date?
     /// Set while held advice is kept up because taps have resumed after a gap.
     public var holdingForTapsSince: Date?
+    /// The logged call this evaluation said was still enough, so a change can be alerted once.
+    public var acknowledgedCallAt: Date?
+    /// What the contraction pattern said at the moment of each logged call, from the merged log. A
+    /// tap from the other device that was made before the call but arrived after it is covered, and
+    /// undoing a later call leaves the earlier call's cover in place.
+    public var callCovers: [CallCover]?
 }
 
 public struct EngineOutput: Sendable, Hashable {
@@ -86,6 +115,10 @@ public struct EngineOutput: Sendable, Hashable {
     public var requiredSustainedSec: Double
     /// The earliest moment the state could change without another tap, for a scheduled notification.
     public var nextReviewAt: Date?
+    /// Where the latest logged call stands, if there is one. Nil in a 999 state: that's 999's job.
+    public var call: CallStatus?
+    /// When her waters went, if the flag is on. For the copy after a call.
+    public var watersBrokeAt: Date?
     public var snapshot: EngineStateSnapshot
 }
 
@@ -146,27 +179,24 @@ public enum GoNoGoEngine {
                 dropNow: stopped && (previousHeld?.advice.state ?? .early) < .callNow
             )
         }
-        let flags = flagAdvice(redFlags: input.redFlags, profile: input.profile)
+        let flags = flagAdvice(input)
 
         let state = max(held.advice.state, flags?.state ?? .early)
-        let heldIsShown = held.advice.state == state
-        let isEasing = heldIsShown && held.pendingDrop != nil
-        var reasons: [ReasonCode] = []
-        if let flags, flags.state == state {
-            reasons += flags.reasons
-        }
-        if heldIsShown {
-            reasons += held.advice.reasons
-            if isEasing {
-                reasons.append(.patternEasing)
-            }
-            if metrics.isQuiet && held.advice.state >= .establishing {
-                reasons.append(.noRecentTaps)
-            }
-        }
+        let isEasing = held.advice.state == state && held.pendingDrop != nil
+        let reasons = shownReasons(state: state, flags: flags, held: held, metrics: metrics)
 
         let enteredAt =
             input.previous.flatMap { $0.state == state ? $0.enteredAt : nil } ?? input.now
+        // The pattern's own level, not an urgent reason's that hides it: a call about one long
+        // contraction doesn't cover a regular pattern that comes later.
+        let patternLevel =
+            held.advice.state >= .callNow ? (stopped ? .early : min(pattern.state, .callTriage)) : held.advice.state
+        let covers = callCovers(input, contractionState: patternLevel)
+        let cover = input.lastCall.flatMap { call in covers.first { $0.callAt == call.at } }
+        let call = callStatus(
+            input,
+            CallCheck(state: state, reasons: reasons, contractionAdvice: held.advice, cover: cover, easedAt: eased),
+            thresholds: thresholds)
         return EngineOutput(
             state: state,
             reasons: reasons,
@@ -177,13 +207,15 @@ public enum GoNoGoEngine {
             contractionAdvice: held.advice,
             isEasing: isEasing,
             requiredSustainedSec: required,
-            nextReviewAt: reviewCandidates(
+            nextReviewAt: (reviewCandidates(
                 metrics: metrics,
                 raw: raw,
                 held: held,
                 thresholds: thresholds,
                 requiredSustainedSec: required
-            ).filter { $0 > input.now }.min(),
+            ) + clearHoldEnds(input)).filter { $0 > input.now }.min(),
+            call: call,
+            watersBrokeAt: input.watersBrokeAt,
             snapshot: EngineStateSnapshot(
                 state: state,
                 enteredAt: enteredAt,
@@ -191,9 +223,32 @@ public enum GoNoGoEngine {
                 held: held,
                 callRuleMetAt: metAt ?? (!stopped && pattern.state == .callTriage ? input.now : nil),
                 lastStart: metrics.lastStart,
-                holdingForTapsSince: holdingSince
+                holdingForTapsSince: holdingSince,
+                acknowledgedCallAt: call?.acknowledgedAt,
+                callCovers: covers.isEmpty ? nil : covers
             )
         )
+    }
+
+    /// The reasons at the level showing: the flags', then the contractions' with "easing" and
+    /// "still coming?" notes.
+    static func shownReasons(state: LabourState, flags: Advice?, held: HeldAdvice, metrics: ContractionMetrics)
+        -> [ReasonCode]
+    {
+        var reasons: [ReasonCode] = []
+        if let flags, flags.state == state {
+            reasons += flags.reasons
+        }
+        if held.advice.state == state {
+            reasons += held.advice.reasons
+            if held.pendingDrop != nil {
+                reasons.append(.patternEasing)
+            }
+            if metrics.isQuiet && held.advice.state >= .establishing {
+                reasons.append(.noRecentTaps)
+            }
+        }
+        return reasons
     }
 
     /// "They've stopped", unless it's in the future (a bad clock) or the next contraction came on
@@ -319,16 +374,64 @@ public enum GoNoGoEngine {
         return mean <= limit && (values.max() ?? .infinity) <= 2 * limit
     }
 
-    /// Red flags and the gestation rule. These never time out: they hold while the toggle is on.
-    static func flagAdvice(redFlags: Set<RedFlag>, profile: LabourProfile) -> Advice? {
+    /// Red flags, the profile and the gestation rule. These never time out: they hold while the
+    /// toggle is on. A 999 flag turned off stays up for a minute, in case that was a mistake.
+    static func flagAdvice(_ input: EngineInput, includingCleared: Bool = true) -> Advice? {
+        let found = flagFindings(input, includingCleared: includingCleared)
+        guard let top = found.map(\.state).max() else { return nil }
+        return Advice(state: top, reasons: found.filter { $0.state == top }.map(\.reason))
+    }
+
+    /// Every flag, profile and gestation reason at every level, not just the top one, so a call
+    /// logged under a 999 flag still covers the waters underneath it.
+    static func flagReasons(_ input: EngineInput) -> [ReasonCode] {
+        flagFindings(input, includingCleared: true).map(\.reason)
+    }
+
+    private static func flagFindings(_ input: EngineInput, includingCleared: Bool)
+        -> [(state: LabourState, reason: ReasonCode)]
+    {
+        let redFlags = input.redFlags
+        let profile = input.profile
         var found: [(state: LabourState, reason: ReasonCode)] = RedFlag.allCases
             .filter { redFlags.contains($0) }
             .map { ($0.state, $0.reason) }
-        if let reason = gestationReason(profile) {
-            found.append((.callNow, reason))
+        if redFlags.contains(.bleeding) && redFlags.contains(.severePain) && !redFlags.contains(.heavyBleeding) {
+            found.append((.call999, .bleedingWithSeverePain))
         }
-        guard let top = found.map(\.state).max() else { return nil }
-        return Advice(state: top, reasons: found.filter { $0.state == top }.map(\.reason))
+        let justCleared = RedFlag.allCases.filter { flag in
+            guard includingCleared, flag.state == .call999, !redFlags.contains(flag),
+                let off = input.clearedRedFlags[flag]
+            else { return false }
+            let since = input.now.timeIntervalSince(off)
+            return since >= 0 && since < EngineConstants.emergencyClearHoldSec
+        }
+        if !justCleared.isEmpty {
+            found += justCleared.map { ($0.state, $0.reason) }
+            found.append((.call999, .emergencyJustCleared))
+        }
+        let gestation = gestationReason(profile)
+        if profile.gbsPositive && redFlags.contains(.watersBroken) {
+            found.append((.callNow, gestation == nil ? .gbsWithWaters : .gbsWithWatersPreterm))
+        }
+        // Kept under the waters reason too, so a call made with both covers both.
+        if profile.gbsPositive && !input.contractions.isEmpty {
+            found.append((.callTriage, .gbsInLabour))
+        }
+        if profile.plannedCaesarean {
+            found.append((.callNow, .plannedCaesarean))
+        }
+        if let gestation {
+            found.append((.callNow, gestation))
+        }
+        return found
+    }
+
+    /// The moments a just-cleared 999 flag stops holding the advice up.
+    static func clearHoldEnds(_ input: EngineInput) -> [Date] {
+        input.clearedRedFlags.filter { $0.key.state == .call999 }.values.map {
+            $0.addingTimeInterval(EngineConstants.emergencyClearHoldSec + 0.001)
+        }
     }
 
     /// Under 37 weeks, or weeks not known and not confirmed as 37 or more, means call now.

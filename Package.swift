@@ -30,6 +30,9 @@ var targets: [Target] = [
 #if canImport(SwiftUI)
     products.append(.library(name: "MissionUI", targets: ["MissionUI"]))
     targets.append(.target(name: "MissionUI", dependencies: ["MissionCore"]))
+    // WatchConnectivity glue shared by the phone and the watch (empty on macOS).
+    products.append(.library(name: "MissionSync", targets: ["MissionSync"]))
+    targets.append(.target(name: "MissionSync", dependencies: ["MissionCore"]))
 #endif
 
 let package = Package(

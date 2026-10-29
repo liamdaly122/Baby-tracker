@@ -31,11 +31,25 @@ public enum ReasonCode: String, Codable, Sendable, CaseIterable {
     case cordVisible
     case seizureCollapse
     case heavyBleeding
+    case headVisible
+    /// Bleeding and constant or severe pain together. NHS: call 999 for bleeding with severe tummy pain.
+    case bleedingWithSeverePain
+    /// A 999 flag was turned off under a minute ago. Shown with that flag, in case it was a mistake.
+    case emergencyJustCleared
     // callNow: red flags and profile
     case watersBroken
     case watersColoured
     case bleeding
     case reducedMovements
+    case severePain
+    case preEclampsiaSigns
+    /// She's GBS positive and her waters have gone, at 37 weeks or more.
+    case gbsWithWaters
+    /// She's GBS positive and her waters have gone, under 37 weeks or weeks not known. Term advice
+    /// (induction straight away) doesn't apply.
+    case gbsWithWatersPreterm
+    /// A caesarean is planned and labour has started first.
+    case plannedCaesarean
     case preterm
     /// No due date and nobody has said she's 37 weeks or more.
     case gestationUnknown
@@ -45,6 +59,8 @@ public enum ReasonCode: String, Codable, Sendable, CaseIterable {
     case tooManyInTenMinutes
     // callTriage
     case regularPatternSustained
+    /// She's GBS positive and contractions have started: antibiotics should start once labour begins.
+    case gbsInLabour
     // establishing
     case patternNotYetSustained
     case patternBuilding
@@ -67,21 +83,32 @@ public enum TermAnswer: String, Codable, Sendable, CaseIterable {
 }
 
 /// Toggles the partner sets in labour mode. Each one forces at least `callNow`; they stay on until
-/// he turns them off, so red-flag states never time out on their own.
+/// he turns them off, so red-flag states never time out on their own. New cases go at the end:
+/// the order is the order reasons are listed in.
 public enum RedFlag: String, Codable, Sendable, CaseIterable {
     case watersBroken
     case watersColoured
     case bleeding
+    /// NHS: a pad soaked soon after putting it on, or bleeding with severe tummy pain, feeling
+    /// faint or dizzy.
     case heavyBleeding
     case reducedMovements
     case urgeToPush
     case cordVisible
     case seizureCollapse
+    /// Constant or severe pain, with no break between contractions.
+    case severePain
+    /// NHS pre-eclampsia signs: a bad headache that painkillers don't help, vision problems, pain
+    /// below the ribs, sudden swelling, or feeling very unwell.
+    case preEclampsiaSigns
+    /// He can see the baby's head.
+    case headVisible
 
     public var state: LabourState {
         switch self {
-        case .urgeToPush, .cordVisible, .seizureCollapse, .heavyBleeding: .call999
-        case .watersBroken, .watersColoured, .bleeding, .reducedMovements: .callNow
+        case .urgeToPush, .cordVisible, .seizureCollapse, .heavyBleeding, .headVisible: .call999
+        case .watersBroken, .watersColoured, .bleeding, .reducedMovements, .severePain, .preEclampsiaSigns:
+            .callNow
         }
     }
 
@@ -95,6 +122,9 @@ public enum RedFlag: String, Codable, Sendable, CaseIterable {
         case .urgeToPush: .urgeToPush
         case .cordVisible: .cordVisible
         case .seizureCollapse: .seizureCollapse
+        case .severePain: .severePain
+        case .preEclampsiaSigns: .preEclampsiaSigns
+        case .headVisible: .headVisible
         }
     }
 }
@@ -127,6 +157,11 @@ public struct LabourProfile: Codable, Sendable, Hashable {
     public var termAnswer: TermAnswer?
     /// Journey time to the maternity unit. Nil if not entered.
     public var travelMinutes: Int?
+    /// She carries group B strep. With her waters gone, antibiotics and induction are usually
+    /// offered straight away.
+    public var gbsPositive: Bool
+    /// A caesarean is booked. Labour starting first means calling the unit at once.
+    public var plannedCaesarean: Bool
 
     public init(
         region: ContentRegion,
@@ -134,7 +169,9 @@ public struct LabourProfile: Codable, Sendable, Hashable {
         previousFastLabour: Bool = false,
         gestationalAgeDays: Int? = nil,
         termAnswer: TermAnswer? = nil,
-        travelMinutes: Int? = nil
+        travelMinutes: Int? = nil,
+        gbsPositive: Bool = false,
+        plannedCaesarean: Bool = false
     ) {
         self.region = region
         self.parity = parity
@@ -142,6 +179,21 @@ public struct LabourProfile: Codable, Sendable, Hashable {
         self.gestationalAgeDays = gestationalAgeDays
         self.termAnswer = termAnswer
         self.travelMinutes = travelMinutes
+        self.gbsPositive = gbsPositive
+        self.plannedCaesarean = plannedCaesarean
+    }
+
+    /// Profiles saved before GBS and planned caesarean existed decode with both off.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        region = try container.decode(ContentRegion.self, forKey: .region)
+        parity = try container.decode(Int.self, forKey: .parity)
+        previousFastLabour = try container.decode(Bool.self, forKey: .previousFastLabour)
+        gestationalAgeDays = try container.decodeIfPresent(Int.self, forKey: .gestationalAgeDays)
+        termAnswer = try? container.decodeIfPresent(TermAnswer.self, forKey: .termAnswer)
+        travelMinutes = try container.decodeIfPresent(Int.self, forKey: .travelMinutes)
+        gbsPositive = try container.decodeIfPresent(Bool.self, forKey: .gbsPositive) ?? false
+        plannedCaesarean = try container.decodeIfPresent(Bool.self, forKey: .plannedCaesarean) ?? false
     }
 }
 
@@ -189,4 +241,9 @@ public enum EngineConstants {
     public static let tenMinutesSec: TimeInterval = 600
     /// Under 37+0 weeks, any labour session means call now.
     public static let termDays = 259
+    /// A 999 flag turned off stays up this long, in case it was turned off by mistake.
+    public static let emergencyClearHoldSec: TimeInterval = 60
+    /// After her waters go, a reminder at this point: induction is usually offered if labour
+    /// hasn't started (NICE NG235).
+    public static let watersReminderSec: TimeInterval = 24 * 3600
 }

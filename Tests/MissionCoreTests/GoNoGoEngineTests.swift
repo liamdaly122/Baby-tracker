@@ -16,7 +16,7 @@ struct GoNoGoEngineTests {
 
     @Test("Red flags map to the NHS levels")
     func redFlagLevels() {
-        let call999: Set<RedFlag> = [.urgeToPush, .cordVisible, .seizureCollapse, .heavyBleeding]
+        let call999: Set<RedFlag> = [.urgeToPush, .cordVisible, .seizureCollapse, .heavyBleeding, .headVisible]
         for flag in RedFlag.allCases {
             #expect(flag.state == (call999.contains(flag) ? .call999 : .callNow), "\(flag)")
         }

@@ -86,7 +86,7 @@ struct CallRuleTests {
         let output = GoNoGoEngine.evaluate(ukInput(regular(count: 8, every: 320, duration: 50), now: 2300))
         #expect(output.reasons == [.patternBuilding])
         let line = StateCopy.reasonLine(for: .patternBuilding, metrics: output.metrics, thresholds: defaults)
-        #expect(line == "About every 5:20, lasting about 50 sec. Not at the call point yet.")
+        #expect(line == "About every 5 min 20 sec, lasting about 50 sec. Not at the call point yet.")
     }
 
     @Test("With a hold set, the detail line counts down to it")

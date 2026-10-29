@@ -68,7 +68,8 @@ struct TriageScriptTests {
             TapEvent(sessionID: session, kind: .movement, at: at(900), deviceID: "phone", lamport: 3),
         ]
         let card = script(contractions: [], events: events, now: 2400)
-        #expect(value(card, "Waters") == "Broke at 08:10 (30 min ago), green, brown or smelly")
+        // No time given: the tap is the latest they could have gone.
+        #expect(value(card, "Waters") == "Broke by 08:10 (30 min ago), time not confirmed, green, brown or smelly")
         #expect(card.lines.first { $0.label == "Waters" }?.isUrgent == true)
         #expect(value(card, "Bleeding") == "None")
         #expect(value(card, "Baby's movements") == "Last felt at 08:15 (25 min ago)")

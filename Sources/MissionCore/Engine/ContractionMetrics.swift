@@ -42,6 +42,14 @@ public struct ContractionMetrics: Codable, Sendable, Hashable {
     public var patternSustainedSec: Double
     /// One typical interval after the last start: when the sustained time stops growing.
     public var sustainedUntil: Date?
+    /// How long the current rate has held, for the copy: back from the last start while the gaps
+    /// stay at the current rate (`rateStretchStart`). The whole run unless a clearly slower stretch
+    /// came before it. Never more than `patternSustainedSec`. The rules still use the whole run.
+    public var rateHeldSec: Double?
+    /// The run before the current rate, if it was slower: its typical gap and how long it went on.
+    /// "Every 4 min for the last 31 min, about every 10 min for 2 h before."
+    public var earlierMedianIntervalSec: Double?
+    public var earlierSpanSec: Double?
     public var segmentStart: Date?
     public var lastStart: Date?
     /// Seconds the latest contraction has been open, if it is still being timed.
@@ -114,16 +122,10 @@ public struct ContractionMetrics: Codable, Sendable, Hashable {
             rate = RateStats(analysed, imputing: gaps, now: now)
         }
 
-        // The cap comes from the whole run, the same set as its first start, so it can't move back.
-        var sustained = 0.0
-        var sustainedUntil: Date?
-        if medianInterval != nil, let first = segment.first, let lastStart,
-            let runInterval = Stats.median(intervals(segment))
-        {
-            let until = lastStart.addingTimeInterval(runInterval)
-            sustainedUntil = until
-            sustained = max(0, min(now, until).timeIntervalSince(first.start))
-        }
+        let shape = RunShape(
+            segment: segment, gaps: gaps, hasPattern: medianInterval != nil, now: now, thresholds: thresholds)
+        let sustained = shape.sustained
+        let sustainedUntil = shape.until
 
         let exits =
             rate.set.map { $0.start.addingTimeInterval(EngineConstants.rateWindowSec) }
@@ -148,6 +150,9 @@ public struct ContractionMetrics: Codable, Sendable, Hashable {
             longestRecentDurationSec: recentDurations.max(),
             patternSustainedSec: sustained,
             sustainedUntil: sustainedUntil,
+            rateHeldSec: shape.held,
+            earlierMedianIntervalSec: shape.earlierMedian,
+            earlierSpanSec: shape.earlierSpan,
             segmentStart: segment.first?.start,
             lastStart: lastStart,
             openElapsedSec: openElapsed,
@@ -163,6 +168,43 @@ public struct ContractionMetrics: Codable, Sendable, Hashable {
         )
     }
 
+    /// The index in `run` where the current rate began. Back from the last start while the typical
+    /// gap there (the median of three neighbouring gaps, with missed taps split out) is at or under
+    /// `typical` and the gap itself is at or under `limit`. One late or missed tap that's on rhythm
+    /// either side (or is the latest gap) is stepped over, so it doesn't read as a change of rate.
+    static func rateStretchStart(
+        _ run: [Contraction], imputing gaps: [MissedTapGap], limit: Double, typical: Double
+    ) -> Int {
+        var missed: [GapKey: Int] = [:]
+        for gap in gaps {
+            missed[GapKey(after: gap.after, before: gap.before)] = gap.estimatedMissed
+        }
+        func split(_ index: Int) -> Double {
+            let gap = run[index].start.timeIntervalSince(run[index - 1].start)
+            return gap / Double((missed[GapKey(after: run[index - 1].start, before: run[index].start)] ?? 0) + 1)
+        }
+        let last = run.count - 1
+        func local(_ index: Int) -> Double {
+            let low = Swift.max(1, Swift.min(index - 1, last - 2))
+            let high = Swift.min(last, low + 2)
+            return Stats.median((low...high).map(split)) ?? split(index)
+        }
+        let tolerance = 1e-9
+        var first = last
+        var skipped = false
+        while first > 0 {
+            if local(first) > typical + tolerance { break }
+            if split(first) > limit + tolerance {
+                let onBefore = first > 1 && split(first - 1) <= limit + tolerance
+                let onAfter = first == last || split(first + 1) <= limit + tolerance
+                if skipped || !onBefore || !onAfter { break }
+                skipped = true
+            }
+            first -= 1
+        }
+        return Swift.max(first, 0)
+    }
+
     /// Start order, with the ID as a tie-break so the result never depends on input order.
     public static func chronological(_ lhs: Contraction, _ rhs: Contraction) -> Bool {
         if lhs.start != rhs.start { return lhs.start < rhs.start }
@@ -171,6 +213,19 @@ public struct ContractionMetrics: Codable, Sendable, Hashable {
 
     static func intervals(_ sorted: [Contraction]) -> [Double] {
         zip(sorted, sorted.dropFirst()).map { $1.start.timeIntervalSince($0.start) }
+    }
+
+    /// One value per gap, in order (index `i` is the gap before `sorted[i + 1]`), each divided by
+    /// the contractions it probably hid, so the indexes still line up with the contractions.
+    static func gapIntervals(_ sorted: [Contraction], imputing gaps: [MissedTapGap]) -> [Double] {
+        var missed: [GapKey: Int] = [:]
+        for gap in gaps {
+            missed[GapKey(after: gap.after, before: gap.before)] = gap.estimatedMissed
+        }
+        return zip(sorted, sorted.dropFirst()).map { earlier, later in
+            let pieces = Double((missed[GapKey(after: earlier.start, before: later.start)] ?? 0) + 1)
+            return later.start.timeIntervalSince(earlier.start) / pieces
+        }
     }
 
     /// Intervals with each missed-tap gap split into the intervals it probably held.
@@ -270,6 +325,57 @@ public struct ContractionMetrics: Codable, Sendable, Hashable {
             best = max(best, head - tail + 1)
         }
         return best
+    }
+}
+
+/// How long the run has gone on, and how long at its current rate.
+private struct RunShape {
+    /// How long the run has been going, capped one typical interval after its last start. The cap
+    /// comes from the whole run, the same set as its first start, so it can't move back.
+    var sustained = 0.0
+    var until: Date?
+    /// How long the current rate has held, and the slower stretch before it, for the copy.
+    var held: Double?
+    var earlierMedian: Double?
+    var earlierSpan: Double?
+
+    init(segment: [Contraction], gaps: [MissedTapGap], hasPattern: Bool, now: Date, thresholds: ThresholdProfile) {
+        guard hasPattern, let first = segment.first, let last = segment.last,
+            let runInterval = Stats.median(ContractionMetrics.intervals(segment))
+        else { return }
+        let until = last.start.addingTimeInterval(runInterval)
+        self.until = until
+        sustained = max(0, min(now, until).timeIntervalSince(first.start))
+        held = sustained
+        // The current rate, anchored at the last start like the pace, so it can't drift in silence.
+        guard let reference = Stats.median(RateStats(segment, imputing: gaps, now: last.start).values) else { return }
+        // A gap may be up to the regularity margin over the current rate (or the advice interval,
+        // if that's longer), but the stretch as a whole has to be at the current rate: a slower
+        // stretch just under the margin isn't time at the call rate.
+        let advice = thresholds.adviceIntervalSec
+        let margin = thresholds.regularityCV
+        let limit = max(reference, advice) * (1 + margin)
+        let typical = reference <= advice ? min(advice, reference * (1 + margin)) : reference * (1 + margin)
+        let begin = ContractionMetrics.rateStretchStart(segment, imputing: gaps, limit: limit, typical: typical)
+        // "Before" is the run of slow gaps just before the current rate: the gap that ended it and
+        // the slow ones before that. Two or more of them, clearly slower than now; otherwise the
+        // whole run counts as this rate. One slow gap between fast ones (coupled contractions, a
+        // late tap) is never a stretch of its own.
+        let split = ContractionMetrics.gapIntervals(segment, imputing: gaps)
+        var slowStart = begin
+        while slowStart > 0 && split[slowStart - 1] > typical + 1e-9 {
+            slowStart -= 1
+        }
+        let slow = Array(split[slowStart..<begin])
+        guard slow.count >= 2, let median = Stats.median(slow), median > max(typical, reference * (1 + margin / 2))
+        else { return }
+        // Stops growing one gap of the current rate after the last start, not one of the whole run's.
+        let heldInterval =
+            Stats.median(ContractionMetrics.intervals(Array(segment[begin...]), imputing: gaps)) ?? reference
+        let heldUntil = min(until, last.start.addingTimeInterval(heldInterval))
+        held = min(sustained, max(0, min(now, heldUntil).timeIntervalSince(segment[begin].start)))
+        earlierMedian = median
+        earlierSpan = segment[begin].start.timeIntervalSince(segment[slowStart].start)
     }
 }
 
