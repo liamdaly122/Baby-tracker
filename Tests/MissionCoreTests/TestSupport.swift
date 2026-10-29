@@ -64,3 +64,57 @@ struct SeededGenerator: RandomNumberGenerator {
         return mixed ^ (mixed >> 31)
     }
 }
+
+/// Taps `count` contractions on `core`, every `every` seconds from `first`, each `duration` long.
+func tapContractions(
+    _ core: inout LabourSessionCore, count: Int, every: Double, duration: Double = 50, first: Double
+) {
+    for index in 0..<count {
+        let begin = first + Double(index) * every
+        _ = core.tap(at: at(begin))
+        _ = core.tap(at: at(begin + duration))
+    }
+}
+
+/// A device refreshing like the app: the alerts `immediate` returns at each refresh, keeping the
+/// alerted snapshot by `LabourAlertPlanner.shouldKeep`.
+struct DeviceRun {
+    var core: LabourSessionCore
+    var alerted: EngineStateSnapshot?
+    var alerts: [PlannedAlert] = []
+
+    init(_ core: LabourSessionCore) {
+        self.core = core
+    }
+
+    mutating func refresh(_ time: Double) {
+        let output = core.output(at: at(time))
+        alerts += LabourAlertPlanner.immediate(previous: alerted, output: output, region: .uk)
+        if LabourAlertPlanner.shouldKeep(output.snapshot, over: alerted) {
+            alerted = output.snapshot
+        }
+    }
+
+    /// Refreshes every 15 seconds from `from` to `until`, as the open app does.
+    mutating func idle(from: Double, until: Double) {
+        for time in stride(from: from, through: until, by: 15) {
+            refresh(time)
+        }
+    }
+
+    /// Taps contractions, refreshing after each tap and every 15 seconds in between.
+    mutating func contractions(count: Int, every: Double, duration: Double = 50, first: Double) {
+        for index in 0..<count {
+            let begin = first + Double(index) * every
+            _ = core.tap(at: at(begin))
+            refresh(begin)
+            _ = core.tap(at: at(begin + duration))
+            refresh(begin + duration)
+            idle(from: begin + duration + 15, until: begin + every - 1)
+        }
+    }
+
+    func count(_ kind: PlannedAlert.Kind) -> Int {
+        alerts.filter { $0.kind == kind }.count
+    }
+}

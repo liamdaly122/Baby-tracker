@@ -16,6 +16,8 @@ public struct MissionBrief: Codable, Sendable, Hashable {
     public var unitName: String
     public var triage: PhoneNumber?
     public var labourWard: PhoneNumber?
+    public var gbsPositive: Bool
+    public var plannedCaesarean: Bool
     public var updatedAt: Date
 
     public init(
@@ -29,6 +31,8 @@ public struct MissionBrief: Codable, Sendable, Hashable {
         unitName: String,
         triage: PhoneNumber?,
         labourWard: PhoneNumber?,
+        gbsPositive: Bool = false,
+        plannedCaesarean: Bool = false,
         updatedAt: Date
     ) {
         self.region = region
@@ -41,7 +45,27 @@ public struct MissionBrief: Codable, Sendable, Hashable {
         self.unitName = unitName
         self.triage = triage
         self.labourWard = labourWard
+        self.gbsPositive = gbsPositive
+        self.plannedCaesarean = plannedCaesarean
         self.updatedAt = updatedAt
+    }
+
+    /// Briefs saved before GBS and planned caesarean existed decode with both off.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        region = try container.decode(ContentRegion.self, forKey: .region)
+        dueDateText = try container.decodeIfPresent(String.self, forKey: .dueDateText)
+        parity = try container.decode(Int.self, forKey: .parity)
+        previousFastLabour = try container.decode(Bool.self, forKey: .previousFastLabour)
+        travelMinutes = try container.decodeIfPresent(Int.self, forKey: .travelMinutes)
+        thresholds = try container.decode(ThresholdProfile.self, forKey: .thresholds)
+        motherName = try container.decode(String.self, forKey: .motherName)
+        unitName = try container.decode(String.self, forKey: .unitName)
+        triage = try? container.decodeIfPresent(PhoneNumber.self, forKey: .triage)
+        labourWard = try? container.decodeIfPresent(PhoneNumber.self, forKey: .labourWard)
+        gbsPositive = try container.decodeIfPresent(Bool.self, forKey: .gbsPositive) ?? false
+        plannedCaesarean = try container.decodeIfPresent(Bool.self, forKey: .plannedCaesarean) ?? false
+        updatedAt = try container.decode(Date.self, forKey: .updatedAt)
     }
 
     public var dueDate: CalendarDay? {
@@ -60,7 +84,9 @@ public struct MissionBrief: Codable, Sendable, Hashable {
             gestationalAgeDays: dueDate.map {
                 PregnancyCalendar(dueDate: $0).gestationalAgeDays(at: date, in: calendar)
             },
-            travelMinutes: travelMinutes
+            travelMinutes: travelMinutes,
+            gbsPositive: gbsPositive,
+            plannedCaesarean: plannedCaesarean
         )
     }
 

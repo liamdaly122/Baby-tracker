@@ -154,7 +154,7 @@ final class WatchLabourModel {
         if let undoable, undoable.until <= now { self.undoable = nil }
         notifier.update(
             sessionID: core.sessionID, previous: alerted, input: core.engineInput(at: now, previous: alerted),
-            output: result)
+            output: result, watersBrokeAt: core.watersBrokeAt)
         alerted = result.snapshot
     }
 
@@ -204,7 +204,12 @@ final class WatchLabourModel {
             return
         }
         if start.sessionID == current.sessionID {
+            let revision = current.start.revision
             current.update(start)
+            if current.start.revision != revision {
+                // Keep the context the phone reads on launch up to date, or it would replay the old start.
+                transport.setContext(.state(brief: nil, session: current.start))
+            }
         } else if SessionStart.winner(current.start, start) == start {
             notifier.cancel(sessionID: current.sessionID)
             if SessionStart.isSameLabour(current.start, start) {

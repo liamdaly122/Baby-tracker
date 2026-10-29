@@ -44,6 +44,22 @@ extension RedFlag {
         case .urgeToPush: "Strong urge to push"
         case .cordVisible: "Cord felt or seen"
         case .seizureCollapse: "Seizure or collapse"
+        case .severePain: "Constant or severe pain"
+        case .preEclampsiaSigns: "Bad headache or vision changes"
+        case .headVisible: "Baby's head visible"
+        }
+    }
+
+    /// What the flag means, where the label alone isn't enough. NHS wording.
+    public var detail: String? {
+        switch self {
+        case .bleeding: "More than a small pink-tinged show"
+        case .heavyBleeding: "Soaks a pad soon after, or with severe pain, faintness or dizziness"
+        case .severePain: "No break between contractions"
+        case .preEclampsiaSigns: "Or pain below the ribs, sudden swelling, feeling very unwell"
+        case .watersBroken, .watersColoured, .reducedMovements, .urgeToPush, .cordVisible, .seizureCollapse,
+            .headVisible:
+            nil
         }
     }
 
@@ -55,6 +71,9 @@ extension RedFlag {
         case .urgeToPush: "arrow.down.to.line"
         case .cordVisible: "exclamationmark.octagon.fill"
         case .seizureCollapse: "bolt.heart.fill"
+        case .severePain: "bolt.fill"
+        case .preEclampsiaSigns: "eye.trianglebadge.exclamationmark"
+        case .headVisible: "exclamationmark.triangle.fill"
         }
     }
 }

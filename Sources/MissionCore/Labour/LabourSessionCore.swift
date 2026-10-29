@@ -9,19 +9,35 @@ public struct SessionStart: Codable, Sendable, Hashable {
     public var startedBy: String
     public var profile: LabourProfile
     public var thresholds: ThresholdProfile
+    /// Goes up each time the phone applies new thresholds to the running labour (a midwife's
+    /// advice), so an older copy echoed back by the other device can never undo them.
+    public var revision: Int
 
     public init(
         sessionID: UUID = UUID(),
         startedAt: Date,
         startedBy: String,
         profile: LabourProfile,
-        thresholds: ThresholdProfile
+        thresholds: ThresholdProfile,
+        revision: Int = 0
     ) {
         self.sessionID = sessionID
         self.startedAt = startedAt
         self.startedBy = startedBy
         self.profile = profile
         self.thresholds = thresholds
+        self.revision = revision
+    }
+
+    /// A start from a build without `revision` is revision 0.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        sessionID = try container.decode(UUID.self, forKey: .sessionID)
+        startedAt = try container.decode(Date.self, forKey: .startedAt)
+        startedBy = try container.decode(String.self, forKey: .startedBy)
+        profile = try container.decode(LabourProfile.self, forKey: .profile)
+        thresholds = try container.decode(ThresholdProfile.self, forKey: .thresholds)
+        revision = try container.decodeIfPresent(Int.self, forKey: .revision) ?? 0
     }
 
     /// Two starts this close together are one labour started on both devices before they talked.
@@ -141,9 +157,49 @@ public struct LabourSessionCore: Sendable {
         record(.termAnswer, at: now, payload: TapPayload(term: answer))
     }
 
+    /// Turns a flag on or off. `happenedAt` says when it actually happened (her waters went 40
+    /// minutes ago), if he knows.
     @discardableResult
-    public mutating func setRedFlag(_ flag: RedFlag, isOn: Bool, at now: Date) -> TapEvent {
-        record(.redFlag, at: now, payload: TapPayload(flag: flag, isOn: isOn))
+    public mutating func setRedFlag(_ flag: RedFlag, isOn: Bool, at now: Date, happenedAt: Date? = nil) -> TapEvent {
+        record(.redFlag, at: now, payload: TapPayload(time: isOn ? happenedAt : nil, flag: flag, isOn: isOn))
+    }
+
+    /// When a flag that's on actually happened, said after the tap. Recorded as a time on its own,
+    /// so it can't turn the flag back on if it was turned off on the other device meanwhile. Nil if
+    /// the flag isn't on here.
+    @discardableResult
+    public mutating func setFlagTime(_ flag: RedFlag, happenedAt: Date, at now: Date) -> TapEvent? {
+        guard log.redFlags[flag]?.isOn == true else { return nil }
+        return record(.redFlag, at: now, payload: TapPayload(time: happenedAt, flag: flag))
+    }
+
+    /// "I've called them": what they said, and the advice he called about, so anything new later
+    /// means calling back. Every flag and profile reason is kept, not just the top level's: the
+    /// call script he read out lists them all.
+    @discardableResult
+    public mutating func logCall(_ outcome: CallOutcome, at now: Date) -> TapEvent {
+        let shown = output(at: now)
+        let flagReasons = GoNoGoEngine.flagReasons(engineInput(at: now, previous: nil))
+        var reasons: [ReasonCode] = []
+        for reason in shown.reasons + flagReasons + shown.contractionAdvice.reasons where !reasons.contains(reason) {
+            reasons.append(reason)
+        }
+        let note = CallNote(
+            outcome: outcome, state: shown.state, contractionState: shown.contractionAdvice.state, reasons: reasons,
+            thresholds: shown.thresholds)
+        return record(.called, at: now, payload: TapPayload(call: note))
+    }
+
+    /// How strong a contraction felt.
+    @discardableResult
+    public mutating func rate(_ contractionID: UUID, _ strength: ContractionStrength, at now: Date) -> TapEvent {
+        record(.strength, at: now, target: contractionID, payload: TapPayload(strength: strength))
+    }
+
+    /// When her waters went, if they're broken: for the 24-hour reminder and the call script.
+    public var watersBrokeAt: Date? {
+        guard let status = log.redFlags[.watersBroken], status.isOn else { return nil }
+        return status.happenedAt ?? status.changedAt
     }
 
     /// Records any event from this device. Ticks the Lamport clock.
@@ -192,10 +248,15 @@ public struct LabourSessionCore: Sendable {
     }
 
     /// New thresholds for the running labour (a midwife's advice on the phone). The advice is
-    /// replayed with them, and the other device gets the same start through sync.
+    /// replayed with them, and the other device gets the same start through sync. Only a newer
+    /// revision is taken, so a copy echoed back late (a crossing catch-up, or the context the
+    /// watch set at launch) can't undo them. Only the thresholds are taken: the profile is fixed
+    /// at launch, and an echo from a build that doesn't know a newer field would otherwise clear it.
+    /// The other way round, a watch upgraded mid-labour keeps the profile it stored at launch.
     public mutating func update(_ newStart: SessionStart) {
-        guard newStart.sessionID == start.sessionID, newStart != start else { return }
-        start = newStart
+        guard newStart.sessionID == start.sessionID, newStart.revision > start.revision else { return }
+        start.thresholds = newStart.thresholds
+        start.revision = newStart.revision
         canonical = nil
     }
 

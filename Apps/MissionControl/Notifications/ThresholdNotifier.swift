@@ -29,7 +29,9 @@ final class ThresholdNotifier: NSObject, LabourAlerting {
         await center.notificationSettings().authorizationStatus
     }
 
-    func engineDidUpdate(sessionID: UUID, previous: EngineStateSnapshot?, input: EngineInput, output: EngineOutput) {
+    func engineDidUpdate(
+        sessionID: UUID, previous: EngineStateSnapshot?, input: EngineInput, output: EngineOutput, watersBrokeAt: Date?
+    ) {
         let region = input.profile.region
         let immediate = LabourAlertPlanner.immediate(previous: previous, output: output, region: region)
         if !immediate.isEmpty {
@@ -43,7 +45,7 @@ final class ThresholdNotifier: NSObject, LabourAlerting {
             }
         }
 
-        let scheduled = LabourAlertPlanner.scheduled(input: input, output: output)
+        let scheduled = LabourAlertPlanner.scheduled(input: input, output: output, watersBrokeAt: watersBrokeAt)
         guard scheduled != lastScheduled else { return }
         lastScheduled = scheduled
         let prefix = LabourAlertPlanner.identifierPrefix(sessionID: sessionID)

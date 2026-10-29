@@ -40,8 +40,8 @@ public enum CallFallback {
         steps.append(
             CallStep(
                 title: "Call \(emergency) if it's an emergency",
-                detail: "If she has a strong urge to push, you can see or feel the cord, there's heavy bleeding, "
-                    + "or she has a seizure or collapses.",
+                detail: "If she has a strong urge to push, you can see the baby's head, you can see or feel the "
+                    + "cord, there's heavy bleeding or bleeding with severe pain, or she has a seizure or collapses.",
                 number: PhoneNumber.shortCode(emergency)
             )
         )

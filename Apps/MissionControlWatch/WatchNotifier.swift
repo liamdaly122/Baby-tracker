@@ -20,7 +20,9 @@ final class WatchNotifier: NSObject {
         _ = try? await center.requestAuthorization(options: [.alert, .sound])
     }
 
-    func update(sessionID: UUID, previous: EngineStateSnapshot?, input: EngineInput, output: EngineOutput) {
+    func update(
+        sessionID: UUID, previous: EngineStateSnapshot?, input: EngineInput, output: EngineOutput, watersBrokeAt: Date?
+    ) {
         let immediate = LabourAlertPlanner.immediate(previous: previous, output: output, region: input.profile.region)
         if !immediate.isEmpty {
             if WKApplication.shared().applicationState == .active {
@@ -31,7 +33,7 @@ final class WatchNotifier: NSObject {
                 }
             }
         }
-        let scheduled = LabourAlertPlanner.scheduled(input: input, output: output)
+        let scheduled = LabourAlertPlanner.scheduled(input: input, output: output, watersBrokeAt: watersBrokeAt)
         guard scheduled != lastScheduled else { return }
         lastScheduled = scheduled
         let prefix = LabourAlertPlanner.identifierPrefix(sessionID: sessionID)

@@ -32,7 +32,7 @@ struct WatchTimerPage: View {
     private var header: some View {
         let state = model.output?.state ?? .early
         return HStack {
-            Text(shortState[state] ?? "")
+            Text(pillText(state))
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(state >= .callTriage ? Color.black : LabourTheme.primaryText)
                 .padding(.horizontal, 8)
@@ -40,7 +40,17 @@ struct WatchTimerPage: View {
                 .background(Capsule().fill(state >= .callNow ? LabourTheme.urgent : LabourTheme.color(for: state)))
             Spacer()
         }
-        .accessibilityLabel(StateCopy.headline(for: state, region: model.core?.start.profile.region ?? .uk))
+        .accessibilityLabel(
+            model.output.map { StateCopy.headline(for: $0, region: model.core?.start.profile.region ?? .uk) } ?? "")
+    }
+
+    /// After a logged call: "Called" while it covers the advice, "Call back" once something changes.
+    private func pillText(_ state: LabourState) -> String {
+        switch model.output?.call {
+        case .acknowledged: "Called"
+        case .callBack: "Call back"
+        case nil: shortState[state] ?? ""
+        }
     }
 
     private func burn(now: Date) -> some View {
@@ -243,6 +253,8 @@ struct WatchCallPage: View {
 /// Red flags: each one forces at least "call now" and stays on until he turns it off.
 struct WatchFlagsPage: View {
     @Environment(WatchLabourModel.self) private var model
+    /// A lit flag he tapped: turning it off asks first, so a brush of the wrist can't lower the advice.
+    @State private var confirmingOff: RedFlag?
 
     var body: some View {
         let active = model.log.activeRedFlags
@@ -250,7 +262,11 @@ struct WatchFlagsPage: View {
             ForEach(RedFlag.allCases, id: \.self) { flag in
                 Toggle(
                     flag.label,
-                    isOn: Binding(get: { active.contains(flag) }, set: { model.setRedFlag(flag, isOn: $0) })
+                    isOn: Binding(
+                        get: { active.contains(flag) },
+                        set: { isOn in
+                            if isOn { model.setRedFlag(flag, isOn: true) } else { confirmingOff = flag }
+                        })
                 )
                 .font(.footnote)
                 .tint(LabourTheme.color(for: flag.state))
@@ -261,6 +277,18 @@ struct WatchFlagsPage: View {
             }
         }
         .navigationTitle("Red flags")
+        .confirmationDialog(
+            "Turn off \(confirmingOff?.label ?? "")?",
+            isPresented: Binding(get: { confirmingOff != nil }, set: { if !$0 { confirmingOff = nil } })
+        ) {
+            Button("Turn it off", role: .destructive) {
+                if let flag = confirmingOff { model.setRedFlag(flag, isOn: false) }
+                confirmingOff = nil
+            }
+            Button("Keep it on", role: .cancel) { confirmingOff = nil }
+        } message: {
+            Text("Only if it was tapped by mistake.")
+        }
     }
 }
 

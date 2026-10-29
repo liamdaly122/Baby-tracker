@@ -122,7 +122,7 @@ struct StatusStrip: View {
                     Circle()
                         .fill(LabourTheme.color(for: output.state))
                         .frame(width: 12, height: 12)
-                    Text(StateCopy.headline(for: output.state, region: model.labour.region))
+                    Text(StateCopy.headline(for: output, region: model.labour.region))
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(LabourTheme.primaryText)
                         .lineLimit(1)

@@ -29,6 +29,8 @@ struct LabourPrompts: View {
                             )
                         }
                     )
+                case .watersWhen:
+                    WatersTimeCard()
                 case nil:
                     EmptyView()
                 }
@@ -78,6 +80,66 @@ struct LabourPrompts: View {
     }
 }
 
+/// "When did her waters go?" Triage asks, and induction is usually offered about 24 hours after.
+private struct WatersTimeCard: View {
+    @Environment(AppModel.self) private var model
+    @State private var picking = false
+    @State private var time = Date()
+
+    var body: some View {
+        let labour = model.labour
+        VStack(alignment: .leading, spacing: 8) {
+            Text("When did her waters go?")
+                .font(.headline)
+            Text("Triage will ask. Use a pad, not a tampon, so the colour can be checked.")
+                .font(.subheadline)
+            if picking {
+                DatePicker(
+                    "Waters went at", selection: $time, in: Date().addingTimeInterval(-48 * 3600)...Date(),
+                    displayedComponents: [.date, .hourAndMinute]
+                )
+                .colorScheme(.light)
+                Button("Save that time") { labour.setWatersTime(time) }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.black)
+            } else {
+                if let before = labour.earlierWaters {
+                    // Turned off and on again: the earlier time is probably still right. Say whether
+                    // he gave it or it was only when the flag was tapped.
+                    let clock = before.onAt.formatted(date: .omitted, time: .shortened)
+                    choice(before.timeGiven ? "Same as before (\(clock))" : "When you tapped it before (\(clock))") {
+                        labour.setWatersTime(before.onAt)
+                    }
+                }
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
+                    choice("Just now") { labour.setWatersTime(secondsAgo: 0) }
+                    choice("30 min ago") { labour.setWatersTime(secondsAgo: 1800) }
+                    choice("1 hour ago") { labour.setWatersTime(secondsAgo: 3600) }
+                    choice("Another time") {
+                        time = labour.earlierWaters?.onAt ?? Date()
+                        picking = true
+                    }
+                }
+            }
+        }
+        .foregroundStyle(Color.black)
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(LabourTheme.primaryText))
+    }
+
+    private func choice(_ title: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.subheadline.weight(.semibold))
+                .frame(maxWidth: .infinity, minHeight: 44)
+                .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(.black, lineWidth: 1.5))
+                .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        }
+        .buttonStyle(.plain)
+    }
+}
+
 /// A question with its answers. Light on dark so it stands out from the advice.
 private struct AskCard: View {
     var title: String
@@ -116,7 +178,9 @@ private struct AskCard: View {
                             .fill(index == 0 ? Color.black : Color.clear)
                     )
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(.black, lineWidth: 1.5))
+                        RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(.black, lineWidth: 1.5)
+                    )
+                    .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             }
             .buttonStyle(.plain)
         }
