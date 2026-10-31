@@ -4,6 +4,38 @@ import SwiftData
 
 /// One-off fixes to saved data when the rules change.
 enum Migrations {
+    /// Review action 16: the hospital moves from flat fields on the profile into a `BirthPlace`
+    /// (where she's booked). Runs whenever those fields hold anything, so it also catches a profile
+    /// filled the old way. If a booked place already exists, its own values win and only blanks
+    /// are filled in.
+    @MainActor
+    static func moveHospital(from profile: MissionProfile, in context: ModelContext) {
+        guard profile.hasLegacyHospital else { return }
+        let existing = try? context.fetch(FetchDescriptor<BirthPlace>()).first { $0.role == .booked }
+        let place = existing ?? BirthPlace(role: .booked)
+        if existing == nil {
+            context.insert(place)
+        }
+        func fill(_ value: inout String, from legacy: String) {
+            if value.isEmpty { value = legacy }
+        }
+        fill(&place.name, from: profile.unitName)
+        fill(&place.triagePhone, from: profile.triagePhone)
+        fill(&place.labourWardPhone, from: profile.labourWardPhone)
+        fill(&place.parkingNotes, from: profile.parkingNotes)
+        fill(&place.afterHoursEntrance, from: profile.afterHoursEntrance)
+        place.travelMinutes = place.travelMinutes ?? profile.travelMinutes
+        place.partnerCanStayOvernight = place.partnerCanStayOvernight || profile.partnerCanStayOvernight
+        profile.unitName = ""
+        profile.triagePhone = ""
+        profile.labourWardPhone = ""
+        profile.parkingNotes = ""
+        profile.afterHoursEntrance = ""
+        profile.travelMinutes = nil
+        profile.partnerCanStayOvernight = false
+        try? context.save()
+    }
+
     static let ukHoldKey = "migrations.b14.ukHold"
 
     /// Plan amendment B14: the UK hold before "Time to call" is now off by default, because the NHS

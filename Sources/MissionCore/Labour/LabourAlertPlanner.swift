@@ -74,7 +74,19 @@ public enum LabourAlertPlanner {
     /// Every labour alert for a session starts with this, so ending the session can cancel exactly
     /// those and leave other reminders alone.
     public static func identifierPrefix(sessionID: UUID) -> String {
-        "labour.\(sessionID.uuidString.lowercased())."
+        "\(identifierRoot)\(sessionID.uuidString.lowercased())."
+    }
+
+    /// The start of every labour alert's identifier, whatever the session.
+    public static let identifierRoot = "labour."
+
+    /// True for a labour alert that doesn't belong to `running`, the labour going now (if any): one
+    /// left from a labour that ended while the app was closed, or that couldn't be saved. Clearing
+    /// these at launch stops an old labour's alerts going off. Other reminders aren't touched.
+    public static func isLeftOver(_ identifier: String, running: UUID?) -> Bool {
+        guard identifier.hasPrefix(identifierRoot) else { return false }
+        guard let running else { return true }
+        return !identifier.hasPrefix(identifierPrefix(sessionID: running))
     }
 
     /// Notifications are only worth sending when there's something to do.

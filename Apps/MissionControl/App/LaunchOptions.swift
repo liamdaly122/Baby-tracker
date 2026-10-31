@@ -77,6 +77,29 @@ enum LaunchOptions {
     }
 
     #if DEBUG
+        /// A hospital, a backup and three people. Ofcom's drama numbers: they ring nobody.
+        @MainActor
+        private static func fillCallList(_ model: AppModel) {
+            let booked = model.editablePlace(.booked)
+            booked.name = "Northgate General Maternity Assessment Centre"
+            booked.triagePhone = "01632 960118 option 2"
+            booked.labourWardPhone = "01632 960245"
+            booked.address = "Great George Street, Leeds LS1 3EX"
+            booked.travelMinutes = 25
+            booked.parkingNotes = "Multi-storey on Great George Street, pay by card"
+            booked.afterHoursEntrance = "Clarendon Wing, use the intercom"
+            booked.partnerCanStayOvernight = true
+            booked.numbersCheckedAt = Date()
+            let backup = model.editablePlace(.backup)
+            backup.name = "Riverside Hospital Labour Ward"
+            backup.triagePhone = "01632 960331"
+            backup.travelMinutes = 35
+            let context = model.planning.mainContext
+            context.insert(CrewContact(name: "Mum", phone: "07700 900123", role: .driver, sortOrder: 0))
+            context.insert(CrewContact(name: "Priya (next door)", phone: "07700 900456", role: .pets, sortOrder: 1))
+            context.insert(CrewContact(name: "Dad", phone: "07700 900789", role: .family, sortOrder: 2))
+        }
+
         @MainActor
         private static func fillProfile(_ model: AppModel, dueInDays: Int) {
             let profile = model.profile
@@ -87,14 +110,7 @@ enum LaunchOptions {
                 profile.motherName = "Sam"
                 profile.hospitalNumber = "LTH1234567"
                 profile.notes = "GBS positive"
-                // Ofcom's drama numbers: they ring nobody.
-                profile.unitName = "Northgate General Maternity Assessment Centre"
-                profile.triagePhone = "01632 960118 option 2"
-                profile.labourWardPhone = "01632 960245"
-                profile.travelMinutes = 25
-                profile.parkingNotes = "Multi-storey on Great George Street, pay by card"
-                profile.afterHoursEntrance = "Clarendon Wing, use the intercom"
-                profile.partnerCanStayOvernight = true
+                fillCallList(model)
             }
             let plan = model.birthPlan
             if plan.isEmpty {

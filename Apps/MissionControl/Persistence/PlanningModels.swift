@@ -2,22 +2,26 @@ import Foundation
 import MissionCore
 import SwiftData
 
-/// The pregnancy and hospital details. Lives in the planning store, which never holds labour data.
+/// The pregnancy and her details. Lives in the planning store, which never holds labour data. The
+/// hospital and the call list have records of their own (`BirthPlace`, `CrewContact`).
 @Model
 final class MissionProfile {
     var dueDateText: String = ""
     var regionRaw: String = ContentRegion.uk.rawValue
     var parity: Int = 0
     var previousFastLabour: Bool = false
-    var travelMinutes: Int?
     var motherName: String = ""
     var hospitalNumber: String = ""
     var notes: String = ""
+    var gbsPositive: Bool = false
+    var plannedCaesarean: Bool = false
+    // The hospital, before it had a `BirthPlace` of its own. Kept so version 1 of the store still
+    // matches this class; `Migrations.moveHospital` moves anything here into a `BirthPlace` and
+    // clears it. Nothing else reads these.
+    var travelMinutes: Int?
     var unitName: String = ""
     var triagePhone: String = ""
     var labourWardPhone: String = ""
-    var gbsPositive: Bool = false
-    var plannedCaesarean: Bool = false
     var parkingNotes: String = ""
     var afterHoursEntrance: String = ""
     var partnerCanStayOvernight: Bool = false
@@ -70,20 +74,20 @@ extension MissionProfile {
         }
     }
 
-    /// Everything labour mode needs to start, on the phone or the watch. Gestation is worked out
-    /// from it once, when labour starts.
-    func brief(thresholds: ThresholdProfile, now: Date = Date()) -> MissionBrief {
+    /// Everything labour mode needs to start, on the phone or the watch, with the hospital from
+    /// `place` (where she's booked). Gestation is worked out from it once, when labour starts.
+    func brief(thresholds: ThresholdProfile, place: BirthPlace?, now: Date = Date()) -> MissionBrief {
         MissionBrief(
             region: region,
             dueDateText: dueDate?.description,
             parity: parity,
             previousFastLabour: previousFastLabour,
-            travelMinutes: travelMinutes,
+            travelMinutes: place?.travelMinutes,
             thresholds: thresholds,
             motherName: motherName,
-            unitName: unitName,
-            triage: triageNumber,
-            labourWard: labourWardNumber,
+            unitName: place?.name ?? "",
+            triage: place?.triageNumber(region: region),
+            labourWard: place?.labourWardNumber(region: region),
             gbsPositive: gbsPositive,
             plannedCaesarean: plannedCaesarean,
             updatedAt: now
@@ -91,40 +95,25 @@ extension MissionProfile {
     }
 
     /// Her details for the triage call. Gestation comes from the session, fixed when it started.
-    func triageDetails(gestationalAgeDays: Int?) -> TriageDetails {
+    func triageDetails(gestationalAgeDays: Int?, place: BirthPlace?) -> TriageDetails {
         TriageDetails(
             motherName: motherName,
             hospitalNumber: hospitalNumber,
             gestationalAge: gestationalAgeDays.map(GestationalAge.init(totalDays:)),
             parity: parity,
             previousFastLabour: previousFastLabour,
-            travelMinutes: travelMinutes,
+            travelMinutes: place?.travelMinutes,
             notes: notes,
             gbsPositive: gbsPositive,
             plannedCaesarean: plannedCaesarean
         )
     }
 
-    /// "your maternity unit" until the user names it.
-    var unitDisplayName: String {
-        unitName.isEmpty ? "your maternity unit" : unitName
+    /// True if the old hospital fields (before `BirthPlace`) hold anything.
+    var hasLegacyHospital: Bool {
+        !unitName.isEmpty || !triagePhone.isEmpty || !labourWardPhone.isEmpty || travelMinutes != nil
+            || !parkingNotes.isEmpty || !afterHoursEntrance.isEmpty || partnerCanStayOvernight
     }
-
-    /// The saved triage line, checked. Older saves were free text, so they're parsed here every time
-    /// and a bad one shows as a problem to fix instead of dialling the wrong number.
-    var triageCheck: Result<PhoneNumber, PhoneNumber.Problem>? {
-        triagePhone.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            ? nil : PhoneNumber.parse(triagePhone, region: region)
-    }
-
-    var triageNumber: PhoneNumber? { try? triageCheck?.get() }
-
-    var labourWardCheck: Result<PhoneNumber, PhoneNumber.Problem>? {
-        labourWardPhone.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            ? nil : PhoneNumber.parse(labourWardPhone, region: region)
-    }
-
-    var labourWardNumber: PhoneNumber? { try? labourWardCheck?.get() }
 }
 
 extension PhoneNumber.Problem {
@@ -138,6 +127,17 @@ extension PhoneNumber.Problem {
         case .tooLong: "That's too long. Check it against her notes."
         case .invalid: "That doesn't look like a number for this country. Check it against her notes."
         case .overseas: "That's an overseas number. Ask the unit for a local one."
+        }
+    }
+
+    /// The same for a person on the call list, whose number isn't in her notes.
+    var personMessage: String {
+        switch self {
+        case .tooShort: "That looks a digit short. Check it with them."
+        case .tooLong: "That's too long. Check it with them."
+        case .invalid:
+            "That doesn't look like a number for this country. For a number abroad, start with + and the country code."
+        case .empty, .letters, .twoNumbers, .overseas: message
         }
     }
 }

@@ -13,7 +13,7 @@ enum Stores {
 
     static func planningContainer(inMemory: Bool = false) throws -> ModelContainer {
         if inMemory {
-            return try container(PlanningSchemaV1.self, PlanningMigrationPlan.self, name: "Planning", url: nil)
+            return try container(PlanningSchemaV2.self, PlanningMigrationPlan.self, name: "Planning", url: nil)
         }
         return try planningContainer(
             at: directory(named: "PlanningStore", excludeFromBackup: false).appending(path: "Planning.store"))
@@ -21,7 +21,7 @@ enum Stores {
 
     /// The planning store in a file of its own. The app keeps it in the App Group; tests use a temporary file.
     static func planningContainer(at url: URL) throws -> ModelContainer {
-        try container(PlanningSchemaV1.self, PlanningMigrationPlan.self, name: "Planning", url: url)
+        try container(PlanningSchemaV2.self, PlanningMigrationPlan.self, name: "Planning", url: url)
     }
 
     static func labourContainer(inMemory: Bool = false) throws -> ModelContainer {
