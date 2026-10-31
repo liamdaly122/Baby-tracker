@@ -455,6 +455,16 @@ struct AlertDeliveryTests {
         #expect(first.allSatisfy { $0.identifier(sessionID: session).hasPrefix(prefix) })
     }
 
+    @Test("At launch, only alerts from a labour that isn't running are cleared")
+    func leftOverAlerts() {
+        let running = LabourAlertPlanner.identifierPrefix(sessionID: session) + "rise.callTriage"
+        let old = LabourAlertPlanner.identifierPrefix(sessionID: UUID()) + "rise.callTriage"
+        #expect(!LabourAlertPlanner.isLeftOver(running, running: session))
+        #expect(LabourAlertPlanner.isLeftOver(old, running: session))
+        #expect(LabourAlertPlanner.isLeftOver(running, running: nil))
+        #expect(!LabourAlertPlanner.isLeftOver("checklist.week36", running: nil))
+    }
+
     @Test("Alerts that ask him to call are time sensitive, so Focus doesn't hold them back")
     func timeSensitive() {
         let output = GoNoGoEngine.evaluate(ukInput([], flags: [.watersBroken], now: 60))

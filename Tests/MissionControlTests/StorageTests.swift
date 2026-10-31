@@ -41,9 +41,10 @@ struct StorageTests {
             runsMigrations: false
         )
         model.profile.motherName = "Sam"
-        model.profile.unitName = "Northgate"
-        model.profile.triagePhone = "01632 960118 option 2"
-        model.profile.labourWardPhone = "01632 960245"
+        let place = model.editablePlace(.booked)
+        place.name = "Northgate"
+        place.triagePhone = "01632 960118 option 2"
+        place.labourWardPhone = "01632 960245"
         model.profile.dueDateText = "2026-12-07"
         model.profile.thresholdOverrides = [.patternWindowSec: 1800]
         model.savePlanning()
@@ -71,11 +72,15 @@ struct StorageTests {
             runsMigrations: false
         )
         #expect(model.planningUnavailable && model.restoredFromCard)
-        #expect(model.profile.unitName == "Northgate")
+        let place = try #require(model.bookedPlace)
+        let savedPlace = try #require(saved.bookedPlace)
+        #expect(place.name == "Northgate")
         #expect(model.profile.motherName == "Sam")
-        #expect(model.profile.triageNumber?.dialable == saved.profile.triageNumber?.dialable)
-        #expect(model.profile.triageNumber?.afterConnecting == saved.profile.triageNumber?.afterConnecting)
-        #expect(model.profile.labourWardNumber != nil)
+        #expect(place.triageNumber(region: .uk)?.dialable == savedPlace.triageNumber(region: .uk)?.dialable)
+        #expect(
+            place.triageNumber(region: .uk)?.afterConnecting == savedPlace.triageNumber(region: .uk)?.afterConnecting)
+        #expect(place.labourWardNumber(region: .uk) != nil)
+        #expect(model.brief.triage == saved.brief.triage)
         #expect(model.currentThresholds == saved.currentThresholds)
         #expect(model.currentThresholds.patternWindowSec == 1800)
 
@@ -96,7 +101,8 @@ struct StorageTests {
             runsMigrations: false
         )
         #expect(model.planningUnavailable && !model.restoredFromCard)
-        #expect(model.profile.triageNumber == nil)
+        #expect(model.bookedPlace == nil)
+        #expect(model.brief.triage == nil)
         model.launch()
         #expect(model.session.isActive)
         // No due date, so labour mode asks "Is she 37 weeks or more?" and says call until it's answered.
@@ -129,7 +135,7 @@ struct StorageTests {
         let card = folder.file("EmergencyCard.json")
         let model = try savedProfile(card: card)
         #expect(EmergencyCard.read(from: card)?.unitName == "Northgate")
-        model.profile.unitName = "Riverside"
+        model.bookedPlace?.name = "Riverside"
         model.savePlanning()
         let saved = try #require(EmergencyCard.read(from: card))
         #expect(saved.unitName == "Riverside")

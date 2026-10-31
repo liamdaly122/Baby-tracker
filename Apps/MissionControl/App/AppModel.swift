@@ -68,6 +68,7 @@ final class AppModel {
         if let card {
             profile.restore(from: card, defaults: Self.thresholdTable(library, region: card.region).defaults)
         }
+        Migrations.moveHospital(from: profile, in: planningContext)
         if runsMigrations && !planningUnavailable && !labourUnavailable {
             Migrations.run(profile: profile, labour: labourStore.mainContext)
             try? planningContext.save()
@@ -76,7 +77,9 @@ final class AppModel {
         let session = LabourSessionModel(context: labourStore.mainContext, deviceID: DeviceIdentity.current)
         self.session = session
         session.storeIsTemporary = labourUnavailable
-        session.detailsProvider = { days in profile.triageDetails(gestationalAgeDays: days) }
+        session.detailsProvider = { [unowned self] days in
+            profile.triageDetails(gestationalAgeDays: days, place: self.bookedPlace)
+        }
         session.alerting = notifier
         reloadLibrary()
 
@@ -84,17 +87,19 @@ final class AppModel {
         self.sync = sync
         session.sync = sync
         let legacyThresholds = currentThresholds
+        let legacyPlace = bookedPlace
         session.loadActiveSession { record in
             // Saved before sessions kept their start: fix gestation at the start time now.
             SessionStart(
                 sessionID: record.id,
                 startedAt: record.startedAt,
                 startedBy: record.ownerDeviceID,
-                profile: profile.brief(thresholds: legacyThresholds).labourProfile(
+                profile: profile.brief(thresholds: legacyThresholds, place: legacyPlace).labourProfile(
                     at: record.startedAt, calendar: .current),
                 thresholds: record.thresholds ?? legacyThresholds
             )
         }
+        notifier.clearLeftOverAlerts(running: session.sessionID)
         if !planningUnavailable {
             writeEmergencyCard()
         }
@@ -117,7 +122,33 @@ final class AppModel {
 
     /// What the watch needs to launch on its own.
     var brief: MissionBrief {
-        profile.brief(thresholds: currentThresholds)
+        profile.brief(thresholds: currentThresholds, place: bookedPlace)
+    }
+
+    /// Where she's booked, once it's been added.
+    var bookedPlace: BirthPlace? { place(.booked) }
+
+    func place(_ role: BirthPlaceRole) -> BirthPlace? {
+        let raw = role.rawValue
+        var descriptor = FetchDescriptor<BirthPlace>(predicate: #Predicate { $0.roleRaw == raw })
+        descriptor.fetchLimit = 1
+        return try? planning.mainContext.fetch(descriptor).first
+    }
+
+    /// The place for `role`, added if there isn't one yet, for the set-up screen to fill in.
+    func editablePlace(_ role: BirthPlaceRole) -> BirthPlace {
+        if let existing = place(role) {
+            return existing
+        }
+        let place = BirthPlace(role: role)
+        planning.mainContext.insert(place)
+        return place
+    }
+
+    /// Removes the backup place, or clears where she's booked.
+    func removePlace(_ place: BirthPlace) {
+        planning.mainContext.delete(place)
+        savePlanning()
     }
 
     func reloadLibrary() {
@@ -148,7 +179,10 @@ final class AppModel {
     func startDrill() {
         guard !session.isActive else { return }
         let profile = self.profile
-        drill = try? DrillController(brief: brief) { days in profile.triageDetails(gestationalAgeDays: days) }
+        let place = bookedPlace
+        drill = try? DrillController(brief: brief) { days in
+            profile.triageDetails(gestationalAgeDays: days, place: place)
+        }
         Task { await notifier.requestAuthorization() }
     }
 

@@ -11,9 +11,21 @@ enum PlanningSchemaV1: VersionedSchema {
     static var models: [any PersistentModel.Type] { [MissionProfile.self, BirthPlanRecord.self] }
 }
 
+/// Version 2 adds the birth places and the call list (review action 16). The profile keeps its old
+/// hospital fields so version 1 still describes saved stores; `Migrations.moveHospital` moves them
+/// into a `BirthPlace` once.
+enum PlanningSchemaV2: VersionedSchema {
+    static var versionIdentifier: Schema.Version { Schema.Version(2, 0, 0) }
+    static var models: [any PersistentModel.Type] {
+        [MissionProfile.self, BirthPlanRecord.self, BirthPlace.self, CrewContact.self]
+    }
+}
+
 enum PlanningMigrationPlan: SchemaMigrationPlan {
-    static var schemas: [any VersionedSchema.Type] { [PlanningSchemaV1.self] }
-    static var stages: [MigrationStage] { [] }
+    static var schemas: [any VersionedSchema.Type] { [PlanningSchemaV1.self, PlanningSchemaV2.self] }
+    static var stages: [MigrationStage] {
+        [.lightweight(fromVersion: PlanningSchemaV1.self, toVersion: PlanningSchemaV2.self)]
+    }
 }
 
 enum LabourSchemaV1: VersionedSchema {

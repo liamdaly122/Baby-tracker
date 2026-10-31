@@ -1,16 +1,22 @@
 import MissionCore
 import MissionUI
+import SwiftData
 import SwiftUI
 
 /// Who to ring, in order: 999 first when it's a 999 situation, then the unit, "Can't get
-/// through?", and everything they'll ask on one card. Every call control dials.
+/// through?", everything they'll ask on one card, getting there, the backup unit, and last the
+/// people on his call list. Every call control dials, except in a practice run.
 struct CallTab: View {
     @Environment(AppModel.self) private var model
     @Environment(\.missionMode) private var mode
+    @Query private var places: [BirthPlace]
+    @Query(sort: \CrewContact.sortOrder) private var crew: [CrewContact]
 
     var body: some View {
-        let profile = model.profile
         let labour = model.labour
+        let region = model.profile.region
+        let booked = places.first { $0.role == .booked }
+        let backup = places.first { $0.role == .backup }
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 LabourTabHeader(
@@ -22,18 +28,27 @@ struct CallTab: View {
                 if labour.output?.state == .call999 {
                     EmergencyCallButton(region: labour.region)
                 }
-                unitCard(profile: profile)
+                unitCard(place: booked, region: region)
                 AfterCallCard()
                 FallbackList(
                     steps: CallFallback.steps(
-                        region: labour.region, unit: profile.triageNumber, labourWard: profile.labourWardNumber)
+                        region: labour.region, unit: booked?.triageNumber(region: region),
+                        labourWard: booked?.labourWardNumber(region: region))
                 )
                 TimelineView(.periodic(from: .now, by: 30)) { _ in
                     if let script = labour.triageScript() {
                         ScriptCard(script: script)
                     }
                 }
-                hospitalCard(profile: profile)
+                if let booked {
+                    GettingThereCard(place: booked)
+                }
+                if let backup, !backup.isBlank {
+                    BackupPlaceCard(place: backup, booked: booked, region: region)
+                }
+                if !crew.isEmpty {
+                    CrewCard(crew: crew, region: region)
+                }
                 if labour.output?.state != .call999 {
                     EmergencyCallButton(region: labour.region)
                         .opacity(0.85)
@@ -47,8 +62,9 @@ struct CallTab: View {
     }
 
     @ViewBuilder
-    private func unitCard(profile: MissionProfile) -> some View {
-        switch profile.triageCheck {
+    private func unitCard(place: BirthPlace?, region: ContentRegion) -> some View {
+        let name = place?.displayName ?? "your maternity unit"
+        switch place?.triageCheck(region: region) {
         case .success(let number):
             // The dial plate: the one number that matters most, on its own panel.
             VStack(alignment: .leading, spacing: 10) {
@@ -58,7 +74,7 @@ struct CallTab: View {
                     .foregroundStyle(LabourWorld.call.accent)
                 if mode == .practice {
                     PracticeDial(
-                        action: "Call \(profile.unitDisplayName)",
+                        action: "Call \(name)",
                         detail: "In a real labour this rings \(number.display).")
                 } else if let url = number.telURL {
                     Link(destination: url) {
@@ -66,7 +82,7 @@ struct CallTab: View {
                             Image(systemName: "phone.fill")
                                 .font(.title2)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("Call \(profile.unitDisplayName)")
+                                Text("Call \(name)")
                                     .font(.title3.bold())
                                     .multilineTextAlignment(.leading)
                                 Text(number.display)
@@ -98,7 +114,7 @@ struct CallTab: View {
         case .failure(let problem):
             fixNumberCard(
                 title: "The saved number needs checking",
-                detail: "“\(profile.triagePhone)”: \(problem.message) Until it's fixed, use NHS 111 below.")
+                detail: "“\(place?.triagePhone ?? "")”: \(problem.message) Until it's fixed, use NHS 111 below.")
         case nil:
             fixNumberCard(
                 title: "Add the triage number",
@@ -110,7 +126,7 @@ struct CallTab: View {
 
     private func fixNumberCard(title: String, detail: String) -> some View {
         NavigationLink {
-            MissionProfileForm()
+            BirthPlaceForm(role: .booked)
         } label: {
             VStack(alignment: .leading, spacing: 6) {
                 Text(title)
@@ -127,33 +143,6 @@ struct CallTab: View {
             .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         }
         .buttonStyle(.plain)
-    }
-
-    @ViewBuilder
-    private func hospitalCard(profile: MissionProfile) -> some View {
-        let rows: [(String, String)] = [
-            ("Journey", profile.travelMinutes.map { "\($0) min" } ?? ""),
-            ("Parking", profile.parkingNotes),
-            ("After hours", profile.afterHoursEntrance),
-            ("Overnight", profile.partnerCanStayOvernight ? "One partner can stay" : ""),
-        ].filter { !$0.1.isEmpty }
-        if !rows.isEmpty {
-            VStack(alignment: .leading, spacing: 10) {
-                Text("GETTING THERE")
-                    .font(.caption.weight(.semibold).monospaced())
-                    .tracking(1)
-                    .foregroundStyle(LabourWorld.call.accent)
-                ForEach(rows, id: \.0) { label, value in
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(label).font(.subheadline).foregroundStyle(LabourTheme.secondaryText)
-                        Text(value).font(.body).foregroundStyle(LabourTheme.primaryText)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
-            }
-            .padding(.vertical, 12)
-            .overlay(alignment: .top) { Rectangle().fill(LabourTheme.primaryText.opacity(0.14)).frame(height: 1) }
-        }
     }
 }
 

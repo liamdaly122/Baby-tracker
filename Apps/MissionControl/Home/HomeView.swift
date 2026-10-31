@@ -1,5 +1,6 @@
 import MissionCore
 import MissionUI
+import SwiftData
 import SwiftUI
 import UserNotifications
 
@@ -8,6 +9,8 @@ import UserNotifications
 struct HomeView: View {
     @Environment(AppModel.self) private var model
     @State private var isConfirmingLaunch = false
+    @Query private var places: [BirthPlace]
+    @Query private var crew: [CrewContact]
 
     /// Which keys the launch card shows this week. LAUNCH is the same at every week.
     private var window: LaunchWindow {
@@ -87,8 +90,25 @@ struct HomeView: View {
                 MissionProfileForm()
             } label: {
                 SetUpRow(
-                    title: "Mission profile", detail: "Due date, hospital and triage number",
+                    title: "Mission profile", detail: "Due date and her details for the call",
                     icon: "person.text.rectangle")
+            }
+            Divider()
+            NavigationLink {
+                BirthPlacesView()
+            } label: {
+                SetUpRow(
+                    title: "Hospital or birth centre", detail: placeDetail, icon: "building.2",
+                    isWarning: placeNeedsWork)
+            }
+            Divider()
+            NavigationLink {
+                CrewView()
+            } label: {
+                SetUpRow(
+                    title: "People to call",
+                    detail: crew.isEmpty ? "Driver, childcare, family" : "\(crew.count) on the list",
+                    icon: "person.2")
             }
             Divider()
             NavigationLink {
@@ -120,6 +140,28 @@ struct HomeView: View {
         .padding(.horizontal, 16)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color(.secondarySystemGroupedBackground)))
+    }
+
+    private var bookedPlace: BirthPlace? {
+        places.first { $0.role == .booked && !$0.isBlank }
+    }
+
+    /// No triage number yet, or numbers that haven't been checked against her notes.
+    private var placeNeedsWork: Bool {
+        guard let place = bookedPlace, !place.triagePhone.isEmpty else { return true }
+        return place.numbersNeedChecking(calendar: model.profile.pregnancyCalendar, now: Date())
+    }
+
+    private var placeDetail: String {
+        guard let place = bookedPlace else { return "Add where she's booked, and the triage number" }
+        if place.triagePhone.isEmpty {
+            return "Add the triage number from her notes"
+        }
+        if place.numbersNeedChecking(calendar: model.profile.pregnancyCalendar, now: Date()) {
+            return place.numbersCheckedAt == nil
+                ? "Check the numbers against her notes" : "34 weeks: check the numbers again"
+        }
+        return place.name.isEmpty ? place.kind.title : place.name
     }
 }
 
@@ -156,6 +198,7 @@ private struct SetUpRow: View {
     var title: String
     var detail: String
     var icon: String
+    var isWarning = false
 
     var body: some View {
         HStack(spacing: 14) {
@@ -165,7 +208,9 @@ private struct SetUpRow: View {
                 .foregroundStyle(.tint)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.headline)
-                Text(detail).font(.subheadline).foregroundStyle(.secondary)
+                Text(detail)
+                    .font(.subheadline)
+                    .foregroundStyle(isWarning ? AnyShapeStyle(.orange) : AnyShapeStyle(.secondary))
             }
             Spacer()
             Image(systemName: "chevron.right").foregroundStyle(.tertiary)

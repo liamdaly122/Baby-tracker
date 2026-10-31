@@ -75,6 +75,22 @@ final class ThresholdNotifier: NSObject, LabourAlerting {
         }
     }
 
+    /// At launch: clears alerts from any labour but `running`, pending and delivered, so a labour
+    /// that ended while the app was closed (or couldn't be saved) doesn't keep alerting.
+    func clearLeftOverAlerts(running: UUID?) {
+        planning = Task { [previous = planning] in
+            await previous?.value
+            let pending = await center.pendingNotificationRequests().map(\.identifier).filter {
+                LabourAlertPlanner.isLeftOver($0, running: running)
+            }
+            center.removePendingNotificationRequests(withIdentifiers: pending)
+            let delivered = await center.deliveredNotifications().map(\.request.identifier).filter {
+                LabourAlertPlanner.isLeftOver($0, running: running)
+            }
+            center.removeDeliveredNotifications(withIdentifiers: delivered)
+        }
+    }
+
     private func post(_ alert: PlannedAlert, sessionID: UUID, after delay: TimeInterval?) {
         let content = UNMutableNotificationContent()
         content.title = alert.title
