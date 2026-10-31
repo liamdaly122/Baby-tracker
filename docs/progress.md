@@ -44,7 +44,7 @@ Right now we're working through the safety fixes from the October review, becaus
 | 13 | Automatic checks on every change, and tests for the app itself | Done (GitHub settings still to change) |
 | 14 | One labour engine shared by the phone and watch | Done |
 | 15 | Phone and watch always agree | Done (the core) |
-| 16 | Saved hospital, and a call list of people | Main part built, on `feature/birth-place-and-calls`. Later: home births, finding the hospital on a map, messaging family after the birth |
+| 16 | Saved hospital, and a call list of people | Main part waiting to be merged ([PR #9](https://github.com/liamdaly122/Baby-tracker/pull/9)). Later: home births, finding the hospital on a map, messaging family after the birth |
 | 17 | A birth plan built up over the weeks | Before the redesign (how it's stored); Phase 6 (the screens) |
 | 18 | The watch as the main timer | Phases 4 and 5 |
 | 19 | Fair week-by-week stages on the home screen | Before the redesign |
@@ -52,7 +52,7 @@ Right now we're working through the safety fixes from the October review, becaus
 
 ## What's next, in order
 
-1. Merge the hospital and call list (16).
+1. Merge the hospital and call list (16, PR #9).
 2. How the birth plan is stored, so it can be built up over the weeks (17).
 3. The hard moments (10).
 4. The redesign rules and accessibility (8 and 9), and the home screen stages (19).
@@ -77,7 +77,7 @@ There are test switches for the simulator and the phone. They're listed at the t
 
 ## Waiting on you
 
-- **Merging** the hospital and call list pull request once it's open.
+- **Merging** PR #9 (the hospital and call list) once its checks pass.
 - **GitHub settings:** make `main` the default branch, and protect it so the checks must pass before merging. I can do this with your go-ahead.
 - **The midwife review** of the advice rules in `docs/content-review-log.md`. It's best done before the redesign. It now includes two questions about the hospital numbers (H1, H2).
 - **Deciding on the Apple Developer Program**, before TestFlight.
