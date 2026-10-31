@@ -64,6 +64,10 @@ final class LabourSessionModel {
     var quietAcknowledgedFor: Date?
     /// The contraction just stopped, so he can say how strong it was.
     private(set) var justStopped: (id: UUID, until: Date)?
+    /// The labour store couldn't be opened, so this session lives in memory only.
+    var storeIsTemporary = false
+    /// The last save failed. The taps are still here and on the watch, and the next save tries them again.
+    private(set) var lastSaveFailed = false
 
     init(context: ModelContext, deviceID: String, now: @escaping () -> Date = Date.init) {
         self.context = context
@@ -72,6 +76,9 @@ final class LabourSessionModel {
     }
 
     var isActive: Bool { core != nil }
+
+    /// Taps aren't reaching the phone's storage, so they'd be lost if the app closed.
+    var isNotSaving: Bool { storeIsTemporary || lastSaveFailed }
 
     /// The session's clock: the time now, or a practice run's time once it has skipped ahead. Views
     /// read this instead of the wall clock.
@@ -459,14 +466,29 @@ final class LabourSessionModel {
     }
 
     private func storedEvents(for sessionID: UUID) -> [TapEvent] {
-        let records =
-            (try? context.fetch(
-                FetchDescriptor<TapEventRecord>(predicate: #Predicate { $0.sessionID == sessionID }))) ?? []
-        return records.compactMap(\.event)
+        let records: [TapEventRecord]
+        do {
+            records = try context.fetch(
+                FetchDescriptor<TapEventRecord>(predicate: #Predicate { $0.sessionID == sessionID }))
+        } catch {
+            Stores.log.error("Couldn't read the taps back: \(error)")
+            return []
+        }
+        let events = records.compactMap(\.event)
+        if events.count < records.count {
+            Stores.log.error("\(records.count - events.count) saved taps couldn't be read")
+        }
+        return events
     }
 
     private func save() {
-        try? context.save()
+        do {
+            try context.save()
+            lastSaveFailed = false
+        } catch {
+            lastSaveFailed = true
+            Stores.log.error("Couldn't save the labour: \(error)")
+        }
     }
 
     #if DEBUG

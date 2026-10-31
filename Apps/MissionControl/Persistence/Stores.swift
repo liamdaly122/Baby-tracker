@@ -1,32 +1,32 @@
 import Foundation
 import SwiftData
+import os
 
 /// The app keeps two SwiftData stores apart (App Store guideline 5.1.3):
 /// - planning: the pregnancy profile and birth plan;
 /// - labour: sessions and taps. Local only: no CloudKit, excluded from backups, and readable after
 ///   first unlock so the lock-screen controls in Phase 4 can write to it.
+/// Each opens on its own, so one failing never takes the other down (`AppModel`).
 enum Stores {
     static let appGroupIdentifier = "group.com.liamdaly.missioncontrol"
+    static let log = Logger(subsystem: "com.liamdaly.missioncontrol", category: "storage")
 
     static func planningContainer(inMemory: Bool = false) throws -> ModelContainer {
-        let schema = Schema([MissionProfile.self, BirthPlanRecord.self])
-        let configuration =
-            inMemory
-            ? ModelConfiguration("Planning", schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
-            : ModelConfiguration(
-                "Planning",
-                schema: schema,
-                url: try directory(named: "PlanningStore", excludeFromBackup: false).appending(path: "Planning.store"),
-                cloudKitDatabase: .none
-            )
-        return try ModelContainer(for: schema, configurations: configuration)
+        if inMemory {
+            return try container(PlanningSchemaV1.self, PlanningMigrationPlan.self, name: "Planning", url: nil)
+        }
+        return try planningContainer(
+            at: directory(named: "PlanningStore", excludeFromBackup: false).appending(path: "Planning.store"))
+    }
+
+    /// The planning store in a file of its own. The app keeps it in the App Group; tests use a temporary file.
+    static func planningContainer(at url: URL) throws -> ModelContainer {
+        try container(PlanningSchemaV1.self, PlanningMigrationPlan.self, name: "Planning", url: url)
     }
 
     static func labourContainer(inMemory: Bool = false) throws -> ModelContainer {
         if inMemory {
-            let configuration = ModelConfiguration(
-                "Labour", schema: labourSchema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
-            return try ModelContainer(for: labourSchema, configurations: configuration)
+            return try container(LabourSchemaV1.self, LabourMigrationPlan.self, name: "Labour", url: nil)
         }
         return try labourContainer(
             at: directory(named: "LabourStore", excludeFromBackup: true).appending(path: "Labour.store"))
@@ -34,11 +34,39 @@ enum Stores {
 
     /// The labour store in a file of its own. The app keeps it in the App Group; tests use a temporary file.
     static func labourContainer(at url: URL) throws -> ModelContainer {
-        let configuration = ModelConfiguration("Labour", schema: labourSchema, url: url, cloudKitDatabase: .none)
-        return try ModelContainer(for: labourSchema, configurations: configuration)
+        try container(LabourSchemaV1.self, LabourMigrationPlan.self, name: "Labour", url: url)
     }
 
-    private static var labourSchema: Schema { Schema([LabourSessionRecord.self, TapEventRecord.self]) }
+    /// Where the backup copy of the hospital's numbers lives (`EmergencyCard`), next to the planning store.
+    static func emergencyCardURL() throws -> URL {
+        try directory(named: "PlanningStore", excludeFromBackup: false).appending(path: "EmergencyCard.json")
+    }
+
+    /// An empty store in memory, for when the real one can't be opened. Making one only fails if the
+    /// phone is out of memory, and then nothing else would work either.
+    static func temporary(_ make: (Bool) throws -> ModelContainer) -> ModelContainer {
+        do {
+            return try make(true)
+        } catch {
+            fatalError("Couldn't create an in-memory store: \(error)")
+        }
+    }
+
+    private static func container(
+        _ version: any VersionedSchema.Type,
+        _ plan: any SchemaMigrationPlan.Type,
+        name: String,
+        url: URL?
+    ) throws -> ModelContainer {
+        let schema = Schema(versionedSchema: version)
+        let configuration =
+            if let url {
+                ModelConfiguration(name, schema: schema, url: url, cloudKitDatabase: .none)
+            } else {
+                ModelConfiguration(name, schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+            }
+        return try ModelContainer(for: schema, migrationPlan: plan, configurations: configuration)
+    }
 
     /// A folder in the App Group container (shared with the widget and, later, intents), or in
     /// Application Support when the App Group isn't available (unsigned simulator builds).

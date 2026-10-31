@@ -71,6 +71,7 @@ struct LabourRootView: View {
 
 /// Each tab's navigation stack, with the labour menu and (off the timer) a slim status strip.
 struct LabourTabStack<Content: View>: View {
+    @Environment(AppModel.self) private var model
     @Environment(\.missionMode) private var mode
     @Binding var tab: LabourTab
     var title: String = ""
@@ -84,6 +85,8 @@ struct LabourTabStack<Content: View>: View {
             VStack(spacing: 0) {
                 if mode == .practice {
                     SimulationBar()
+                } else if model.labour.isNotSaving {
+                    NotSavingBar()
                 }
                 if showsStatus {
                     StatusStrip { tab = .timer }

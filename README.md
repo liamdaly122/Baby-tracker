@@ -68,4 +68,6 @@ Simulator builds need no signing. For a device, put your team in `Configs/Signin
 - Phase 0 (research, plan, scaffold) complete.
 - Phase 1 (go/no-go engine and event-sourced tap log) complete: `GoNoGoEngine`, `ContractionMetrics`, hysteresis, NHS-worded state copy, `EventLog` and `EventMerger`, with 26 scripted labours and property tests.
 - Phase 2 (calendar and UK content v1) complete: `PregnancyCalendar` (gestational age, expected week of childbirth, qualifying week, deadlines and reminders), `ContentLoader`, `HumourResolver` and `GlossaryIndex` search; 134 checklist items in 12 modules, 94 glossary terms, 17 coaching cards, 12 story beats, 22 quiz questions and 35 badges.
-- Next: Phase 3, iOS labour mode. See `docs/plan.md` section B10 for the full phase list.
+- Phase 3 (iOS labour mode) and the watch's own timer are built. The first full review's safety fixes are being worked through before the redesign.
+
+Where things are, in plain English (what works, the review's fixes, what's next, and what's waiting on the owner): [`docs/progress.md`](docs/progress.md), updated with each pull request.
