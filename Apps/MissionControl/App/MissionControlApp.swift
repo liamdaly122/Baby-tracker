@@ -5,21 +5,15 @@ import SwiftUI
 @main
 struct MissionControlApp: App {
     /// Nil when the app is only hosting its tests: they make their own models.
-    @State private var loaded: Result<AppModel, Error>? =
-        LaunchOptions.isTestHost ? nil : Result { try AppModel(inMemory: LaunchOptions.inMemory) }
+    @State private var model: AppModel? = LaunchOptions.isTestHost ? nil : LaunchOptions.makeModel()
 
     var body: some Scene {
         WindowGroup {
-            switch loaded {
-            case .success(let model):
+            if let model {
                 AppRootView()
                     .environment(model)
                     .modelContainer(model.planning)
                     .task { LaunchOptions.applyDemoData(to: model) }
-            case .failure(let error):
-                StoreFailureView(error: error)
-            case nil:
-                EmptyView()
             }
         }
     }
@@ -63,23 +57,5 @@ struct AppRootView: View {
                 break
             }
         }
-    }
-}
-
-/// Shown if the stores can't be opened, which should only happen if the disk is full.
-struct StoreFailureView: View {
-    var error: Error
-
-    var body: some View {
-        VStack(spacing: 12) {
-            Text("Mission Control can't open its data")
-                .font(.title2.bold())
-            Text("Free up some space and reopen the app. If labour has started, phone your maternity unit.")
-                .multilineTextAlignment(.center)
-            Text(error.localizedDescription)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-        }
-        .padding()
     }
 }

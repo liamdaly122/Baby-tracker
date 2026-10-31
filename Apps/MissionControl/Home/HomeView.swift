@@ -19,6 +19,7 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
+                    StorageNotices()
                     countdown
                     if isConfirmingLaunch {
                         LaunchGate(
