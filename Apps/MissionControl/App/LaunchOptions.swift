@@ -7,13 +7,52 @@ import MissionCore
 ///   -demoPreterm      the same, due in 40 days (34+2): the drill key sits under LAUNCH
 ///   -demoLabour       start labour mode with an hour of contractions every 4 minutes
 ///   -demoDrill        open straight into a practice run
+///   -failPlanningStore  act as if her saved details can't be opened
+///   -failLabourStore    act as if labour taps can't be saved
+/// Any demo flag implies -inMemoryStores, so demo data can never be written over a real profile.
 enum LaunchOptions {
+    private static let demoFlags = [
+        "-demoProfile", "-demoPreterm", "-demoLabour", "-demoDrill", "-failPlanningStore", "-failLabourStore",
+    ]
+
     static var inMemory: Bool {
         #if DEBUG
-            ProcessInfo.processInfo.arguments.contains("-inMemoryStores")
+            let arguments = ProcessInfo.processInfo.arguments
+            return arguments.contains("-inMemoryStores") || demoFlags.contains(where: arguments.contains)
         #else
             false
         #endif
+    }
+
+    /// The app is only hosting its unit tests, so it opens no stores and starts no watch link.
+    static var isTestHost: Bool {
+        #if DEBUG
+            ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+        #else
+            false
+        #endif
+    }
+
+    /// The app's model, with a store failing on purpose if a -fail flag asks for it.
+    @MainActor
+    static func makeModel() -> AppModel {
+        #if DEBUG
+            struct SimulatedFailure: Error {}
+            let arguments = ProcessInfo.processInfo.arguments
+            let failPlanning = arguments.contains("-failPlanningStore")
+            let failLabour = arguments.contains("-failLabourStore")
+            if failPlanning || failLabour {
+                return AppModel(
+                    planning: failPlanning
+                        ? .failure(SimulatedFailure()) : Result { try Stores.planningContainer(inMemory: true) },
+                    labour: failLabour
+                        ? .failure(SimulatedFailure()) : Result { try Stores.labourContainer(inMemory: true) },
+                    emergencyCardURL: nil,
+                    runsMigrations: false
+                )
+            }
+        #endif
+        return AppModel(inMemory: inMemory)
     }
 
     @MainActor

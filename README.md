@@ -35,7 +35,7 @@ Two modes: **T-minus** (the pregnancy: briefings, checklists, skills training, r
 | `Sources/MissionContent/Content/{uk,us}/` | Versioned content JSON, one file per kind per region |
 | `Apps/` | Thin iOS, watchOS and widget shells. The Xcode project is generated from `project.yml` |
 | `Scripts/content-lint.py` | Content checks: provenance, `off` copy, duplicate IDs, forbidden diagnostic phrases, threshold bounds |
-| `.github/workflows/ci.yml` | Linux build, test and format lint plus content lint on every PR; the macOS app build runs on `main` or PRs labelled `needs-mac` |
+| `.github/workflows/ci.yml` | On every PR: Linux build, test and format lint, content lint, and on macOS SwiftLint, the app tests and the iOS and watch builds (Xcode 27.2) |
 
 ## Building
 
@@ -55,11 +55,19 @@ The apps need a Mac with Xcode and [XcodeGen](https://github.com/yonaskolb/Xcode
 Scripts/gen-project.sh
 ```
 
-Then open `MissionControl.xcodeproj`. Simulator builds need no signing. For a device, put your team in `Configs/Signing.local.xcconfig` (gitignored) as `DEVELOPMENT_TEAM = ABCDE12345`.
+Then open `MissionControl.xcodeproj`. The app tests (`Tests/MissionControlTests`) run in the `MissionControl` scheme on any iPhone simulator:
+
+```bash
+xcodebuild test -project MissionControl.xcodeproj -scheme MissionControl -destination 'platform=iOS Simulator,name=iPhone 17'
+```
+
+Simulator builds need no signing. For a device, put your team in `Configs/Signing.local.xcconfig` (gitignored) as `DEVELOPMENT_TEAM = ABCDE12345`.
 
 ## Status
 
 - Phase 0 (research, plan, scaffold) complete.
 - Phase 1 (go/no-go engine and event-sourced tap log) complete: `GoNoGoEngine`, `ContractionMetrics`, hysteresis, NHS-worded state copy, `EventLog` and `EventMerger`, with 26 scripted labours and property tests.
 - Phase 2 (calendar and UK content v1) complete: `PregnancyCalendar` (gestational age, expected week of childbirth, qualifying week, deadlines and reminders), `ContentLoader`, `HumourResolver` and `GlossaryIndex` search; 134 checklist items in 12 modules, 94 glossary terms, 17 coaching cards, 12 story beats, 22 quiz questions and 35 badges.
-- Next: Phase 3, iOS labour mode. See `docs/plan.md` section B10 for the full phase list.
+- Phase 3 (iOS labour mode) and the watch's own timer are built. The first full review's safety fixes are being worked through before the redesign.
+
+Where things are, in plain English (what works, the review's fixes, what's next, and what's waiting on the owner): [`docs/progress.md`](docs/progress.md), updated with each pull request.
