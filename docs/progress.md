@@ -38,7 +38,7 @@ Right now we're working through the safety fixes from the October review, becaus
 | 8 | Rules for the redesign (every Call button dials, 999 always one tap away) | Before the redesign |
 | 9 | Readable in the dark, big buttons, large text, VoiceOver | Before the redesign |
 | 10 | Hard moments: loss, admission, neonatal care, false alarms | Before the redesign |
-| 11 | A storage problem never stops labour mode or loses the hospital's number | Built, on `feature/safer-storage` |
+| 11 | A storage problem never stops labour mode or loses the hospital's number | Waiting to be merged, after PR #7 ([PR #8](https://github.com/liamdaly122/Baby-tracker/pull/8)) |
 | 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Can start any time, alongside the rest |
 | 13 | Automatic checks on every change, and tests for the app itself | Waiting to be merged ([PR #7](https://github.com/liamdaly122/Baby-tracker/pull/7)) |
 | 14 | One labour engine shared by the phone and watch | Done |
@@ -51,7 +51,7 @@ Right now we're working through the safety fixes from the October review, becaus
 
 ## What's next, in order
 
-1. Merge PR #7 and the storage fix (11).
+1. Merge PR #7, then PR #8 (the storage fix, 11).
 2. The hospital and call-list details (16), then how the birth plan is stored (17).
 3. The hard moments (10).
 4. The redesign rules and accessibility (8 and 9), and the home screen stages (19).
@@ -76,7 +76,7 @@ There are test switches for the simulator and the phone. They're listed at the t
 
 ## Waiting on you
 
-- **Merging** the open pull requests on GitHub (PR #7 now, the storage fix next).
+- **Merging** the open pull requests on GitHub: PR #7 first, then PR #8 (the storage fix), which is built on it.
 - **GitHub settings:** make `main` the default branch, and protect it so the checks must pass before merging. I can do this with your go-ahead.
 - **The midwife review** of the advice rules in `docs/content-review-log.md`. It's best done before the redesign.
 - **Deciding on the Apple Developer Program**, before TestFlight.
