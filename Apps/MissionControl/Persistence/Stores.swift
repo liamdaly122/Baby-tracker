@@ -23,18 +23,22 @@ enum Stores {
     }
 
     static func labourContainer(inMemory: Bool = false) throws -> ModelContainer {
-        let schema = Schema([LabourSessionRecord.self, TapEventRecord.self])
-        let configuration =
-            inMemory
-            ? ModelConfiguration("Labour", schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
-            : ModelConfiguration(
-                "Labour",
-                schema: schema,
-                url: try directory(named: "LabourStore", excludeFromBackup: true).appending(path: "Labour.store"),
-                cloudKitDatabase: .none
-            )
-        return try ModelContainer(for: schema, configurations: configuration)
+        if inMemory {
+            let configuration = ModelConfiguration(
+                "Labour", schema: labourSchema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+            return try ModelContainer(for: labourSchema, configurations: configuration)
+        }
+        return try labourContainer(
+            at: directory(named: "LabourStore", excludeFromBackup: true).appending(path: "Labour.store"))
     }
+
+    /// The labour store in a file of its own. The app keeps it in the App Group; tests use a temporary file.
+    static func labourContainer(at url: URL) throws -> ModelContainer {
+        let configuration = ModelConfiguration("Labour", schema: labourSchema, url: url, cloudKitDatabase: .none)
+        return try ModelContainer(for: labourSchema, configurations: configuration)
+    }
+
+    private static var labourSchema: Schema { Schema([LabourSessionRecord.self, TapEventRecord.self]) }
 
     /// A folder in the App Group container (shared with the widget and, later, intents), or in
     /// Application Support when the App Group isn't available (unsigned simulator builds).

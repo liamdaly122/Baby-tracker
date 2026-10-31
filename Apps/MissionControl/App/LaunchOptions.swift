@@ -7,10 +7,23 @@ import MissionCore
 ///   -demoPreterm      the same, due in 40 days (34+2): the drill key sits under LAUNCH
 ///   -demoLabour       start labour mode with an hour of contractions every 4 minutes
 ///   -demoDrill        open straight into a practice run
+/// Any demo flag implies -inMemoryStores, so demo data can never be written over a real profile.
 enum LaunchOptions {
+    private static let demoFlags = ["-demoProfile", "-demoPreterm", "-demoLabour", "-demoDrill"]
+
     static var inMemory: Bool {
         #if DEBUG
-            ProcessInfo.processInfo.arguments.contains("-inMemoryStores")
+            let arguments = ProcessInfo.processInfo.arguments
+            return arguments.contains("-inMemoryStores") || demoFlags.contains(where: arguments.contains)
+        #else
+            false
+        #endif
+    }
+
+    /// The app is only hosting its unit tests, so it opens no stores and starts no watch link.
+    static var isTestHost: Bool {
+        #if DEBUG
+            ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
         #else
             false
         #endif

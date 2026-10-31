@@ -4,7 +4,9 @@ import SwiftUI
 
 @main
 struct MissionControlApp: App {
-    @State private var loaded = Result { try AppModel(inMemory: LaunchOptions.inMemory) }
+    /// Nil when the app is only hosting its tests: they make their own models.
+    @State private var loaded: Result<AppModel, Error>? =
+        LaunchOptions.isTestHost ? nil : Result { try AppModel(inMemory: LaunchOptions.inMemory) }
 
     var body: some Scene {
         WindowGroup {
@@ -16,6 +18,8 @@ struct MissionControlApp: App {
                     .task { LaunchOptions.applyDemoData(to: model) }
             case .failure(let error):
                 StoreFailureView(error: error)
+            case nil:
+                EmptyView()
             }
         }
     }

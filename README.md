@@ -35,7 +35,7 @@ Two modes: **T-minus** (the pregnancy: briefings, checklists, skills training, r
 | `Sources/MissionContent/Content/{uk,us}/` | Versioned content JSON, one file per kind per region |
 | `Apps/` | Thin iOS, watchOS and widget shells. The Xcode project is generated from `project.yml` |
 | `Scripts/content-lint.py` | Content checks: provenance, `off` copy, duplicate IDs, forbidden diagnostic phrases, threshold bounds |
-| `.github/workflows/ci.yml` | Linux build, test and format lint plus content lint on every PR; the macOS app build runs on `main` or PRs labelled `needs-mac` |
+| `.github/workflows/ci.yml` | On every PR: Linux build, test and format lint, content lint, and on macOS SwiftLint, the app tests and the iOS and watch builds (Xcode 27.2) |
 
 ## Building
 
@@ -55,7 +55,13 @@ The apps need a Mac with Xcode and [XcodeGen](https://github.com/yonaskolb/Xcode
 Scripts/gen-project.sh
 ```
 
-Then open `MissionControl.xcodeproj`. Simulator builds need no signing. For a device, put your team in `Configs/Signing.local.xcconfig` (gitignored) as `DEVELOPMENT_TEAM = ABCDE12345`.
+Then open `MissionControl.xcodeproj`. The app tests (`Tests/MissionControlTests`) run in the `MissionControl` scheme on any iPhone simulator:
+
+```bash
+xcodebuild test -project MissionControl.xcodeproj -scheme MissionControl -destination 'platform=iOS Simulator,name=iPhone 17'
+```
+
+Simulator builds need no signing. For a device, put your team in `Configs/Signing.local.xcconfig` (gitignored) as `DEVELOPMENT_TEAM = ABCDE12345`.
 
 ## Status
 

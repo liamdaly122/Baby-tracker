@@ -5,13 +5,23 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
+# A new push to a pull request cancels the run still going for the old one.
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+# Actions are pinned to commits, with the release in a comment. The toolchains match local
+# development: Swift 6.4.2 and Xcode 27.2.
 jobs:
   linux:
     name: Package (Linux)
     runs-on: ubuntu-latest
-    container: swift:6.2-noble
+    container: swift:6.4.2-noble
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Build
         run: swift build
       - name: Test
@@ -23,31 +33,44 @@ jobs:
     name: Content lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Lint content
         run: python3 -I Scripts/content-lint.py
       - name: Lint self-tests
         run: python3 -I -m unittest discover -s Scripts -p 'test_*.py'
 
-  # macOS minutes cost 10x, so this only runs on main or on PRs labelled needs-mac.
+  # Runs on every pull request: GitHub's macOS runners are free for public repositories. Xcode 27
+  # is only on the xcode-27 image so far, which GitHub still calls a preview.
   mac:
     name: Apps (macOS)
-    if: github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'needs-mac')
-    runs-on: macos-15
+    runs-on: xcode-27
+    timeout-minutes: 60
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
     steps:
-      - uses: actions/checkout@v4
-      - name: Install tools
-        run: brew install xcodegen swiftlint
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Versions
+        run: |
+          sw_vers
+          xcodebuild -version
+          swift --version
+      - name: Cache pinned tools
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .tools
+          key: tools-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('Scripts/ci-install-tools.sh') }}
+      - name: Install pinned tools
+        run: Scripts/ci-install-tools.sh
       - name: SwiftLint
         run: swiftlint lint --strict
       - name: Package tests
         run: swift test
       - name: Generate project
         run: Scripts/gen-project.sh
-      - name: Build iOS app with widgets and watch app
+      - name: Build and test iOS app with widgets and watch app
         run: >
-          xcodebuild build -project MissionControl.xcodeproj -scheme MissionControl
-          -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO
+          xcodebuild test -project MissionControl.xcodeproj -scheme MissionControl
+          -destination 'platform=iOS Simulator,name=iPhone 17' CODE_SIGNING_ALLOWED=NO
       - name: Build watch app
         run: >
           xcodebuild build -project MissionControl.xcodeproj -scheme MissionControlWatch

@@ -56,7 +56,23 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
         TARGETED_DEVICE_FAMILY: "1"
         CODE_SIGN_ENTITLEMENTS: Apps/MissionControl/MissionControl.entitlements
-    scheme: {}
+    scheme:
+      testTargets:
+        - MissionControlTests
+
+  # App-hosted unit tests (Swift Testing) for the app layer: storage, relaunch, undo and the practice run.
+  MissionControlTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - Tests/MissionControlTests
+    dependencies:
+      - target: MissionControl
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.liamdaly.missioncontrol.tests
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "1"
 
   MissionControlWatch:
     type: application
