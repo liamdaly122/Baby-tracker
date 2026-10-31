@@ -6,6 +6,7 @@ import UIKit
 /// The timer: advice at the top, the big button at the bottom, history below (scroll up).
 struct TimerTab: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.missionMode) private var mode
     @State private var bannerExpanded = false
     @State private var showsEmergency = false
     @State private var showsAllFlags = false
@@ -32,6 +33,9 @@ struct TimerTab: View {
 
     private func controls(height: CGFloat) -> some View {
         VStack(spacing: 14) {
+            if mode == .practice, let drill = model.drill {
+                DrillGuideCard(drill: drill)
+            }
             banner
             if labour.output?.state == .call999 || showsEmergency {
                 EmergencyCallButton(region: labour.region)
@@ -41,16 +45,17 @@ struct TimerTab: View {
             flags
             Spacer(minLength: 0)
             UndoArea()
-            TimelineView(.periodic(from: .now, by: 1)) { context in
+            TimelineView(.periodic(from: .now, by: 1)) { _ in
                 StartStopButton(
                     isRunning: labour.openContraction != nil,
-                    elapsed: labour.openContraction.map { context.date.timeIntervalSince($0.start) }
+                    elapsed: labour.openContraction.map { labour.currentTime.timeIntervalSince($0.start) }
                 ) {
                     UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                     labour.tap()
                 }
             }
-            .frame(height: max(180, height * 0.34))
+            // A little shorter in a practice run, to make room for the drill's guide.
+            .frame(height: mode == .practice ? max(150, height * 0.28) : max(180, height * 0.34))
             StrengthRow()
             HStack {
                 Label("History below", systemImage: "chevron.compact.up")
@@ -228,14 +233,15 @@ private struct StatsRow: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 1)) { context in
+        TimelineView(.periodic(from: .now, by: 1)) { _ in
             let labour = model.labour
+            let now = labour.currentTime
             let metrics = labour.output?.metrics
-            let lastHour = labour.log.contractions.filter { context.date.timeIntervalSince($0.start) <= 3600 }.count
+            let lastHour = labour.log.contractions.filter { now.timeIntervalSince($0.start) <= 3600 }.count
             HStack(spacing: 8) {
                 StatTile(
                     label: "Since last",
-                    value: metrics?.lastStart.map { clockText(context.date.timeIntervalSince($0)) } ?? "–"
+                    value: metrics?.lastStart.map { clockText(now.timeIntervalSince($0)) } ?? "–"
                 )
                 StatTile(label: "Every", value: metrics.map { every($0, labour.thresholds) } ?? "–")
                 StatTile(label: "Lasting", value: metrics?.medianDurationSec.map { "\(Int($0.rounded()))s" } ?? "–")
@@ -264,11 +270,12 @@ private struct UndoArea: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 1)) { context in
-            if let undoable = model.labour.undoable, undoable.expiresAt > context.date {
+        TimelineView(.periodic(from: .now, by: 1)) { _ in
+            let now = model.labour.currentTime
+            if let undoable = model.labour.undoable, undoable.expiresAt > now {
                 UndoChip(label: undoable.label) { model.labour.undo() }
                     .transition(.opacity)
-            } else if let notice = model.labour.notice, notice.until > context.date {
+            } else if let notice = model.labour.notice, notice.until > now {
                 Text(notice.text)
                     .font(.headline)
                     .foregroundStyle(LabourTheme.secondaryText)
@@ -394,8 +401,8 @@ private struct StrengthRow: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 1)) { context in
-            if let stopped = model.labour.justStopped, stopped.until > context.date {
+        TimelineView(.periodic(from: .now, by: 1)) { _ in
+            if let stopped = model.labour.justStopped, stopped.until > model.labour.currentTime {
                 HStack(spacing: 8) {
                     Text("How strong?")
                         .font(.subheadline)

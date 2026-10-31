@@ -9,7 +9,7 @@ struct LabourPrompts: View {
 
     var body: some View {
         let labour = model.labour
-        TimelineView(.periodic(from: .now, by: 30)) { context in
+        TimelineView(.periodic(from: .now, by: 30)) { _ in
             VStack(spacing: 10) {
                 switch labour.prompt {
                 case .endedOrNew(let elapsed):
@@ -46,7 +46,7 @@ struct LabourPrompts: View {
                     )
                 }
                 if let output = labour.output {
-                    notes(output, labour: labour, now: context.date)
+                    notes(output, labour: labour, now: labour.currentTime)
                 }
             }
         }
@@ -95,7 +95,8 @@ private struct WatersTimeCard: View {
                 .font(.subheadline)
             if picking {
                 DatePicker(
-                    "Waters went at", selection: $time, in: Date().addingTimeInterval(-48 * 3600)...Date(),
+                    "Waters went at", selection: $time,
+                    in: labour.currentTime.addingTimeInterval(-48 * 3600)...labour.currentTime,
                     displayedComponents: [.date, .hourAndMinute]
                 )
                 .colorScheme(.light)
@@ -116,7 +117,7 @@ private struct WatersTimeCard: View {
                     choice("30 min ago") { labour.setWatersTime(secondsAgo: 1800) }
                     choice("1 hour ago") { labour.setWatersTime(secondsAgo: 3600) }
                     choice("Another time") {
-                        time = labour.earlierWaters?.onAt ?? Date()
+                        time = labour.earlierWaters?.onAt ?? labour.currentTime
                         picking = true
                     }
                 }

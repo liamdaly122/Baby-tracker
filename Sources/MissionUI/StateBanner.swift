@@ -26,16 +26,20 @@ public struct StateBanner: View {
         self.isExpanded = isExpanded
     }
 
-    private var filled: Bool { LabourTheme.isFilled(state) }
-    private var accent: Color { LabourTheme.color(for: state) }
+    @Environment(\.missionMode) private var mode
+
+    /// A practice run uses the blueprint tint, never the state colours, so it can't pass for labour.
+    private var filled: Bool { mode == .live && LabourTheme.isFilled(state) }
+    private var accent: Color { mode == .practice ? LabourTheme.blueprint : LabourTheme.color(for: state) }
     private var textColor: Color { filled ? .white : LabourTheme.primaryText }
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(headline)
+            Text(mode.headline(headline))
                 .font(.title2.weight(.bold))
                 .foregroundStyle(filled ? .white : accent)
                 .fixedSize(horizontal: false, vertical: true)
+                .accessibilityLabel(mode.spokenHeadline(headline))
             ForEach(reasonLines, id: \.self) { line in
                 Text(line)
                     .font(.body)

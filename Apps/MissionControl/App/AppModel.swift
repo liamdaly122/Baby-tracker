@@ -10,7 +10,10 @@ import SwiftData
 final class AppModel {
     let planning: ModelContainer
     let labourStore: ModelContainer
-    let labour: LabourSessionModel
+    /// The real labour: saved, alerted and shared with the watch.
+    let session: LabourSessionModel
+    /// A practice run, if one is going. In memory only, with no alerts, no watch link and no dialling.
+    private(set) var drill: DrillController?
     let notifier: ThresholdNotifier
     private(set) var sync: PhoneSync?
     private(set) var library: ContentLibrary
@@ -31,16 +34,17 @@ final class AppModel {
             try? planningContext.save()
         }
 
-        labour = LabourSessionModel(context: labourStore.mainContext, deviceID: DeviceIdentity.current)
-        labour.detailsProvider = { days in profile.triageDetails(gestationalAgeDays: days) }
-        labour.alerting = notifier
+        let session = LabourSessionModel(context: labourStore.mainContext, deviceID: DeviceIdentity.current)
+        self.session = session
+        session.detailsProvider = { days in profile.triageDetails(gestationalAgeDays: days) }
+        session.alerting = notifier
         reloadLibrary()
 
-        let sync = PhoneSync(labour: labour) { [unowned self] in self.brief }
+        let sync = PhoneSync(labour: session) { [unowned self] in self.brief }
         self.sync = sync
-        labour.sync = sync
+        session.sync = sync
         let legacyThresholds = currentThresholds
-        labour.loadActiveSession { record in
+        session.loadActiveSession { record in
             // Saved before sessions kept their start: fix gestation at the start time now.
             SessionStart(
                 sessionID: record.id,
@@ -75,10 +79,34 @@ final class AppModel {
         }
     }
 
-    /// LAUNCH: fixes gestation, region and thresholds for this labour, and tells the watch.
-    func launch() async {
-        await notifier.requestAuthorization()
-        labour.start(brief.sessionStart(at: Date(), by: labour.deviceID, calendar: .current))
+    /// The labour the screens show: the real one whenever it's running, otherwise a practice run.
+    var labour: LabourSessionModel {
+        guard !session.isActive, let drill else { return session }
+        return drill.labour
+    }
+
+    /// A practice run is on screen.
+    var isDrilling: Bool { !session.isActive && drill != nil }
+
+    /// LAUNCH: fixes gestation, region and thresholds for this labour, and tells the watch. Ends any
+    /// practice run, and starts the session before asking about alerts, so a permission prompt
+    /// can't hold it up.
+    func launch() {
+        endDrill()
+        session.start(brief.sessionStart(at: Date(), by: session.deviceID, calendar: .current))
+        Task { await notifier.requestAuthorization() }
+    }
+
+    /// A practice run on a pretend 39+0 labour. Asks about alerts too, as part of getting ready.
+    func startDrill() {
+        guard !session.isActive else { return }
+        let profile = self.profile
+        drill = try? DrillController(brief: brief) { days in profile.triageDetails(gestationalAgeDays: days) }
+        Task { await notifier.requestAuthorization() }
+    }
+
+    func endDrill() {
+        drill = nil
     }
 
     /// Saves the profile and sends the watch the new brief.

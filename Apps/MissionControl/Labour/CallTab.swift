@@ -6,6 +6,7 @@ import SwiftUI
 /// through?", and everything they'll ask on one card. Every call control dials.
 struct CallTab: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.missionMode) private var mode
 
     var body: some View {
         let profile = model.profile
@@ -14,8 +15,10 @@ struct CallTab: View {
             VStack(alignment: .leading, spacing: 16) {
                 LabourTabHeader(
                     world: .call, eyebrow: "Comms", title: "Who to ring",
-                    subtitle: labour.output?.state == .call999
-                        ? "999 first. Then your unit." : "In this order. Every button dials.")
+                    subtitle: mode == .practice
+                        ? "In this order. In a drill, nothing dials."
+                        : labour.output?.state == .call999
+                            ? "999 first. Then your unit." : "In this order. Every button dials.")
                 if labour.output?.state == .call999 {
                     EmergencyCallButton(region: labour.region)
                 }
@@ -53,7 +56,11 @@ struct CallTab: View {
                     .font(.caption.weight(.semibold).monospaced())
                     .tracking(1)
                     .foregroundStyle(LabourWorld.call.accent)
-                if let url = number.telURL {
+                if mode == .practice {
+                    PracticeDial(
+                        action: "Call \(profile.unitDisplayName)",
+                        detail: "In a real labour this rings \(number.display).")
+                } else if let url = number.telURL {
                     Link(destination: url) {
                         HStack(spacing: 12) {
                             Image(systemName: "phone.fill")
@@ -237,6 +244,7 @@ private struct AfterCallCard: View {
 /// "Can't get through?" as a numbered ladder: try again, the labour ward, NHS 111, then 999 in an
 /// emergency. Always open, because it's the order to work down.
 private struct FallbackList: View {
+    @Environment(\.missionMode) private var mode
     var steps: [CallStep]
 
     var body: some View {
@@ -263,7 +271,14 @@ private struct FallbackList: View {
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     Spacer(minLength: 8)
-                    if let number = step.number, let url = number.telURL {
+                    if let number = step.number, mode == .practice {
+                        Text(number.display)
+                            .font(.subheadline.weight(.bold).monospacedDigit())
+                            .lineLimit(1)
+                            .fixedSize()
+                            .foregroundStyle(LabourTheme.blueprint)
+                            .accessibilityLabel("Practice. In a real labour this rings \(number.display).")
+                    } else if let number = step.number, let url = number.telURL {
                         Link(destination: url) {
                             Label(number.display, systemImage: "phone.fill")
                                 .font(.subheadline.weight(.bold).monospacedDigit())
