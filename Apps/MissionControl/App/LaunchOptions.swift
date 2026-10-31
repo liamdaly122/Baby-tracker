@@ -3,8 +3,10 @@ import MissionCore
 
 /// Launch arguments for testing in the simulator. They do nothing in release builds.
 ///   -inMemoryStores   start with empty stores that vanish on quit
-///   -demoProfile      fill in a profile and birth plan
+///   -demoProfile      fill in a profile and birth plan, due in 10 days (38+4)
+///   -demoPreterm      the same, due in 40 days (34+2): the drill key sits under LAUNCH
 ///   -demoLabour       start labour mode with an hour of contractions every 4 minutes
+///   -demoDrill        open straight into a practice run
 enum LaunchOptions {
     static var inMemory: Bool {
         #if DEBUG
@@ -18,24 +20,29 @@ enum LaunchOptions {
     static func applyDemoData(to model: AppModel) {
         #if DEBUG
             let arguments = ProcessInfo.processInfo.arguments
-            if arguments.contains("-demoProfile") || arguments.contains("-demoLabour") {
-                fillProfile(model)
+            if arguments.contains("-demoProfile") || arguments.contains("-demoLabour")
+                || arguments.contains("-demoPreterm")
+            {
+                fillProfile(model, dueInDays: arguments.contains("-demoPreterm") ? 40 : 10)
             }
-            if arguments.contains("-demoLabour"), !model.labour.isActive {
+            if arguments.contains("-demoDrill") {
+                model.startDrill()
+            }
+            if arguments.contains("-demoLabour"), !model.session.isActive {
                 let launched = Date().addingTimeInterval(-3700)
-                model.labour.start(
-                    model.brief.sessionStart(at: launched, by: model.labour.deviceID, calendar: .current))
-                model.labour.insertDemoHistory(count: 15, every: 240, lasting: 50)
+                model.session.start(
+                    model.brief.sessionStart(at: launched, by: model.session.deviceID, calendar: .current))
+                model.session.insertDemoHistory(count: 15, every: 240, lasting: 50)
             }
         #endif
     }
 
     #if DEBUG
         @MainActor
-        private static func fillProfile(_ model: AppModel) {
+        private static func fillProfile(_ model: AppModel, dueInDays: Int) {
             let profile = model.profile
             if profile.dueDate == nil {
-                profile.dueDate = CalendarDay(Date(), in: .current).adding(days: 10)
+                profile.dueDate = CalendarDay(Date(), in: .current).adding(days: dueInDays)
             }
             if profile.motherName.isEmpty {
                 profile.motherName = "Sam"

@@ -12,6 +12,8 @@ public enum LabourTheme {
     public static let amber = Color(red: 1.0, green: 0.69, blue: 0.0)
     public static let urgent = Color(red: 1.0, green: 0.42, blue: 0.21)
     public static let emergency = Color(red: 0.89, green: 0.16, blue: 0.15)
+    /// The practice run's colour: the prototype's pale blueprint blue, never a state colour.
+    public static let blueprint = Color(red: 0.55, green: 0.72, blue: 0.91)
     public static let minimumControlSize: CGFloat = 56
     public static let cornerRadius: CGFloat = 20
 
@@ -78,9 +80,27 @@ extension RedFlag {
     }
 }
 
+/// A real labour, or a practice run. A practice run is labelled SIMULATION on every screen, its
+/// headlines start "SIM:", and nothing in it dials.
+public enum MissionMode: Sendable {
+    case live
+    case practice
+
+    /// "SIM: Time to call your maternity unit" in a practice run.
+    public func headline(_ text: String) -> String {
+        self == .practice ? "SIM: \(text)" : text
+    }
+
+    /// What VoiceOver reads for a headline: "Practice." first in a practice run.
+    public func spokenHeadline(_ text: String) -> String {
+        self == .practice ? "Practice. \(text)" : text
+    }
+}
+
 extension EnvironmentValues {
     /// How much humour copy carries. The labour root forces `.off`.
     @Entry public var humourLevel: HumourLevel = .mild
+    @Entry public var missionMode: MissionMode = .live
 }
 
 /// "4:05" or "1:02:10".

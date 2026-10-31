@@ -9,6 +9,12 @@ struct HomeView: View {
     @Environment(AppModel.self) private var model
     @State private var isConfirmingLaunch = false
 
+    /// Which keys the launch card shows this week. LAUNCH is the same at every week.
+    private var window: LaunchWindow {
+        LaunchWindow(
+            gestationalAgeDays: model.profile.pregnancyCalendar?.gestationalAgeDays(at: Date(), in: .current))
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -16,7 +22,8 @@ struct HomeView: View {
                     countdown
                     if isConfirmingLaunch {
                         LaunchGate(
-                            onLaunch: { Task { await model.launch() } },
+                            offersDrill: window.drillOnLaunchCard,
+                            onLaunch: { model.launch() },
                             onCancel: { withAnimation { isConfirmingLaunch = false } }
                         )
                         .transition(.opacity.combined(with: .move(edge: .top)))
@@ -62,7 +69,7 @@ struct HomeView: View {
             VStack(spacing: 4) {
                 Text("LAUNCH")
                     .font(.system(size: 40, weight: .heavy, design: .rounded))
-                Text("Labour has started")
+                Text(window.launchSubtitle)
                     .font(.headline)
             }
             .foregroundStyle(.black)
@@ -70,7 +77,7 @@ struct HomeView: View {
             .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(LabourTheme.amber))
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("Launch labour mode")
+        .accessibilityLabel("Launch labour mode. \(window.launchSubtitle)")
     }
 
     private var setUpLinks: some View {
@@ -98,6 +105,16 @@ struct HomeView: View {
             }
             Divider()
             AlertsRow()
+            if window.drillInHangar {
+                Divider()
+                NavigationLink {
+                    DrillHangarView()
+                } label: {
+                    SetUpRow(
+                        title: "Practice run", detail: "Rehearse the timer and the call, about 5 minutes",
+                        icon: "airplane.departure")
+                }
+            }
         }
         .padding(.horizontal, 16)
         .background(
@@ -157,40 +174,87 @@ private struct SetUpRow: View {
     }
 }
 
-/// Shown once before labour mode starts: what the app does and doesn't do.
+/// The launch card: the real key first and full size at every week, what the app does and doesn't
+/// do (in full the first time, then one line), and from 30 weeks a smaller drill key under it.
 struct LaunchGate: View {
+    var offersDrill: Bool
     var onLaunch: () -> Void
     var onCancel: () -> Void
+    @AppStorage("launchDisclaimerSeen") private var disclaimerSeen = false
+    /// Read when the card opens, so the full text doesn't vanish while he's reading it.
+    @State private var showsFullDisclaimer = true
+    @State private var askingAboutDrill = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("Before you start")
-                .font(.title2.bold())
-            Text(
-                "Mission Control times contractions and follows NHS advice on when to call your maternity unit. "
-                    + "It doesn't diagnose anything or tell you what stage of labour she's in."
-            )
-            Text("Your midwife's advice always comes first. In an emergency, call 999.")
-                .fontWeight(.semibold)
-            Text(
-                "You'll be asked to allow notifications so the app can tell you when it's time to call, "
-                    + "even with your phone locked."
-            )
-            .font(.callout)
-            .foregroundStyle(.secondary)
             Button(action: onLaunch) {
                 Text("Start labour mode")
                     .font(.headline)
                     .foregroundStyle(.black)
-                    .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
+                    .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize + 16)
                     .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(LabourTheme.amber))
             }
             .buttonStyle(.plain)
+            if showsFullDisclaimer {
+                Text(
+                    "Mission Control times contractions. Its advice on when to call your maternity unit is based on "
+                        + "NHS guidance, and it isn't affiliated with or endorsed by the NHS. It doesn't diagnose "
+                        + "anything or tell you what stage of labour she's in."
+                )
+                Text("Your midwife's advice always comes first. In an emergency, call 999.")
+                    .fontWeight(.semibold)
+                Text("Allow alerts when asked, so it can tell you when to call even with the phone locked.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+            } else {
+                Text("Based on NHS advice, not a diagnosis. Her midwife's advice comes first. Emergency: 999.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+            }
+            if offersDrill {
+                if askingAboutDrill {
+                    DrillStartQuestion()
+                } else {
+                    Button {
+                        withAnimation { askingAboutDrill = true }
+                    } label: {
+                        Label("Not labour yet? Run the drill", systemImage: "airplane.departure")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(LabourTheme.blueprint)
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                    }
+                }
+            }
             Button("Not yet", action: onCancel)
                 .frame(maxWidth: .infinity, minHeight: 44)
+        }
+        .onAppear {
+            showsFullDisclaimer = !disclaimerSeen
+            disclaimerSeen = true
         }
         .padding(18)
         .background(
             RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Color(.secondarySystemGroupedBackground)))
+    }
+}
+
+/// The training hangar, from 37 weeks: the drill, away from the launch card, behind the question
+/// that sends a real labour to LAUNCH instead.
+struct DrillHangarView: View {
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Practice run")
+                    .font(.largeTitle.bold())
+                Text(
+                    "A pretend labour at 39 weeks: time two contractions, skip ahead to the call point, handle a "
+                        + "curveball and rehearse the call. Nothing is saved, nothing dials and no alerts are sent."
+                )
+                DrillStartQuestion()
+            }
+            .padding(16)
+        }
+        .navigationTitle("Training hangar")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

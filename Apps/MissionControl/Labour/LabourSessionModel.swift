@@ -72,6 +72,10 @@ final class LabourSessionModel {
     }
 
     var isActive: Bool { core != nil }
+
+    /// The session's clock: the time now, or a practice run's time once it has skipped ahead. Views
+    /// read this instead of the wall clock.
+    var currentTime: Date { now() }
     var sessionID: UUID? { core?.sessionID }
     var start: SessionStart? { core?.start }
 
@@ -415,6 +419,15 @@ final class LabourSessionModel {
     }
 
     // MARK: Storage
+
+    /// For the practice run only: scripted taps (skipping ahead), recorded and stored like any other.
+    func applyScripted(_ change: (inout LabourSessionCore) -> Void) {
+        guard var core else { return }
+        let known = Set(core.events.map(\.id))
+        change(&core)
+        self.core = core
+        stored(core.events.filter { !known.contains($0.id) }, undoLabel: nil)
+    }
 
     private func perform(_ undoLabel: String?, _ change: (inout LabourSessionCore, Date) -> TapEvent?) {
         guard var core else { return }

@@ -6,6 +6,7 @@ import SwiftUI
 struct EndLabourView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.missionMode) private var mode
     @State private var babyName = ""
     @State private var weight = ""
     @State private var wellbeing = "Mum and baby are doing well."
@@ -13,7 +14,7 @@ struct EndLabourView: View {
     @State private var confirmingEnd = false
 
     private var message: String {
-        let time = Date().formatted(date: .omitted, time: .shortened)
+        let time = model.labour.currentTime.formatted(date: .omitted, time: .shortened)
         let opener = model.profile.humour == .full ? "The Payload has landed!" : "Baby's here!"
         var parts = [opener]
         let name = babyName.trimmingCharacters(in: .whitespaces)
@@ -31,6 +32,37 @@ struct EndLabourView: View {
     }
 
     var body: some View {
+        if mode == .practice {
+            practiceEnd
+        } else {
+            liveEnd
+        }
+    }
+
+    /// A practice run just ends: no message to send, nothing kept.
+    private var practiceEnd: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("End the practice run?")
+                .font(.largeTitle.bold())
+                .foregroundStyle(LabourTheme.primaryText)
+            Text("Nothing from the drill is kept. Real labour mode is one tap away whenever you need it.")
+                .foregroundStyle(LabourTheme.secondaryText)
+            Button {
+                model.endDrill()
+            } label: {
+                Text("End the drill")
+                    .font(.headline)
+                    .foregroundStyle(.black)
+                    .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
+                    .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(LabourTheme.blueprint))
+            }
+            .buttonStyle(.plain)
+            Spacer()
+        }
+        .padding(16)
+    }
+
+    private var liveEnd: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Baby's here?")
