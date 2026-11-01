@@ -1,7 +1,6 @@
 import MissionCore
 import MissionUI
 import SwiftUI
-import UIKit
 
 /// The timer: advice at the top, the big button at the bottom, history below (scroll up).
 struct TimerTab: View {
@@ -31,7 +30,14 @@ struct TimerTab: View {
         .background(LabourTheme.background)
     }
 
+    /// The one clock in labour mode: everything time-based on the timer reads `now` from here.
     private func controls(height: CGFloat) -> some View {
+        TimelineView(.periodic(from: .now, by: 1)) { _ in
+            controls(height: height, now: labour.currentTime)
+        }
+    }
+
+    private func controls(height: CGFloat, now: Date) -> some View {
         VStack(spacing: 14) {
             if mode == .practice, let drill = model.drill {
                 DrillGuideCard(drill: drill)
@@ -41,22 +47,22 @@ struct TimerTab: View {
                 EmergencyCallButton(region: labour.region)
             }
             LabourPrompts()
-            StatsRow()
+            StatsRow(now: now)
             flags
             Spacer(minLength: 0)
-            UndoArea()
-            TimelineView(.periodic(from: .now, by: 1)) { _ in
-                StartStopButton(
-                    isRunning: labour.openContraction != nil,
-                    elapsed: labour.openContraction.map { labour.currentTime.timeIntervalSince($0.start) }
-                ) {
-                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                    labour.tap()
-                }
+            UndoArea(now: now)
+            StartStopButton(
+                isRunning: labour.openContraction != nil,
+                elapsed: labour.openContraction.map { now.timeIntervalSince($0.start) }
+            ) {
+                labour.tap()
+            }
+            .sensoryFeedback(trigger: labour.openContraction != nil) { _, running in
+                running ? .impact(weight: .heavy) : .impact(weight: .light)
             }
             // A little shorter in a practice run, to make room for the drill's guide.
             .frame(height: mode == .practice ? max(150, height * 0.28) : max(180, height * 0.34))
-            StrengthRow()
+            StrengthRow(now: now)
             HStack {
                 Label("History below", systemImage: "chevron.compact.up")
                     .font(.footnote)
@@ -70,7 +76,7 @@ struct TimerTab: View {
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(LabourTheme.secondaryText)
                         .underline()
-                        .frame(minHeight: 44)
+                        .frame(minHeight: LabourTheme.chipSize)
                         .accessibilityHint("Tells the app the contractions have stopped. Undo is available.")
                 }
             }
@@ -93,6 +99,12 @@ struct TimerTab: View {
                 source: output.reasons.first.map { StateCopy.source(for: $0, region: labour.region).title },
                 isExpanded: bannerExpanded
             )
+            .onChange(of: output.state) { _, _ in
+                // Once per change of level, never on the every-second redraw.
+                AccessibilityNotification.Announcement(
+                    mode.spokenHeadline(StateCopy.headline(for: output, region: labour.region))
+                ).post()
+            }
             .onTapGesture { withAnimation { bannerExpanded.toggle() } }
             .onLongPressGesture { withAnimation { showsEmergency = true } }
             .accessibilityHint("Tap for more detail. Long-press to show the emergency call button.")
@@ -113,8 +125,8 @@ struct TimerTab: View {
 
     private var flags: some View {
         let active = labour.log.activeRedFlags
-        let pinned: [RedFlag] = [.reducedMovements, .watersBroken]
-        let others = RedFlag.allCases.filter { !pinned.contains($0) }
+        let pinned = RedFlagLayout.pinned
+        let others = RedFlagLayout.others
         return VStack(spacing: 10) {
             HStack(spacing: 10) {
                 ForEach(pinned, id: \.self) { flag in
@@ -127,7 +139,7 @@ struct TimerTab: View {
                 } label: {
                     Label("Baby moved", systemImage: "hand.wave.fill")
                         .font(.subheadline.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
                         .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(LabourTheme.surface))
                 }
                 .buttonStyle(.plain)
@@ -141,7 +153,7 @@ struct TimerTab: View {
                         systemImage: showsAllFlags ? "chevron.up" : "exclamationmark.triangle"
                     )
                     .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: 44)
+                    .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
                     .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(LabourTheme.surface))
                 }
                 .buttonStyle(.plain)
@@ -192,7 +204,6 @@ private struct FlagButton: View {
 
     var body: some View {
         Button {
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             action()
         } label: {
             Label {
@@ -209,13 +220,13 @@ private struct FlagButton: View {
                 Image(systemName: isOn ? "checkmark.circle.fill" : flag.icon)
             }
             .multilineTextAlignment(.leading)
-            .foregroundStyle(isOn ? Color.white : LabourTheme.primaryText)
+            .foregroundStyle(isOn ? LabourTheme.textOnFill(for: flag.state) : LabourTheme.primaryText)
             .padding(.vertical, 8)
             .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
             .padding(.horizontal, 8)
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(isOn ? LabourTheme.color(for: flag.state) : LabourTheme.surface)
+                    .fill(isOn ? LabourTheme.fill(for: flag.state) : LabourTheme.surface)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
@@ -223,6 +234,7 @@ private struct FlagButton: View {
             )
         }
         .buttonStyle(.plain)
+        .sensoryFeedback(.warning, trigger: isOn) { _, turnedOn in turnedOn }
         .accessibilityValue(isOn ? "On" : "Off")
         .accessibilityHint(isOn ? "Asks before turning it off" : "")
     }
@@ -231,22 +243,20 @@ private struct FlagButton: View {
 /// Since last, typical interval and length, and how many in the last hour.
 private struct StatsRow: View {
     @Environment(AppModel.self) private var model
+    var now: Date
 
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 1)) { _ in
-            let labour = model.labour
-            let now = labour.currentTime
-            let metrics = labour.output?.metrics
-            let lastHour = labour.log.contractions.filter { now.timeIntervalSince($0.start) <= 3600 }.count
-            HStack(spacing: 8) {
-                StatTile(
-                    label: "Since last",
-                    value: metrics?.lastStart.map { clockText(now.timeIntervalSince($0)) } ?? "–"
-                )
-                StatTile(label: "Every", value: metrics.map { every($0, labour.thresholds) } ?? "–")
-                StatTile(label: "Lasting", value: metrics?.medianDurationSec.map { "\(Int($0.rounded()))s" } ?? "–")
-                StatTile(label: "Last hour", value: "\(lastHour)")
-            }
+        let labour = model.labour
+        let metrics = labour.output?.metrics
+        let lastHour = labour.log.contractions.filter { now.timeIntervalSince($0.start) <= 3600 }.count
+        HStack(spacing: 8) {
+            StatTile(
+                label: "Since last",
+                value: metrics?.lastStart.map { clockText(now.timeIntervalSince($0)) } ?? "–"
+            )
+            StatTile(label: "Every", value: metrics.map { every($0, labour.thresholds) } ?? "–")
+            StatTile(label: "Lasting", value: metrics?.medianDurationSec.map { "\(Int($0.rounded()))s" } ?? "–")
+            StatTile(label: "Last hour", value: "\(lastHour)")
         }
     }
 }
@@ -268,10 +278,10 @@ private func every(_ metrics: ContractionMetrics, _ thresholds: ThresholdProfile
 /// The undo chip for 10 seconds after any tap, or a short note such as "Ignored a double tap".
 private struct UndoArea: View {
     @Environment(AppModel.self) private var model
+    var now: Date
 
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 1)) { _ in
-            let now = model.labour.currentTime
+        Group {
             if let undoable = model.labour.undoable, undoable.expiresAt > now {
                 UndoChip(label: undoable.label) { model.labour.undo() }
                     .transition(.opacity)
@@ -388,7 +398,7 @@ private struct RowEditor: View {
             Text(title)
                 .font(.subheadline.weight(.semibold))
                 .padding(.horizontal, 14)
-                .frame(minHeight: 44)
+                .frame(minHeight: LabourTheme.chipSize)
                 .background(RoundedRectangle(cornerRadius: 10, style: .continuous).fill(LabourTheme.raisedSurface))
         }
         .buttonStyle(.plain)
@@ -399,10 +409,11 @@ private struct RowEditor: View {
 /// "How strong was that one?" for 20 seconds after a stop. Triage asks how strong they are.
 private struct StrengthRow: View {
     @Environment(AppModel.self) private var model
+    var now: Date
 
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 1)) { _ in
-            if let stopped = model.labour.justStopped, stopped.until > model.labour.currentTime {
+        Group {
+            if let stopped = model.labour.justStopped, stopped.until > now {
                 HStack(spacing: 8) {
                     Text("How strong?")
                         .font(.subheadline)
@@ -414,7 +425,7 @@ private struct StrengthRow: View {
                             Text(strength.label)
                                 .font(.subheadline.weight(.semibold))
                                 .padding(.horizontal, 12)
-                                .frame(minHeight: 44)
+                                .frame(minHeight: LabourTheme.chipSize)
                                 .background(Capsule().fill(LabourTheme.surface))
                                 .foregroundStyle(LabourTheme.primaryText)
                         }

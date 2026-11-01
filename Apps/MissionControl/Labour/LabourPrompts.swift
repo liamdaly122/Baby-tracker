@@ -133,7 +133,7 @@ private struct WatersTimeCard: View {
         Button(action: action) {
             Text(title)
                 .font(.subheadline.weight(.semibold))
-                .frame(maxWidth: .infinity, minHeight: 44)
+                .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
                 .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(.black, lineWidth: 1.5))
                 .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
@@ -171,7 +171,7 @@ private struct AskCard: View {
                 Text(choice.0)
                     .font(.subheadline.weight(.semibold))
                     .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity, minHeight: 44)
+                    .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
                     .padding(.horizontal, 6)
                     .foregroundStyle(index == 0 ? Color.white : Color.black)
                     .background(

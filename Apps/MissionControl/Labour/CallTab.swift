@@ -90,7 +90,7 @@ struct CallTab: View {
                             }
                             Spacer(minLength: 0)
                         }
-                        .foregroundStyle(Color(red: 0.7, green: 0.19, blue: 0.11))
+                        .foregroundStyle(LabourPalette.redInk.color)
                         .padding(16)
                         .frame(maxWidth: .infinity, minHeight: 88)
                         .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Self.cream))
@@ -122,7 +122,7 @@ struct CallTab: View {
         }
     }
 
-    static let cream = Color(red: 0.96, green: 0.91, blue: 0.82)
+    static let cream = LabourPalette.cream.color
 
     private func fixNumberCard(title: String, detail: String) -> some View {
         NavigationLink {
@@ -203,7 +203,7 @@ private struct AfterCallCard: View {
                 Text(Self.button(outcome))
                     .font(.subheadline.weight(.semibold))
                     .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity, minHeight: 44)
+                    .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
                     .padding(.horizontal, 8)
                     .foregroundStyle(LabourTheme.primaryText)
                     .background(Capsule().fill(LabourTheme.primaryText.opacity(0.1)))
@@ -296,8 +296,8 @@ private struct FallbackList: View {
 
 private struct ScriptCard: View {
     var script: TriageScript
-    static let ink = Color(red: 0.11, green: 0.13, blue: 0.28)
-    static let redInk = Color(red: 0.7, green: 0.19, blue: 0.11)
+    static let ink = LabourPalette.ink.color
+    static let redInk = LabourPalette.redInk.color
 
     var body: some View {
         // A notepad: what to read out, with the urgent lines in red ink.

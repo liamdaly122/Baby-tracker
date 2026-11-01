@@ -274,7 +274,7 @@ public enum StateCopy {
         }
     }
 
-    static func emergencyNumber(_ region: ContentRegion) -> String {
+    public static func emergencyNumber(_ region: ContentRegion) -> String {
         switch region {
         case .uk: "999"
         case .us: "911"

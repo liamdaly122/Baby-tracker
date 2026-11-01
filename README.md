@@ -61,7 +61,13 @@ Then open `MissionControl.xcodeproj`. The app tests (`Tests/MissionControlTests`
 xcodebuild test -project MissionControl.xcodeproj -scheme MissionControl -destination 'platform=iOS Simulator,name=iPhone 17'
 ```
 
-Simulator builds need no signing. For a device, put your team in `Configs/Signing.local.xcconfig` (gitignored) as `DEVELOPMENT_TEAM = ABCDE12345`.
+The picture tests compare views with saved PNGs in `Tests/MissionControlTests/__Snapshots__`. After a deliberate visual change, record new ones on the iOS 27.0 simulator (the one CI uses), check them, and commit them:
+
+```bash
+TEST_RUNNER_RECORD_SNAPSHOTS=1 xcodebuild test -project MissionControl.xcodeproj -scheme MissionControl -destination 'platform=iOS Simulator,name=iPhone 17e' -only-testing:MissionControlTests/SnapshotTests
+```
+
+Rules for the redesign are in [`docs/redesign-rules.md`](docs/redesign-rules.md). Simulator builds need no signing. For a device, put your team in `Configs/Signing.local.xcconfig` (gitignored) as `DEVELOPMENT_TEAM = ABCDE12345`.
 
 ## Status
 

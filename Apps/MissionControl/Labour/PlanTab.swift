@@ -68,9 +68,9 @@ struct PlanSheet: View {
     /// Sections that are his draft and not checked with her.
     var unchecked: Set<String> = []
 
-    static let paper = Color(red: 0.98, green: 0.96, blue: 0.89)
-    static let ink = Color(red: 0.11, green: 0.13, blue: 0.28)
-    static let redInk = Color(red: 0.7, green: 0.19, blue: 0.11)
+    static let paper = LabourPalette.paper.color
+    static let ink = LabourPalette.ink.color
+    static let redInk = LabourPalette.redInk.color
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
