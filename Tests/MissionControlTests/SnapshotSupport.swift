@@ -23,7 +23,7 @@ enum Snapshot {
     /// labour or practice, in the prototype's fonts.
     static func image(
         _ view: some View, width: CGFloat = 375, size: DynamicTypeSize, mode: MissionModeOption,
-        background: Color = LabourTheme.space
+        background: Color = LabourTheme.space, colorScheme: ColorScheme = .dark
     ) -> UIImage? {
         MissionType.registerFonts()
         let content =
@@ -33,7 +33,7 @@ enum Snapshot {
             .background(background)
             .environment(\.dynamicTypeSize, size)
             .environment(\.missionMode, mode.value)
-            .environment(\.colorScheme, .dark)
+            .environment(\.colorScheme, colorScheme)
         let renderer = ImageRenderer(content: content)
         renderer.scale = 1
         renderer.proposedSize = ProposedViewSize(width: width, height: nil)

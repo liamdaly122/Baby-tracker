@@ -213,6 +213,13 @@ public enum LabourPalette {
         // Plan, Coach and Decoder.
         let avoidBox = signal.over(coachCard, opacity: 0.12)
         pairs += [
+            Pair(name: "cream on sim deep", text: cream, background: simDeep, minimum: 4.5),
+            Pair(name: "sim on sim deep", text: sim, background: simDeep, minimum: 4.5),
+            Pair(
+                name: "sim ink on the drill question box", text: simInk, background: sim.over(simDeep, opacity: 0.08),
+                minimum: 4.5),
+            Pair(name: "cream on the launch cover", text: cream, background: PaletteColor(hex: 0x1A2046), minimum: 4.5),
+            Pair(name: "muted on the launch cover", text: muted, background: PaletteColor(hex: 0x1A2046), minimum: 4.5),
             Pair(name: "paper ink on the plan sheet", text: ink, background: paperHi, minimum: 4.5),
             Pair(name: "paper muted on the plan sheet", text: paperMuted, background: paperHi, minimum: 4.5),
             Pair(name: "red ink on the plan sheet", text: redInk, background: paperHi, minimum: 4.5),
