@@ -19,6 +19,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 5,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.gov.uk/paternity-pay-leave/pay",
         "sourceTitle": "GOV.UK: Paternity pay",
@@ -43,6 +44,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 10,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.gov.uk/paternity-pay-leave/eligibility",
         "sourceTitle": "GOV.UK: Paternity pay and leave eligibility",
@@ -77,6 +79,7 @@
       ],
       "quizID": null,
       "xp": 50,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.gov.uk/paternity-pay-leave/how-to-claim",
         "sourceTitle": "GOV.UK: Paternity pay and leave, how to claim",
@@ -184,6 +187,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 10,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.acas.org.uk/pregnancy-at-work/antenatal-appointments",
         "sourceTitle": "Acas: Time off for antenatal appointments",
@@ -728,6 +732,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 20,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.nhs.uk/pregnancy/keeping-well/your-babys-movements/",
         "sourceTitle": "NHS: Your baby's movements",
@@ -1271,6 +1276,7 @@
       ],
       "quizID": null,
       "xp": 20,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/preparing-for-the-birth/how-to-make-a-birth-plan/",
         "sourceTitle": "NHS: How to make a birth plan",
@@ -1328,6 +1334,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 15,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/preparing-for-the-birth/pack-your-bag-for-labour/",
         "sourceTitle": "NHS: Pack your bag for labour",
@@ -1382,6 +1389,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 15,
+      "must": true,
       "provenance": {
         "sourceURL": "https://thh.nhs.uk/packing-your-hospital-bag",
         "sourceTitle": "The Hillingdon Hospitals: Packing your hospital bag",
@@ -1410,6 +1418,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 15,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.which.co.uk/reviews/giving-birth/article/what-to-pack-in-your-hospital-bag",
         "sourceTitle": "Which?: What to pack in your hospital bag",
@@ -1439,6 +1448,7 @@
       ],
       "quizID": null,
       "xp": 10,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/preparing-for-the-birth/pack-your-bag-for-labour/",
         "sourceTitle": "NHS: Pack your bag for labour",
@@ -1542,6 +1552,7 @@
       ],
       "quizID": "car-seat",
       "xp": 30,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.gov.uk/child-car-seats-the-rules",
         "sourceTitle": "GOV.UK: Child car seats, the rules",
@@ -1771,6 +1782,7 @@
       "reminderDaysBefore": [],
       "quizID": "safe-sleep",
       "xp": 20,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.lullabytrust.org.uk/safer-sleep-advice/",
         "sourceTitle": "The Lullaby Trust: Safer sleep advice",
@@ -2023,6 +2035,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 10,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.leedsth.nhs.uk/services/maternity/pregnancy/mac/",
         "sourceTitle": "Leeds Teaching Hospitals: Maternity Assessment Centre",
@@ -2047,6 +2060,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 15,
+      "must": true,
       "provenance": null
     },
     {
@@ -2065,6 +2079,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 20,
+      "must": true,
       "provenance": null
     },
     {
@@ -2106,6 +2121,7 @@
       "reminderDaysBefore": [],
       "quizID": "when-to-call",
       "xp": 30,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/",
         "sourceTitle": "NHS: Signs that labour has begun",
@@ -2182,6 +2198,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 10,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.leedsth.nhs.uk/services/maternity/pregnancy/mac/",
         "sourceTitle": "Leeds Teaching Hospitals: Maternity Assessment Centre",
@@ -2206,6 +2223,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 5,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.nct.org.uk/labour-birth/dads-and-partners/ten-tips-for-birth-partners",
         "sourceTitle": "NCT: Ten tips for birth partners",
@@ -2248,6 +2266,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 5,
+      "must": true,
       "provenance": null
     },
     {
@@ -2265,6 +2284,7 @@
       "reminderDaysBefore": [],
       "quizID": "safe-sleep",
       "xp": 20,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.lullabytrust.org.uk/safer-sleep-advice/",
         "sourceTitle": "The Lullaby Trust: Safer sleep advice",
@@ -2729,6 +2749,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 15,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.nhs.uk/conditions/pre-eclampsia/",
         "sourceTitle": "NHS: Pre-eclampsia",
@@ -2861,6 +2882,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 15,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.nnuh.nhs.uk/publication/download/information-for-mothers-following-the-birth-of-a-baby-signs-and-symptoms-of-serious-illness-v6",
         "sourceTitle": "Norfolk and Norwich University Hospitals: Signs of serious illness after birth",
@@ -3006,6 +3028,7 @@
       "reminderDaysBefore": [],
       "quizID": null,
       "xp": 5,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.nhs.uk/conditions/baby/newborn-screening/blood-spot-test/",
         "sourceTitle": "NHS: Newborn blood spot test",
@@ -3092,6 +3115,7 @@
       ],
       "quizID": null,
       "xp": 40,
+      "must": true,
       "provenance": {
         "sourceURL": "https://www.gov.uk/register-birth",
         "sourceTitle": "GOV.UK: Register a birth",

@@ -35,6 +35,7 @@ STAGES = {"latent", "established", "transition", "pushing", "thirdStage", "theat
 ACTS = {"recruitment", "systemsCheck", "countdown", "holdAtTMinus", "launch", "splashdown"}
 SPEAKERS = {"capcom", "flightSurgeon", "veteran"}
 ANCHORS = {"ewc", "edd", "birth"}
+HER_DECISION_PREFIXES = ("Remind her", "Help her", "Ask her", "Suggest")
 BADGE_RULES = {"checklistItemsDone", "moduleComplete", "quizPassed", "streakDays"}
 MAX_WEEK = 42
 MIN_QUIZ_QUESTIONS = 3
@@ -257,6 +258,14 @@ class Lint:
             self.error(where, "xp must be a whole number, 0 or more")
         if item.get("quizID") is not None and not isinstance(item.get("quizID"), str):
             self.error(where, "quizID must be a string or null")
+        must = item.get("must")
+        if must is not None and not isinstance(must, bool):
+            self.error(where, "must must be true or false")
+        elif must:
+            # Only his own actions can hold up the build. Her decisions are information (review content-06).
+            title = (item.get("title") or {}).get("off", "")
+            if title.startswith(HER_DECISION_PREFIXES):
+                self.error(where, "a must-do must be something he does, not her decision")
 
     def check_glossary(self, where, item):
         worry = item.get("worryLevel")

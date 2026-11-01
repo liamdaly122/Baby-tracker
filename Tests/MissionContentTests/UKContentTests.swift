@@ -147,3 +147,51 @@ struct UKContentTests {
         #expect(us.thresholds.defaults.adviceDurationSec == 60)
     }
 }
+
+/// Review action 19: only fair must-dos can hold the build.
+@Suite("UK must-dos")
+struct UKMustDoTests {
+    let library: ContentLibrary
+
+    init() throws {
+        library = try BundledContent.library(for: .uk)
+    }
+
+    /// The latest week a deadline can fall, before the birth. The expected week of childbirth
+    /// starts up to six days before the due date.
+    private func latestWeek(_ deadline: Deadline) -> Double? {
+        switch deadline.anchor {
+        case .edd, .ewc: 40 + Double(deadline.offsetDays) / 7
+        case .birth: nil
+        }
+    }
+
+    @Test("Every stage before the birth has must-dos, and none of them is her decision")
+    func mustDos() {
+        let musts = library.checklist.filter(\.isMust)
+        for stage in BuildStage.allCases {
+            #expect(musts.contains { BuildStage.of($0) == stage }, "\(stage) has no must-dos")
+        }
+        for item in musts {
+            for prefix in ["Remind her", "Help her", "Ask her", "Suggest"] {
+                #expect(!item.title.off.hasPrefix(prefix), "\(item.id) is her decision")
+            }
+        }
+        // Her clinical choices are information, not must-dos.
+        for id in ["appts.whooping-cough", "appts.rsv-vaccine", "admin.mum-tells-employer"] {
+            #expect(library.checklist.first { $0.id == id }?.isMust == false, "\(id)")
+        }
+    }
+
+    @Test("A must-do's deadline is no later than two weeks after the next stage opens")
+    func windowsCloseInTime() {
+        for item in library.checklist where item.isMust {
+            guard let deadline = item.deadline, let week = latestWeek(deadline),
+                let nextStart = BuildStage.of(item).next?.startWeek
+            else { continue }
+            #expect(
+                week <= Double(nextStart + BuildProgress.holdGraceWeeks),
+                "\(item.id) is due at \(week) weeks, after stage \(BuildStage.of(item).name) can hold the next")
+        }
+    }
+}

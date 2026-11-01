@@ -176,6 +176,11 @@ public struct ChecklistItem: Codable, Sendable, Hashable, Identifiable {
     public var quizID: String?
     public var xp: Int
     public var provenance: Provenance?
+    /// A must-do for its stage of the build: something in his control that matters before the
+    /// next stage. Only these can put the next stage on HOLD (`BuildProgress`). Nil means no.
+    public var must: Bool?
+
+    public var isMust: Bool { must ?? false }
 }
 
 public struct GlossaryEntry: Codable, Sendable, Hashable, Identifiable {
