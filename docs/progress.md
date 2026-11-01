@@ -1,6 +1,6 @@
 # Where Mission Control is up to
 
-Plain-English progress, kept up to date with each pull request. Last updated 31 October 2026.
+Plain-English progress, kept up to date with each pull request. Last updated 1 November 2026.
 
 ## In short
 
@@ -9,9 +9,9 @@ The heart of the app works. He presses LAUNCH, taps START and STOP for each cont
 Two things haven't happened yet:
 
 - **It hasn't been on a real iPhone.** Everything so far has run on the Mac's pretend iPhone (the simulator). See "Trying it on your iPhone" below.
-- **It still looks like a plain iPhone app.** The design from the prototype comes later, in "the redesign" (the plan calls it the reskin).
+- **Most of it still looks like a plain iPhone app.** The redesign has started: the labour timer now looks like the agreed prototype (v3). The other screens follow one at a time.
 
-Right now we're working through the safety fixes from the October review, because they need to be in place before the redesign.
+Right now we're doing the redesign, starting with the labour timer. It's built and tested, waiting to be merged ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)).
 
 ## What works today
 
@@ -40,7 +40,7 @@ Right now we're working through the safety fixes from the October review, becaus
 | 6 | Red flags and the call script | Done |
 | 7 | The practice run | Done |
 | 8 | Rules for the redesign (every Call button dials, 999 always one tap away) | Done: the rules are in `docs/redesign-rules.md` |
-| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. The rest happens screen by screen in the redesign |
+| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. The timer is redesigned, waiting to be merged ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)); the other screens follow |
 | 10 | Hard moments: loss, admission, neonatal care, false alarms | Done. Later: discreet mode in early pregnancy, support for her recovery |
 | 11 | A storage problem never stops labour mode or loses the hospital's number | Done |
 | 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Can start any time, alongside the rest |
@@ -50,21 +50,35 @@ Right now we're working through the safety fixes from the October review, becaus
 | 16 | Saved hospital, and a call list of people | Main part done. Later: home births, finding the hospital on a map, messaging family after the birth |
 | 17 | A birth plan built up over the weeks | How it's stored: waiting to be merged ([PR #10](https://github.com/liamdaly122/Baby-tracker/pull/10)). Phase 6: the guided builder, the PDF and reminders |
 | 18 | The watch as the main timer | Phases 4 and 5 |
-| 19 | Fair week-by-week stages on the home screen | The rules are built and tested, waiting to be merged ([PR #13](https://github.com/liamdaly122/Baby-tracker/pull/13)). The screens that show them come in Phase 6 |
+| 19 | Fair week-by-week stages on the home screen | Done: the rules are built and tested ([PR #13](https://github.com/liamdaly122/Baby-tracker/pull/13)). The screens that show them come in Phase 6 |
 | 20 | Weekly briefings and the home screen | Phase 6 |
 
 ## What's next, in order
 
-1. Merge the fair stages (19, PR #13).
-2. **The redesign**, screen by screen, following `docs/redesign-rules.md`: the timer first, then Call, Plan, Coach and Decoder, launch and the practice run, set-up, the watch, and the home screen.
+1. **The redesign**, screen by screen, following `docs/redesign-rules.md`. The timer is done and waiting to be merged ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)). Next: Call, then Plan, Coach and Decoder, launch and the practice run, set-up, the watch, and the home screen.
+2. The legal and privacy groundwork (12).
 3. A first test build for real phones (TestFlight).
 4. The watch as the main timer (18), the lock screen and the Live Activity.
 5. Phase 6: the home screen's rocket and checklists, weekly briefings and the birth plan builder (20).
 6. Final checks, the midwife's sign-off, then a wider test.
 
-The legal and privacy groundwork (12) can happen alongside any of these.
-
 The full plan, with the reasons, is in `docs/plan.md` (section B14).
+
+## The redesigned timer
+
+The labour timer now matches the agreed prototype (v3): the night sky and the Earth behind it, the five-level strip, the big headline, the call button inside the advice, the last hour as a line, three big numbers, the two flag switches, the round START button, and the prototype's own tab bar, in its three fonts (League Gothic, Instrument Sans and Martian Mono, free to use under their licence).
+
+A few things differ from the prototype on purpose, each because a safety rule needs it:
+
+- **Red panels are a darker red.** The prototype's bright red with cream words is hard to read (3.3 to 1). The "Call now" panel, its level chip, a lit flag and "Real labour? Launch" use the prototype's own darker red instead (5.7 to 1).
+- **999 is always in the top row**, next to "Baby's here?". The prototype only showed 999 in an emergency.
+- **The big button never leaves the screen.** It sits just above the tab bar. When there's a lot to show, it shrinks to its smallest size, the numbers row steps aside, and the rest scrolls above it.
+- **The undo bar sits above the big button, not over it.** Over a small button it hid the running clock.
+- **Nothing moves except the breathing rings while a contraction runs.** The prototype's twinkling stars, passing satellite, glowing line and blinking dot are still.
+- **No text is smaller than 11 points.** The prototype's smallest labels were 8.5, so they're a little bigger, and everything grows with the phone's text size.
+- **Buttons are bigger:** flags and controls are at least 56 points tall, small chips at least 44.
+- **"They've stopped" is cream, not lilac,** so it's readable over the Earth.
+- **Kept from the app:** the list of contractions for fixing a mis-tap, with "Baby moved", is below the flags (scroll down). "Labour settings" moved to the bottom of the Plan tab, as the top row has no room for it next to 999. "End practice" is in the practice run's guide card.
 
 ## Trying it on your iPhone
 

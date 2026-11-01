@@ -22,6 +22,7 @@ struct PlanTab: View {
                     content: content, motherName: model.profile.motherName,
                     unchecked: Set(content.uncheckedAnswers(herConfirmedAt: plan.herConfirmedAt).map(\.sectionID)))
                 PlanChangedCard(branches: PlanScenario.allCases.compactMap(content.branch(for:)))
+                LabourSettingsLink()
             }
             .padding(16)
         }
@@ -221,5 +222,36 @@ private struct PlanChangedCard: View {
         .background(Rectangle().fill(LabourTheme.amber))
         .rotationEffect(.degrees(0.8))
         .shadow(color: .black.opacity(0.35), radius: 8, y: 6)
+    }
+}
+
+/// Labour settings, at the foot of the plan: when to call (a midwife's own numbers), the hospital
+/// and her details. The prototype's top row has no room for it next to 999.
+private struct LabourSettingsLink: View {
+    var body: some View {
+        NavigationLink {
+            LabourSettingsView()
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "gearshape")
+                    .font(.title3)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Labour settings")
+                        .font(.headline)
+                    Text("When to call, the hospital, her details")
+                        .font(.subheadline)
+                        .foregroundStyle(LabourTheme.secondaryText)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(LabourTheme.secondaryText)
+            }
+            .foregroundStyle(LabourTheme.primaryText)
+            .padding(.horizontal, 16)
+            .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize + 8)
+            .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(LabourTheme.surface))
+            .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        }
+        .buttonStyle(.plain)
     }
 }

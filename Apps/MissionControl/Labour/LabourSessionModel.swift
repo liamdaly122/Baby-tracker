@@ -97,6 +97,24 @@ final class LabourSessionModel {
     /// The contraction being timed right now, if the latest one hasn't been stopped.
     var openContraction: Contraction? { log.openContraction }
 
+    /// How far along she is, for the top of labour mode: "40+2", counting days since launch, or
+    /// what he's said when there's no due date.
+    var gestationLabel: String {
+        if let start = core?.start, let days = start.profile.gestationalAgeDays {
+            let calendar = Calendar.current
+            let since =
+                calendar.dateComponents(
+                    [.day], from: calendar.startOfDay(for: start.startedAt), to: calendar.startOfDay(for: now())
+                ).day ?? 0
+            return GestationalAge(totalDays: days + max(0, since)).description
+        }
+        switch log.termAnswer {
+        case .term: return "37 weeks or more"
+        case .preterm: return "under 37 weeks"
+        case .notSure, nil: return "weeks not known"
+        }
+    }
+
     /// No due date, and nobody has said she's 37 weeks or more.
     var needsTermAnswer: Bool {
         guard let start = core?.start, start.profile.gestationalAgeDays == nil else { return false }

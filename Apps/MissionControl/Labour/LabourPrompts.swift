@@ -10,16 +10,16 @@ struct LabourPrompts: View {
     var body: some View {
         let labour = model.labour
         TimelineView(.periodic(from: .now, by: 30)) { _ in
-            VStack(spacing: 10) {
+            VStack(spacing: 8) {
                 switch labour.prompt {
                 case .endedOrNew(let elapsed):
-                    AskCard(
+                    NoticeAsk(
                         title: "This one has been going \(clockText(elapsed)).",
                         detail: "Did it just end, or is this a new one?",
                         choices: [("It just ended", labour.endedJustNow), ("This is a new one", labour.newOneStarted)]
                     )
                 case .fixForgotten(let id, let elapsed):
-                    AskCard(
+                    NoticeAsk(
                         title: "How long did that last one last?",
                         detail: "You started a new one without stopping it.",
                         choices: TapPolicy.forgottenStopFixesSec(elapsed: elapsed).map { seconds in
@@ -35,7 +35,7 @@ struct LabourPrompts: View {
                     EmptyView()
                 }
                 if labour.needsTermAnswer {
-                    AskCard(
+                    NoticeAsk(
                         title: "Is she 37 weeks pregnant or more?",
                         detail: "There's no due date saved. Until you know, the advice is to call now.",
                         choices: [
@@ -58,7 +58,7 @@ struct LabourPrompts: View {
         if output.reasons.contains(.noRecentTaps), let lastStart = metrics.lastStart,
             labour.quietAcknowledgedFor != lastStart
         {
-            AskCard(
+            NoticeAsk(
                 title: "Nothing logged for \(Int(now.timeIntervalSince(lastStart) / 60)) min.",
                 detail: "Are they still coming?",
                 choices: [("Still coming", labour.acknowledgeQuiet), ("They've stopped", labour.markStopped)]
@@ -66,13 +66,13 @@ struct LabourPrompts: View {
         }
         let missed = metrics.missedTapGaps.reduce(0) { $0 + $1.estimatedMissed }
         if missed > 0 {
-            InfoCard(
+            NoticeInfo(
                 title: missed == 1 ? "Looks like 1 wasn't logged." : "Looks like \(missed) weren't logged.",
                 detail: "They're counted, so the pattern isn't lost. The call script says so too."
             )
         }
         if output.reasons.contains(.contractionsStopped) {
-            InfoCard(
+            NoticeInfo(
                 title: "You said they've stopped.",
                 detail: "Tap Start if they come back. If the next one comes on rhythm, the app treats it as a pause."
             )
@@ -88,11 +88,11 @@ private struct WatersTimeCard: View {
 
     var body: some View {
         let labour = model.labour
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 6) {
             Text("When did her waters go?")
-                .font(.headline)
+                .font(MissionType.body(15).weight(.bold))
             Text("Triage will ask. Use a pad, not a tampon, so the colour can be checked.")
-                .font(.subheadline)
+                .font(MissionType.body(13.5))
             if picking {
                 DatePicker(
                     "Waters went at", selection: $time,
@@ -102,7 +102,7 @@ private struct WatersTimeCard: View {
                 .colorScheme(.light)
                 Button("Save that time") { labour.setWatersTime(time) }
                     .buttonStyle(.borderedProminent)
-                    .tint(.black)
+                    .tint(LabourTheme.paperInk)
             } else {
                 if let before = labour.earlierWaters {
                     // Turned off and on again: the earlier time is probably still right. Say whether
@@ -123,45 +123,53 @@ private struct WatersTimeCard: View {
                 }
             }
         }
-        .foregroundStyle(Color.black)
-        .padding(14)
+        .foregroundStyle(LabourTheme.paperInk)
+        .padding(.horizontal, 13)
+        .padding(.vertical, 11)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(LabourTheme.primaryText))
+        .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(LabourTheme.cream))
     }
 
     private func choice(_ title: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(title)
-                .font(.subheadline.weight(.semibold))
-                .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
-                .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(.black, lineWidth: 1.5))
+                .font(MissionType.body(13.5).weight(.semibold))
+                .frame(maxWidth: .infinity, minHeight: LabourTheme.chipSize)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .strokeBorder(LabourTheme.paperInk, lineWidth: 1.5)
+                )
                 .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .buttonStyle(.plain)
     }
 }
 
-/// A question with its answers. Light on dark so it stands out from the advice.
-private struct AskCard: View {
+/// A question with its answers: the prototype's cream "ask" card, first answer filled.
+struct NoticeAsk: View {
     var title: String
     var detail: String
     var choices: [(String, () -> Void)]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 4) {
             Text(title)
-                .font(.headline)
+                .font(MissionType.body(15).weight(.bold))
+                .fixedSize(horizontal: false, vertical: true)
             Text(detail)
-                .font(.subheadline)
+                .font(MissionType.body(13.5))
+                .fixedSize(horizontal: false, vertical: true)
             ViewThatFits(in: .horizontal) {
-                HStack(spacing: 8) { buttons }
-                VStack(spacing: 8) { buttons }
+                HStack(spacing: 6) { buttons }
+                VStack(spacing: 6) { buttons }
             }
+            .padding(.top, 4)
         }
-        .foregroundStyle(Color.black)
-        .padding(14)
+        .foregroundStyle(LabourTheme.paperInk)
+        .padding(.horizontal, 13)
+        .padding(.vertical, 11)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(LabourTheme.primaryText))
+        .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(LabourTheme.cream))
         .accessibilityElement(children: .contain)
     }
 
@@ -169,17 +177,19 @@ private struct AskCard: View {
         ForEach(Array(choices.enumerated()), id: \.offset) { index, choice in
             Button(action: choice.1) {
                 Text(choice.0)
-                    .font(.subheadline.weight(.semibold))
+                    .font(MissionType.body(13.5).weight(.semibold))
                     .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
-                    .padding(.horizontal, 6)
-                    .foregroundStyle(index == 0 ? Color.white : Color.black)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 10)
+                    .frame(maxWidth: .infinity, minHeight: LabourTheme.chipSize)
+                    .foregroundStyle(index == 0 ? LabourTheme.cream : LabourTheme.paperInk)
                     .background(
                         RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .fill(index == 0 ? Color.black : Color.clear)
+                            .fill(index == 0 ? LabourTheme.paperInk : Color.clear)
                     )
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(.black, lineWidth: 1.5)
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .strokeBorder(LabourTheme.paperInk, lineWidth: 1.5)
                     )
                     .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             }
@@ -188,23 +198,25 @@ private struct AskCard: View {
     }
 }
 
-/// Something worth knowing that needs no answer.
-private struct InfoCard: View {
+/// Something worth knowing that needs no answer: the prototype's pale-blue "info" card.
+struct NoticeInfo: View {
     var title: String
     var detail: String
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(title).font(.headline)
-            Text(detail).font(.subheadline)
+            Text(title).font(MissionType.body(15).weight(.bold))
+            Text(detail).font(MissionType.body(13.5))
         }
-        .foregroundStyle(LabourTheme.primaryText)
-        .padding(14)
+        .foregroundStyle(LabourTheme.cream)
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(.horizontal, 13)
+        .padding(.vertical, 11)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(LabourTheme.surface))
+        .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(LabourTheme.blueprint.opacity(0.14)))
         .overlay(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .strokeBorder(LabourTheme.secondaryText.opacity(0.5), lineWidth: 1.5)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .strokeBorder(LabourTheme.blueprint.opacity(0.35), lineWidth: 1.5)
         )
         .accessibilityElement(children: .combine)
     }

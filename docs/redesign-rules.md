@@ -54,7 +54,7 @@ The redesign must cover each of these, live and in a practice run:
 
 ## 5. Readable at 3am
 
-- **Labour screens are true black.** Big bright surfaces are only for things held up for someone else to read: the birth plan sheet for the midwife. The call script's paper card is a design decision for the redesign: keep it, or make it ink on black.
+- **Labour screens are true black.** Big bright surfaces are only for things held up for someone else to read: the birth plan sheet for the midwife. The call script's paper card is a design decision for the redesign: keep it, or make it ink on black. The timer's orbit scene from the agreed prototype counts as dark: a near-black sky (#05060F to #101737) and an Earth no brighter than #1D4B7A.
 - **Text passes WCAG 2.2 contrast:** 4.5:1, or 3:1 for large text, 18pt (or 14pt bold) and over. Every colour pair the app uses is checked by a test (`LabourPaletteTests`).
   - Hot colours behind text use the fill tokens: `LabourTheme.fill(for:)` and `textOnFill(for:)`.
   - Bright orange (`urgent`) is for strokes, icons and text on black only. Never put white text on it.
@@ -63,7 +63,7 @@ The redesign must cover each of these, live and in a practice run:
   - small choice chips (strength, nudge a minute) have at least a 44pt tap area (`LabourTheme.chipSize`).
 - **Text is never smaller than caption 2** (11pt).
 - **Text grows with the phone's text size (Dynamic Type)** everywhere. Labour mode is capped at the third accessibility size, so the big button stays on screen; the home screen isn't capped.
-- **Fonts:** the prototype's fonts are OFL-licensed. Ship the licence text with them. Use the display face only at 22pt and over, and plain sans-serif for safety copy.
+- **Fonts:** the prototype's fonts are OFL-licensed. Ship the licence text with them. Use the display face only at 22pt and over, and plain sans-serif for safety copy. They're in `Sources/MissionUI/Fonts` with their licences: League Gothic (display), Instrument Sans (body, the plain sans-serif) and Martian Mono (labels). Use them through `MissionType`, which keeps text at 11pt or more and the display face at 22pt or more.
 
 ## 6. VoiceOver
 

@@ -2,112 +2,131 @@ import MissionCore
 import MissionUI
 import SwiftUI
 
-/// The timer: advice at the top, the big button at the bottom, history below (scroll up).
+/// The timer, as the agreed prototype (v3) lays it out over the orbit scene: the level strip, the
+/// advice with its call button, the last hour as a line, three numbers, the flags, any question,
+/// and the round button. Differences from the prototype, each for a redesign rule: the button is
+/// pinned above the tab bar so nothing can push it off screen, the numbers give way first when
+/// space runs out, and the contraction list for fixing taps is below the flags.
 struct TimerTab: View {
     @Environment(AppModel.self) private var model
     @Environment(\.missionMode) private var mode
-    @State private var bannerExpanded = false
-    @State private var showsEmergency = false
     @State private var showsAllFlags = false
     /// A lit flag he tapped: turning it off needs a second, deliberate tap.
     @State private var confirmingOff: RedFlag?
     @State private var expandedRow: UUID?
+    /// The height of everything above the button, so the button can take what's left, as in the
+    /// prototype: 132 to 212 points.
+    @State private var upperHeight: CGFloat = 0
+    /// Whether that height included the numbers row, and how tall the row is.
+    @State private var measuredWithStats = true
+    @State private var statsHeight: CGFloat = 50
 
     private var labour: LabourSessionModel { model.labour }
 
     var body: some View {
         GeometryReader { geometry in
-            ScrollView {
-                VStack(spacing: 14) {
-                    controls(height: geometry.size.height)
-                    HistoryList(expandedRow: $expandedRow)
+            // The one clock in labour mode: everything time-based on the timer reads `now` from here.
+            TimelineView(.periodic(from: .now, by: 1)) { _ in
+                let now = labour.currentTime
+                let burn = min(212, max(132, geometry.size.height - upperHeight - 20))
+                // The numbers give way first when there isn't room for them and the smallest button.
+                let withoutStats = upperHeight - (measuredWithStats ? statsHeight + 12 : 0)
+                let roomForStats = geometry.size.height - withoutStats - 20 - (statsHeight + 12) >= 132
+                VStack(spacing: 0) {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 12) {
+                            let showsStats = roomForStats && showsStats(now: now)
+                            upper(now: now, showsStats: showsStats)
+                                .padding(.top, 4)
+                                .padding(.bottom, 4)
+                                .onGeometryChange(for: CGFloat.self) {
+                                    $0.size.height
+                                } action: {
+                                    upperHeight = $0
+                                    measuredWithStats = showsStats
+                                }
+                            HistoryList(expandedRow: $expandedRow)
+                                .padding(.top, 24)
+                        }
+                        .padding(.horizontal, 18)
+                        .padding(.bottom, 24)
+                    }
+                    .scrollIndicators(.hidden)
+                    .safeAreaInset(edge: .bottom, spacing: 0) {
+                        // Above the button, not over it as in the prototype: over a small button
+                        // it hid the clock. What it covers scrolls up from under it.
+                        UndoArea(now: now)
+                            .padding(.horizontal, 18)
+                            .padding(.bottom, 4)
+                    }
+                    dock(now: now, size: burn)
                 }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 24)
             }
-            .scrollIndicators(.hidden)
-        }
-        .background(LabourTheme.background)
-    }
-
-    /// The one clock in labour mode: everything time-based on the timer reads `now` from here.
-    private func controls(height: CGFloat) -> some View {
-        TimelineView(.periodic(from: .now, by: 1)) { _ in
-            controls(height: height, now: labour.currentTime)
         }
     }
 
-    private func controls(height: CGFloat, now: Date) -> some View {
-        VStack(spacing: 14) {
+    /// Whether a question is up. Like the prototype, the trace and numbers step aside for it, so
+    /// the question shows without pushing the button.
+    private func isAsking(now: Date) -> Bool {
+        labour.prompt != nil || labour.needsTermAnswer || (labour.justStopped.map { $0.until > now } ?? false)
+    }
+
+    /// The prototype hides the numbers at "Call now" and 999, and while a question is up.
+    private func showsStats(now: Date) -> Bool {
+        !AdviceBlock<EmptyView>.isHot(labour.output?.state ?? .early) && !isAsking(now: now)
+    }
+
+    private func upper(now: Date, showsStats: Bool) -> some View {
+        let state = labour.output?.state
+        let asking = isAsking(now: now)
+        return VStack(alignment: .leading, spacing: 12) {
             if mode == .practice, let drill = model.drill {
                 DrillGuideCard(drill: drill)
             }
-            banner
-            if labour.output?.state == .call999 || showsEmergency {
-                EmergencyCallButton(region: labour.region)
+            if let state {
+                LevelStrip(state: state)
             }
-            LabourPrompts()
-            StatsRow(now: now)
+            advice
+            if !asking {
+                telemetry(now: now, compact: (state ?? .early) >= .callTriage)
+            }
+            if showsStats {
+                stats(now: now)
+                    .onGeometryChange(for: CGFloat.self) {
+                        $0.size.height
+                    } action: {
+                        statsHeight = $0
+                    }
+            }
             flags
-            Spacer(minLength: 0)
-            UndoArea(now: now)
-            StartStopButton(
-                isRunning: labour.openContraction != nil,
-                elapsed: labour.openContraction.map { now.timeIntervalSince($0.start) }
-            ) {
-                labour.tap()
-            }
-            .sensoryFeedback(trigger: labour.openContraction != nil) { _, running in
-                running ? .impact(weight: .heavy) : .impact(weight: .light)
-            }
-            // A little shorter in a practice run, to make room for the drill's guide.
-            .frame(height: mode == .practice ? max(150, height * 0.28) : max(180, height * 0.34))
-            StrengthRow(now: now)
-            HStack {
-                Label("History below", systemImage: "chevron.compact.up")
-                    .font(.footnote)
-                    .foregroundStyle(LabourTheme.secondaryText)
-                    .labelStyle(.titleAndIcon)
-                Spacer()
-                if !labour.log.contractions.isEmpty, labour.openContraction == nil,
-                    labour.output?.reasons.contains(.contractionsStopped) != true
-                {
-                    Button("They've stopped") { labour.markStopped() }
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(LabourTheme.secondaryText)
-                        .underline()
-                        .frame(minHeight: LabourTheme.chipSize)
-                        .accessibilityHint("Tells the app the contractions have stopped. Undo is available.")
-                }
-            }
+            StrengthQuestion(now: now)
+            LabourPrompts()
         }
-        .padding(.top, 8)
-        .frame(minHeight: height - 8)
     }
 
-    @ViewBuilder private var banner: some View {
+    @ViewBuilder private var advice: some View {
         if let output = labour.output {
             let thresholds = output.thresholds
-            StateBanner(
+            AdviceBlock(
                 state: output.state,
                 headline: StateCopy.headline(for: output, region: labour.region),
-                detail: StateCopy.detail(for: output, region: labour.region, thresholds: thresholds),
                 reasonLines: output.reasons.filter { $0 != .noRecentTaps }.map {
                     StateCopy.reasonLine(
                         for: $0, metrics: output.metrics, thresholds: thresholds, now: output.evaluatedAt)
                 } + contractionLine(output),
-                source: output.reasons.first.map { StateCopy.source(for: $0, region: labour.region).title },
-                isExpanded: bannerExpanded
-            )
+                detail: StateCopy.detail(for: output, region: labour.region, thresholds: thresholds),
+                source: output.reasons.first.map { StateCopy.source(for: $0, region: labour.region).title }
+            ) {
+                if output.state >= .callTriage {
+                    AdviceCall(state: output.state)
+                }
+            }
             .onChange(of: output.state) { _, _ in
                 // Once per change of level, never on the every-second redraw.
                 AccessibilityNotification.Announcement(
                     mode.spokenHeadline(StateCopy.headline(for: output, region: labour.region))
                 ).post()
             }
-            .onTapGesture { withAnimation { bannerExpanded.toggle() } }
-            .onLongPressGesture { withAnimation { showsEmergency = true } }
-            .accessibilityHint("Tap for more detail. Long-press to show the emergency call button.")
         }
     }
 
@@ -123,48 +142,109 @@ struct TimerTab: View {
         return ["Contractions: \(line)"]
     }
 
+    /// "TELEMETRY · LAST 60 MIN", then the line. Shorter once it's time to call.
+    private func telemetry(now: Date, compact: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text("TELEMETRY · LAST 60 MIN")
+                Spacer(minLength: 8)
+                Text("NOW")
+            }
+            .font(MissionType.mono())
+            .tracking(MissionType.monoTracking())
+            .lineLimit(1)
+            .foregroundStyle(LabourTheme.muted)
+            .accessibilityHidden(true)
+            ContractionTrace(
+                contractions: labour.log.contractions,
+                missedTaps: labour.output?.metrics.missedTapGaps ?? [],
+                now: now
+            )
+            .frame(height: compact ? 48 : 80)
+        }
+    }
+
+    private func stats(now: Date) -> some View {
+        let metrics = labour.output?.metrics
+        let lastHour = labour.log.contractions.filter {
+            $0.start >= now.addingTimeInterval(-3600) && $0.start <= now.addingTimeInterval(60)
+        }.count
+        return StatsStrip([
+            (metrics.map { every($0, labour.thresholds) } ?? "–", "Every"),
+            (metrics?.medianDurationSec.map { "\(Int($0.rounded()))s" } ?? "–", "Lasting"),
+            ("\(lastHour)", "Last hour"),
+        ])
+    }
+
+    /// Pinned under the scrolling area: the big button, with "They've stopped" in its corner.
+    private func dock(now: Date, size: CGFloat) -> some View {
+        let open = labour.openContraction
+        let showsStopped =
+            !labour.log.contractions.isEmpty && open == nil
+            && labour.output?.reasons.contains(.contractionsStopped) != true
+        return BurnButton(
+            isRunning: open != nil,
+            elapsed: open.map { now.timeIntervalSince($0.start) },
+            urgentAfter: labour.thresholds.urgentSingleDurationSec,
+            isCompact: AdviceBlock<EmptyView>.isHot(labour.output?.state ?? .early)
+        ) {
+            labour.tap()
+        }
+        .frame(width: size, height: size)
+        .sensoryFeedback(trigger: open != nil) { _, running in
+            running ? .impact(weight: .heavy) : .impact(weight: .light)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.top, 4)
+        .padding(.bottom, 12)
+        .overlay(alignment: .bottomTrailing) {
+            if showsStopped {
+                Button("They've stopped") { labour.markStopped() }
+                    .font(MissionType.body(13).weight(.semibold))
+                    // Cream, not the prototype's lilac: lilac over the Earth's blue is under 4.5:1.
+                    .foregroundStyle(LabourTheme.cream)
+                    .underline()
+                    .frame(minHeight: LabourTheme.chipSize)
+                    .padding(.trailing, 18)
+                    .accessibilityHint("Tells the app the contractions have stopped. Undo is available.")
+            }
+        }
+    }
+
     private var flags: some View {
         let active = labour.log.activeRedFlags
-        let pinned = RedFlagLayout.pinned
         let others = RedFlagLayout.others
-        return VStack(spacing: 10) {
-            HStack(spacing: 10) {
-                ForEach(pinned, id: \.self) { flag in
-                    FlagButton(flag: flag, isOn: active.contains(flag)) { toggle(flag, active: active) }
+        let othersOn = others.filter(active.contains).count
+        return VStack(spacing: 8) {
+            HStack(spacing: 8) {
+                ForEach(RedFlagLayout.pinned, id: \.self) { flag in
+                    FlagToggle(flag: flag, isOn: active.contains(flag)) { toggle(flag, active: active) }
                 }
-            }
-            HStack(spacing: 10) {
-                Button {
-                    labour.logMovement()
-                } label: {
-                    Label("Baby moved", systemImage: "hand.wave.fill")
-                        .font(.subheadline.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
-                        .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(LabourTheme.surface))
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(LabourTheme.primaryText)
                 Button {
                     withAnimation { showsAllFlags.toggle() }
                 } label: {
-                    let otherOn = others.filter(active.contains).count
-                    Label(
-                        showsAllFlags ? "Fewer" : (otherOn > 0 ? "More (\(otherOn) on)" : "More red flags"),
-                        systemImage: showsAllFlags ? "chevron.up" : "exclamationmark.triangle"
-                    )
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
-                    .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(LabourTheme.surface))
+                    Text(showsAllFlags ? "Fewer" : (othersOn > 0 ? "More · \(othersOn) on" : "More"))
+                        .font(MissionType.body(13.5).weight(.semibold))
+                        .foregroundStyle(LabourTheme.cream)
+                        .padding(.leading, 12)
+                        .padding(.trailing, 10)
+                        .frame(minHeight: LabourTheme.minimumControlSize)
+                        .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(FlagToggle.surface))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .strokeBorder(
+                                    othersOn > 0 ? LabourTheme.signal : LabourTheme.cream.opacity(0.3), lineWidth: 1.5)
+                        )
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle(others.contains(where: active.contains) ? LabourTheme.urgent : LabourTheme.primaryText)
+                .fixedSize(horizontal: true, vertical: false)
+                .accessibilityLabel(showsAllFlags ? "Fewer red flags" : "More red flags")
+                .accessibilityValue(othersOn > 0 ? "\(othersOn) on" : "")
             }
             if showsAllFlags {
-                LazyVGrid(
-                    columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10
-                ) {
+                LazyVGrid(columns: [GridItem(.flexible(), spacing: 8), GridItem(.flexible(), spacing: 8)], spacing: 8) {
                     ForEach(others, id: \.self) { flag in
-                        FlagButton(flag: flag, isOn: active.contains(flag)) { toggle(flag, active: active) }
+                        FlagToggle(flag: flag, isOn: active.contains(flag)) { toggle(flag, active: active) }
                     }
                 }
             }
@@ -196,68 +276,121 @@ struct TimerTab: View {
     }
 }
 
-/// A red-flag toggle. Filled when on.
-private struct FlagButton: View {
+/// A red-flag switch, as in the prototype: the words, and a small switch that slides across when
+/// it's on. On, it fills with the darker red so the cream words stay readable.
+struct FlagToggle: View {
     var flag: RedFlag
     var isOn: Bool
     var action: () -> Void
 
+    /// The prototype's rgba(14, 20, 51, 0.7) behind an unlit flag.
+    static let surface = Color(red: 14 / 255, green: 20 / 255, blue: 51 / 255).opacity(0.7)
+
     var body: some View {
-        Button {
-            action()
-        } label: {
-            Label {
+        Button(action: action) {
+            HStack(spacing: 4) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(flag.label)
-                        .font(.subheadline.weight(.semibold))
+                        .font(MissionType.body(13.5).weight(.semibold))
                     if let detail = flag.detail {
                         Text(detail)
-                            .font(.caption)
-                            .opacity(0.85)
+                            .font(MissionType.body(12, relativeTo: .caption))
+                            .opacity(isOn ? 1 : 0.85)
                     }
                 }
-            } icon: {
-                Image(systemName: isOn ? "checkmark.circle.fill" : flag.icon)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 0)
+                Capsule()
+                    .fill(isOn ? Color(red: 9 / 255, green: 13 / 255, blue: 36 / 255).opacity(0.45) : switchOff)
+                    .frame(width: 30, height: 18)
+                    .overlay(alignment: isOn ? .trailing : .leading) {
+                        Circle().fill(LabourTheme.cream).frame(width: 14, height: 14).padding(2)
+                    }
+                    .accessibilityHidden(true)
             }
-            .multilineTextAlignment(.leading)
-            .foregroundStyle(isOn ? LabourTheme.textOnFill(for: flag.state) : LabourTheme.primaryText)
-            .padding(.vertical, 8)
-            .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
-            .padding(.horizontal, 8)
+            .foregroundStyle(LabourTheme.cream)
+            .padding(.leading, 12)
+            .padding(.trailing, 10)
+            .padding(.vertical, 6)
+            .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(isOn ? LabourTheme.fill(for: flag.state) : LabourTheme.surface)
+                RoundedRectangle(cornerRadius: 14, style: .continuous).fill(isOn ? LabourTheme.hot : Self.surface)
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .strokeBorder(LabourTheme.color(for: flag.state).opacity(isOn ? 0 : 0.6), lineWidth: 1.5)
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .strokeBorder(isOn ? LabourTheme.hot : LabourTheme.signal.opacity(0.55), lineWidth: 1.5)
             )
+            .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
         .buttonStyle(.plain)
         .sensoryFeedback(.warning, trigger: isOn) { _, turnedOn in turnedOn }
+        .accessibilityAddTraits(.isToggle)
         .accessibilityValue(isOn ? "On" : "Off")
         .accessibilityHint(isOn ? "Asks before turning it off" : "")
     }
+
+    private var switchOff: Color { LabourTheme.cream.opacity(0.18) }
 }
 
-/// Since last, typical interval and length, and how many in the last hour.
-private struct StatsRow: View {
+/// The call button inside the advice: the booked unit's triage line from "time to call", 999
+/// at 999. Every one dials; in a practice run each shows the number and dials nothing.
+private struct AdviceCall: View {
     @Environment(AppModel.self) private var model
-    var now: Date
+    @Environment(\.missionMode) private var mode
+    var state: LabourState
 
     var body: some View {
-        let labour = model.labour
-        let metrics = labour.output?.metrics
-        let lastHour = labour.log.contractions.filter { now.timeIntervalSince($0.start) <= 3600 }.count
-        HStack(spacing: 8) {
-            StatTile(
-                label: "Since last",
-                value: metrics?.lastStart.map { clockText(now.timeIntervalSince($0)) } ?? "–"
-            )
-            StatTile(label: "Every", value: metrics.map { every($0, labour.thresholds) } ?? "–")
-            StatTile(label: "Lasting", value: metrics?.medianDurationSec.map { "\(Int($0.rounded()))s" } ?? "–")
-            StatTile(label: "Last hour", value: "\(lastHour)")
+        let region = model.labour.region
+        let style: DialFace.Style = mode == .practice ? .practice : (state >= .callNow ? .hot : .warm)
+        if state == .call999 {
+            let number = StateCopy.emergencyNumber(region)
+            if mode == .practice {
+                DialFace(title: "Call \(number)", detail: "In a real labour this rings \(number)", style: style)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("Practice. Call \(number). In a real labour this rings \(number).")
+            } else if let url = EmergencyDial.url(region) {
+                Link(destination: url) {
+                    DialFace(title: "Call \(number)", detail: "Then your maternity unit. Stay with her.", style: style)
+                }
+                .accessibilityLabel("Call \(number)")
+            }
+        } else if let place = model.bookedPlace, let number = place.triageNumber(region: region) {
+            let name = place.displayName
+            // "01632 960118 · then press 2", as the prototype writes it.
+            let then = number.afterConnecting.map { $0.prefix(1).lowercased() + $0.dropFirst() }
+            let detail = [number.display, then].compactMap { $0 }.joined(separator: " · ")
+            if mode == .practice {
+                DialFace(title: "Call \(name)", detail: "In a real labour this rings \(number.display)", style: style)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("Practice. Call \(name). In a real labour this rings \(number.display).")
+            } else if let url = number.telURL {
+                Link(destination: url) {
+                    DialFace(title: "Call \(name)", detail: detail, style: style)
+                }
+                .accessibilityLabel("Call \(name), \(number.display)")
+            }
+        } else {
+            NoNumberCard()
         }
+    }
+}
+
+/// Where the unit's button would be, with no triage number saved: the Call tab has 111 and 999.
+private struct NoNumberCard: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("No triage number saved")
+                .font(MissionType.body(15).weight(.bold))
+            Text("The Call tab has NHS 111, 999 and what to say.")
+                .font(MissionType.body(13.5))
+        }
+        .foregroundStyle(LabourTheme.paperInk)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 11)
+        .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(LabourTheme.cream))
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -275,7 +408,7 @@ private func every(_ metrics: ContractionMetrics, _ thresholds: ThresholdProfile
     } ?? "–"
 }
 
-/// The undo chip for 10 seconds after any tap, or a short note such as "Ignored a double tap".
+/// The undo bar for 10 seconds after any tap, or a short note such as "Ignored a double tap".
 private struct UndoArea: View {
     @Environment(AppModel.self) private var model
     var now: Date
@@ -283,167 +416,55 @@ private struct UndoArea: View {
     var body: some View {
         Group {
             if let undoable = model.labour.undoable, undoable.expiresAt > now {
-                UndoChip(label: undoable.label) { model.labour.undo() }
+                UndoBar(text: Self.text(for: undoable.label)) { model.labour.undo() }
                     .transition(.opacity)
             } else if let notice = model.labour.notice, notice.until > now {
                 Text(notice.text)
-                    .font(.headline)
-                    .foregroundStyle(LabourTheme.secondaryText)
-                    .frame(minHeight: LabourTheme.minimumControlSize)
-            } else {
-                Color.clear.frame(height: LabourTheme.minimumControlSize)
-            }
-        }
-    }
-}
-
-/// Contraction history, newest first. Tap a row to fix it in place.
-private struct HistoryList: View {
-    @Environment(AppModel.self) private var model
-    @Binding var expandedRow: UUID?
-
-    var body: some View {
-        let contractions = model.labour.log.contractions
-        let needsEdit = Set(model.labour.output?.metrics.needsEdit ?? [])
-        VStack(alignment: .leading, spacing: 4) {
-            Text(contractions.isEmpty ? "No contractions timed yet" : "History")
-                .font(.headline)
-                .foregroundStyle(LabourTheme.secondaryText)
-                .padding(.vertical, 8)
-            ForEach(Array(contractions.enumerated()).reversed(), id: \.element.id) { index, contraction in
-                let previous = index > 0 ? contractions[index - 1] : nil
-                VStack(spacing: 0) {
-                    Button {
-                        withAnimation { expandedRow = expandedRow == contraction.id ? nil : contraction.id }
-                    } label: {
-                        ContractionRow(
-                            number: index + 1,
-                            startText: contraction.start.formatted(date: .omitted, time: .shortened),
-                            durationText: durationText(contraction, isLast: index == contractions.count - 1),
-                            intervalText: previous.map {
-                                "every \(clockText(contraction.start.timeIntervalSince($0.start)))"
-                            },
-                            needsEdit: needsEdit.contains(contraction.id)
-                        )
-                    }
-                    .buttonStyle(.plain)
-                    if expandedRow == contraction.id {
-                        RowEditor(contraction: contraction, isLast: index == contractions.count - 1)
-                    }
-                }
-                .padding(.horizontal, 12)
-                .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(LabourTheme.surface))
+                    .font(MissionType.body(14).weight(.semibold))
+                    .foregroundStyle(LabourTheme.paperInk)
+                    .padding(.horizontal, 16)
+                    .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize, alignment: .leading)
+                    .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(LabourTheme.cream))
+                    // A note takes no taps: they go through to the button.
+                    .allowsHitTesting(false)
             }
         }
     }
 
-    private func durationText(_ contraction: Contraction, isLast: Bool) -> String {
-        if let end = contraction.end {
-            return end >= contraction.start ? clockText(end.timeIntervalSince(contraction.start)) : "check"
+    /// What was just done, in the prototype's words: "Contraction started".
+    static func text(for label: String) -> String {
+        switch label {
+        case "start": "Contraction started"
+        case "stop": "Contraction stopped"
+        case "they've stopped": "Marked as stopped"
+        case "flag": "Red flag on"
+        case "flag off": "Red flag off"
+        case "movement": "Movement logged"
+        case "waters time": "Waters time saved"
+        case "answer": "Answer saved"
+        case "call": "Call logged"
+        case "delete": "Contraction deleted"
+        case "merge": "Contractions merged"
+        default: "Contraction changed"
         }
-        return isLast ? "timing" : "no stop"
-    }
-}
-
-/// Inline fixes for one contraction: nudge the start or end by a minute, merge or delete.
-private struct RowEditor: View {
-    @Environment(AppModel.self) private var model
-    var contraction: Contraction
-    var isLast: Bool
-
-    var body: some View {
-        let labour = model.labour
-        VStack(alignment: .leading, spacing: 10) {
-            stepperRow(
-                "Start",
-                minus: { labour.moveStart(of: contraction, byMinutes: -1) },
-                plus: { labour.moveStart(of: contraction, byMinutes: 1) }
-            )
-            if contraction.end != nil {
-                stepperRow(
-                    "End",
-                    minus: { labour.moveEnd(of: contraction, byMinutes: -1) },
-                    plus: { labour.moveEnd(of: contraction, byMinutes: 1) }
-                )
-            } else if !isLast {
-                HStack(spacing: 8) {
-                    Text("Lasted about").foregroundStyle(LabourTheme.secondaryText)
-                    ForEach([30, 60, 90], id: \.self) { seconds in
-                        editButton("\(seconds)s") { labour.close(contraction.id, afterSeconds: Double(seconds)) }
-                    }
-                }
-            }
-            HStack(spacing: 8) {
-                if labour.canMergeWithPrevious(contraction) {
-                    editButton("Merge with previous") { labour.mergeWithPrevious(contraction) }
-                }
-                editButton("Delete", role: .destructive) { labour.delete(contraction) }
-            }
-        }
-        .padding(.vertical, 10)
-    }
-
-    private func stepperRow(_ title: String, minus: @escaping () -> Void, plus: @escaping () -> Void) -> some View {
-        HStack(spacing: 8) {
-            Text(title)
-                .foregroundStyle(LabourTheme.secondaryText)
-                .frame(minWidth: 48, alignment: .leading)
-            editButton("−1 min", action: minus)
-            editButton("+1 min", action: plus)
-        }
-    }
-
-    private func editButton(_ title: String, role: ButtonRole? = nil, action: @escaping () -> Void) -> some View {
-        Button(role: role, action: action) {
-            Text(title)
-                .font(.subheadline.weight(.semibold))
-                .padding(.horizontal, 14)
-                .frame(minHeight: LabourTheme.chipSize)
-                .background(RoundedRectangle(cornerRadius: 10, style: .continuous).fill(LabourTheme.raisedSurface))
-        }
-        .buttonStyle(.plain)
-        .foregroundStyle(role == .destructive ? LabourTheme.urgent : LabourTheme.primaryText)
     }
 }
 
 /// "How strong was that one?" for 20 seconds after a stop. Triage asks how strong they are.
-private struct StrengthRow: View {
+private struct StrengthQuestion: View {
     @Environment(AppModel.self) private var model
     var now: Date
 
     var body: some View {
-        Group {
-            if let stopped = model.labour.justStopped, stopped.until > now {
-                HStack(spacing: 8) {
-                    Text("How strong?")
-                        .font(.subheadline)
-                        .foregroundStyle(LabourTheme.secondaryText)
-                    ForEach(ContractionStrength.allCases, id: \.self) { strength in
-                        Button {
-                            model.labour.rateLast(strength)
-                        } label: {
-                            Text(strength.label)
-                                .font(.subheadline.weight(.semibold))
-                                .padding(.horizontal, 12)
-                                .frame(minHeight: LabourTheme.chipSize)
-                                .background(Capsule().fill(LabourTheme.surface))
-                                .foregroundStyle(LabourTheme.primaryText)
-                        }
-                        .buttonStyle(.plain)
-                    }
+        if let stopped = model.labour.justStopped, stopped.until > now {
+            NoticeAsk(
+                title: "How strong was that one?",
+                detail: "Triage will ask.",
+                choices: ContractionStrength.allCases.map { strength in
+                    (strength.label, { model.labour.rateLast(strength) })
                 }
-                .transition(.opacity)
-            }
-        }
-    }
-}
-
-extension ContractionStrength {
-    var label: String {
-        switch self {
-        case .mild: "Mild"
-        case .moderate: "Moderate"
-        case .strong: "Strong"
+            )
+            .transition(.opacity)
         }
     }
 }
