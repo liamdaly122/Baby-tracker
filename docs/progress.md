@@ -9,9 +9,9 @@ The heart of the app works. He presses LAUNCH, taps START and STOP for each cont
 Two things haven't happened yet:
 
 - **It hasn't been on a real iPhone.** Everything so far has run on the Mac's pretend iPhone (the simulator). See "Trying it on your iPhone" below.
-- **Most of it still looks like a plain iPhone app.** The redesign has started: the labour timer now looks like the agreed prototype (v3). The other screens follow one at a time.
+- **Most of it still looks like a plain iPhone app.** The redesign has started: the labour timer and the Call tab now look like the agreed prototype (v3). The other screens follow one at a time.
 
-Right now we're doing the redesign, starting with the labour timer. It's built and tested, waiting to be merged ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)).
+Right now we're doing the redesign. The labour timer is done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)). The Call tab is built and tested, waiting to be merged ([PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15)).
 
 ## What works today
 
@@ -40,7 +40,7 @@ Right now we're doing the redesign, starting with the labour timer. It's built a
 | 6 | Red flags and the call script | Done |
 | 7 | The practice run | Done |
 | 8 | Rules for the redesign (every Call button dials, 999 always one tap away) | Done: the rules are in `docs/redesign-rules.md` |
-| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. The timer is redesigned, waiting to be merged ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)); the other screens follow |
+| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. The timer is redesigned ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)) and the Call tab is built, waiting to be merged ([PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15)); the other screens follow |
 | 10 | Hard moments: loss, admission, neonatal care, false alarms | Done. Later: discreet mode in early pregnancy, support for her recovery |
 | 11 | A storage problem never stops labour mode or loses the hospital's number | Done |
 | 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Can start any time, alongside the rest |
@@ -55,7 +55,7 @@ Right now we're doing the redesign, starting with the labour timer. It's built a
 
 ## What's next, in order
 
-1. **The redesign**, screen by screen, following `docs/redesign-rules.md`. The timer is done and waiting to be merged ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)). Next: Call, then Plan, Coach and Decoder, launch and the practice run, set-up, the watch, and the home screen.
+1. **The redesign**, screen by screen, following `docs/redesign-rules.md`. The timer is done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)) and the Call tab is waiting to be merged ([PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15)). Next: Plan, Coach and Decoder, launch and the practice run, set-up, the watch, and the home screen.
 2. The legal and privacy groundwork (12).
 3. A first test build for real phones (TestFlight).
 4. The watch as the main timer (18), the lock screen and the Live Activity.
@@ -79,6 +79,18 @@ A few things differ from the prototype on purpose, each because a safety rule ne
 - **Buttons are bigger:** flags and controls are at least 56 points tall, small chips at least 44.
 - **"They've stopped" is cream, not lilac,** so it's readable over the Earth.
 - **Kept from the app:** the list of contractions for fixing a mis-tap, with "Baby moved", is below the flags (scroll down). "Labour settings" moved to the bottom of the Plan tab, as the top row has no room for it next to 999. "End practice" is in the practice run's guide card.
+
+## The redesigned Call tab
+
+The Call tab now matches the prototype's dark red "comms" panel: the unit on its own plate with a big "Call triage" button, the number to copy and "then press 2", the numbered "If nobody answers" list, the script on a ruled notepad, getting there, the backup unit, the people to ring with their own "Call" buttons, and a red 999 plate. The headers on the Plan, Coach and Decoder tabs now use the prototype's style too.
+
+Where it differs from the prototype, and why:
+
+- **The order follows the safety rules.** "After the call" (what they said) comes straight after the unit, and 999 comes last as well as first in an emergency. The prototype had 999 in the middle and no "After the call".
+- **The 999 plate is the darker red,** so the cream words are readable, and it says when to ring 999 in the app's own words.
+- **Small call buttons use the display font a little bigger** (22 points, not 17), because the rules keep that font for big text.
+- **Kept from the app:** the backup unit, a text button beside each person, and "Labour settings" on the Plan tab. The prototype's "Copy 'We're heading in'" message isn't added: the app doesn't have that message yet.
+- **Added, not in the prototype:** the one-line advice strip above the other tabs, so a change in the advice is never missed.
 
 ## Trying it on your iPhone
 

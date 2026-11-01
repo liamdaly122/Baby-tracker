@@ -3,9 +3,10 @@ import MissionUI
 import SwiftData
 import SwiftUI
 
-/// Who to ring, in order: 999 first when it's a 999 situation, then the unit, "Can't get
-/// through?", everything they'll ask on one card, getting there, the backup unit, and last the
-/// people on his call list. Every call control dials, except in a practice run.
+/// Who to ring, laid out like the agreed prototype's comms panel, in the order redesign rule 2
+/// sets: 999 first when it's a 999 situation, the unit, after the call, "If nobody answers", the
+/// script, getting there, the backup unit, the people, and 999 again last. Every call control
+/// dials, except in a practice run.
 struct CallTab: View {
     @Environment(AppModel.self) private var model
     @Environment(\.missionMode) private var mode
@@ -17,171 +18,171 @@ struct CallTab: View {
         let region = model.profile.region
         let booked = places.first { $0.role == .booked }
         let backup = places.first { $0.role == .backup }
+        let isEmergency = labour.output?.state == .call999
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 12) {
                 LabourTabHeader(
                     world: .call, eyebrow: "Comms", title: "Who to ring",
                     subtitle: mode == .practice
                         ? "In this order. In a drill, nothing dials."
-                        : labour.output?.state == .call999
-                            ? "999 first. Then your unit." : "In this order. Every button dials.")
-                if labour.output?.state == .call999 {
-                    EmergencyCallButton(region: labour.region)
+                        : isEmergency ? "999 first. Then your unit." : "In this order. Every button dials.")
+                if isEmergency {
+                    EmergencyPlate(region: labour.region)
                 }
-                unitCard(place: booked, region: region)
-                AfterCallCard()
-                FallbackList(
+                UnitPlate(place: booked, region: region)
+                AfterCallSection()
+                FallbackLadder(
                     steps: CallFallback.steps(
                         region: labour.region, unit: booked?.triageNumber(region: region),
                         labourWard: booked?.labourWardNumber(region: region))
                 )
                 TimelineView(.periodic(from: .now, by: 30)) { _ in
                     if let script = labour.triageScript() {
-                        ScriptCard(script: script)
+                        NotepadCard(opening: script.opening, lines: script.lines)
                     }
                 }
                 if let booked {
-                    GettingThereCard(place: booked)
+                    GettingThereSection(place: booked)
                 }
                 if let backup, !backup.isBlank {
-                    BackupPlaceCard(place: backup, booked: booked, region: region)
+                    BackupSection(place: backup, booked: booked, region: region)
                 }
                 if !crew.isEmpty {
-                    CrewCard(crew: crew, region: region)
+                    CrewSection(crew: crew, region: region)
                 }
-                if labour.output?.state != .call999 {
-                    EmergencyCallButton(region: labour.region)
-                        .opacity(0.85)
+                if !isEmergency {
+                    EmergencyPlate(region: labour.region)
                 }
                 Text("NHS advice: phone before you go in. They may advise staying at home for a while longer.")
-                    .font(.footnote)
-                    .foregroundStyle(LabourTheme.secondaryText)
-            }
-            .padding(16)
-        }
-    }
-
-    @ViewBuilder
-    private func unitCard(place: BirthPlace?, region: ContentRegion) -> some View {
-        let name = place?.displayName ?? "your maternity unit"
-        switch place?.triageCheck(region: region) {
-        case .success(let number):
-            // The dial plate: the one number that matters most, on its own panel.
-            VStack(alignment: .leading, spacing: 10) {
-                Text("YOUR MATERNITY UNIT")
-                    .font(.caption.weight(.semibold).monospaced())
-                    .tracking(1)
-                    .foregroundStyle(LabourWorld.call.accent)
-                if mode == .practice {
-                    PracticeDial(
-                        action: "Call \(name)",
-                        detail: "In a real labour this rings \(number.display).")
-                } else if let url = number.telURL {
-                    Link(destination: url) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "phone.fill")
-                                .font(.title2)
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("Call \(name)")
-                                    .font(.title3.bold())
-                                    .multilineTextAlignment(.leading)
-                                Text(number.display)
-                                    .font(.headline.monospacedDigit())
-                            }
-                            Spacer(minLength: 0)
-                        }
-                        .foregroundStyle(LabourPalette.redInk.color)
-                        .padding(16)
-                        .frame(maxWidth: .infinity, minHeight: 88)
-                        .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Self.cream))
-                    }
-                }
-                if let after = number.afterConnecting {
-                    Label(after, systemImage: "number")
-                        .font(.headline)
-                        .foregroundStyle(LabourTheme.primaryText)
-                }
-                Text("Have her notes ready when they answer.")
-                    .font(.subheadline)
-                    .foregroundStyle(LabourTheme.secondaryText)
-            }
-            .padding(16)
-            .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(LabourWorld.call.surface))
-            .overlay(
-                RoundedRectangle(cornerRadius: 22, style: .continuous)
-                    .strokeBorder(LabourTheme.urgent.opacity(0.55), lineWidth: 1.5)
-            )
-        case .failure(let problem):
-            fixNumberCard(
-                title: "The saved number needs checking",
-                detail: "“\(place?.triagePhone ?? "")”: \(problem.message) Until it's fixed, use NHS 111 below.")
-        case nil:
-            fixNumberCard(
-                title: "Add the triage number",
-                detail: "It's on her maternity notes, often on the front. Until then, use NHS 111 below.")
-        }
-    }
-
-    static let cream = LabourPalette.cream.color
-
-    private func fixNumberCard(title: String, detail: String) -> some View {
-        NavigationLink {
-            BirthPlaceForm(role: .booked)
-        } label: {
-            VStack(alignment: .leading, spacing: 6) {
-                Text(title)
-                    .font(.title3.bold())
-                Text(detail)
-                    .foregroundStyle(LabourTheme.secondaryText)
+                    .font(MissionType.body(13, relativeTo: .footnote))
+                    .foregroundStyle(LabourTheme.muted)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(16)
-            .background(
-                RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(LabourTheme.amber, lineWidth: 2)
-            )
-            .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .padding(.horizontal, 18)
+            .padding(.top, 4)
+            .padding(.bottom, 24)
         }
-        .buttonStyle(.plain)
+        .scrollIndicators(.hidden)
+    }
+}
+
+/// 999 on a red plate, with when to ring it in the app's own words.
+private struct EmergencyPlate: View {
+    var region: ContentRegion
+
+    var body: some View {
+        let number = StateCopy.emergencyNumber(region)
+        let when = CallFallback.steps(region: region, unit: nil, labourWard: nil).last?.detail
+        CallPlate(isEmergency: true, label: "Emergency") {
+            if let phone = PhoneNumber.shortCode(number) {
+                BigDial(number: phone, title: "Call \(number)", detail: nil, style: .hot)
+            }
+            if let when {
+                // Solid cream: faded, it would drop under 4.5:1 on the red.
+                Text(when)
+                    .font(MissionType.body(13, relativeTo: .footnote))
+                    .foregroundStyle(LabourTheme.cream)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+}
+
+/// The booked unit on its plate: what kind of place, its name, the big "Call triage", the number
+/// to copy, "press 2", and when the numbers were last checked against her notes. With no usable
+/// number, what to do instead.
+private struct UnitPlate: View {
+    @Environment(AppModel.self) private var model
+    var place: BirthPlace?
+    var region: ContentRegion
+
+    var body: some View {
+        switch place?.triageCheck(region: region) {
+        case .success(let number):
+            CallPlate(label: place?.kind.title ?? "Your maternity unit", title: place?.displayName) {
+                let then = number.afterConnecting.map { $0.prefix(1).lowercased() + $0.dropFirst() }
+                BigDial(
+                    number: number, title: "Call triage",
+                    detail: [number.display, then].compactMap { $0 }.joined(separator: " · "))
+                NumberRow(number: number)
+                PlateNote("\(checkedNote) Have her notes ready when they answer.")
+            }
+        case .failure(let problem):
+            noNumber(
+                title: "The saved number needs checking",
+                detail: "“\(place?.triagePhone ?? "")”: \(problem.message)", action: "Fix the number")
+        case nil:
+            noNumber(
+                title: "No number saved",
+                detail: "The triage number is on her maternity notes, often on the front.", action: "Add the number")
+        }
+    }
+
+    /// "Checked against her notes in week 34.", or that they need checking.
+    private var checkedNote: String {
+        guard let place, let checked = place.numbersCheckedAt else { return "Not checked against her notes yet." }
+        let calendar = model.profile.pregnancyCalendar
+        if place.numbersNeedChecking(calendar: calendar, now: model.labour.currentTime) {
+            return "Checked before 34 weeks: check them against her notes again."
+        }
+        if let calendar {
+            return "Checked against her notes in week \(calendar.gestationalAgeDays(at: checked, in: .current) / 7)."
+        }
+        return "Checked against her notes on \(checked.formatted(date: .abbreviated, time: .omitted))."
+    }
+
+    private func noNumber(title: String, detail: String, action: String) -> some View {
+        CallPlate(label: "Your maternity unit", title: title) {
+            PlateNote("\(detail) Until then, NHS 111 can help.")
+            if let nhs = CallFallback.steps(region: region, unit: nil, labourWard: nil)
+                .first(where: { $0.number?.display == "111" }), let phone = nhs.number
+            {
+                BigDial(number: phone, title: nhs.title, detail: nhs.detail)
+            }
+            NavigationLink {
+                BirthPlaceForm(role: .booked)
+            } label: {
+                GhostButtonLabel(title: action, systemImage: "pencil")
+            }
+            .buttonStyle(.plain)
+        }
     }
 }
 
 /// "I've called them": what they said. While nothing new happens, the advice says so; anything
 /// new after it says call them back.
-private struct AfterCallCard: View {
+private struct AfterCallSection: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.dynamicTypeSize) private var typeSize
     /// Asked before logging: a stray tap would otherwise replace "call now" with what they said.
     @State private var confirming: CallOutcome?
 
     var body: some View {
         let labour = model.labour
         let last = labour.log.lastCall
-        VStack(alignment: .leading, spacing: 10) {
-            Text("AFTER THE CALL")
-                .font(.caption.weight(.semibold).monospaced())
-                .tracking(1)
-                .foregroundStyle(LabourWorld.call.accent)
+        CommsSection("After the call") {
             if let last {
                 Text(
                     "Logged at \(last.at.formatted(date: .omitted, time: .shortened)): \(Self.said(last.note.outcome))."
                 )
-                .font(.headline)
-                .foregroundStyle(LabourTheme.primaryText)
+                .font(MissionType.body(15).weight(.semibold))
+                .foregroundStyle(LabourTheme.cream)
                 if case .callBack = labour.output?.call {
                     Label("Something has changed since. Call them back.", systemImage: "phone.arrow.up.right.fill")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(LabourTheme.urgent)
+                        .font(MissionType.body(14).weight(.semibold))
+                        .foregroundStyle(CallLook.label)
                 }
             }
             Text(last == nil ? "What did they say?" : "Called again? What did they say?")
-                .font(.subheadline)
-                .foregroundStyle(LabourTheme.secondaryText)
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: 8) { buttons() }
-                VStack(spacing: 8) { buttons() }
+                .font(MissionType.body(14))
+                .foregroundStyle(LabourTheme.muted)
+            // Side by side, words wrapping, until the text is very large.
+            if typeSize.isAccessibilitySize {
+                VStack(spacing: 6) { buttons() }
+            } else {
+                HStack(spacing: 6) { buttons() }
             }
         }
-        .padding(.vertical, 4)
         .confirmationDialog(
             confirming.map { "Log that \(Self.said($0))?" } ?? "",
             isPresented: Binding(get: { confirming != nil }, set: { if !$0 { confirming = nil } }),
@@ -201,13 +202,18 @@ private struct AfterCallCard: View {
                 confirming = outcome
             } label: {
                 Text(Self.button(outcome))
-                    .font(.subheadline.weight(.semibold))
+                    .font(MissionType.body(13.5).weight(.semibold))
                     .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 10)
                     .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
-                    .padding(.horizontal, 8)
-                    .foregroundStyle(LabourTheme.primaryText)
-                    .background(Capsule().fill(LabourTheme.primaryText.opacity(0.1)))
-                    .overlay(Capsule().strokeBorder(LabourTheme.primaryText.opacity(0.3), lineWidth: 1))
+                    .foregroundStyle(LabourTheme.cream)
+                    .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(LabourTopRow.pillSurface))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .strokeBorder(LabourTheme.cream.opacity(0.4), lineWidth: 1.5)
+                    )
+                    .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
             .buttonStyle(.plain)
         }
@@ -230,122 +236,18 @@ private struct AfterCallCard: View {
     }
 }
 
-/// "Can't get through?" as a numbered ladder: try again, the labour ward, NHS 111, then 999 in an
-/// emergency. Always open, because it's the order to work down.
-private struct FallbackList: View {
-    @Environment(\.missionMode) private var mode
-    var steps: [CallStep]
+/// The prototype's outlined pill, for things that aren't calls: directions, fixing a number.
+struct GhostButtonLabel: View {
+    var title: String
+    var systemImage: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Text("IF NOBODY ANSWERS")
-                .font(.caption.weight(.semibold).monospaced())
-                .tracking(1)
-                .foregroundStyle(LabourWorld.call.accent)
-                .padding(.bottom, 6)
-            ForEach(Array(steps.enumerated()), id: \.element) { index, step in
-                HStack(alignment: .center, spacing: 12) {
-                    Text("\(index + 1)")
-                        .font(.subheadline.monospacedDigit().weight(.bold))
-                        .foregroundStyle(LabourWorld.call.accent)
-                        .frame(width: 28, height: 28)
-                        .overlay(Circle().strokeBorder(LabourTheme.urgent, lineWidth: 1.5))
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(step.title)
-                            .font(.headline)
-                            .foregroundStyle(LabourTheme.primaryText)
-                        Text(step.detail)
-                            .font(.subheadline)
-                            .foregroundStyle(LabourTheme.secondaryText)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    Spacer(minLength: 8)
-                    if let number = step.number, mode == .practice {
-                        Text(number.display)
-                            .font(.subheadline.weight(.bold).monospacedDigit())
-                            .lineLimit(1)
-                            .fixedSize()
-                            .foregroundStyle(LabourTheme.blueprint)
-                            .accessibilityLabel("Practice. In a real labour this rings \(number.display).")
-                    } else if let number = step.number, let url = number.telURL {
-                        Link(destination: url) {
-                            Label(number.display, systemImage: "phone.fill")
-                                .font(.subheadline.weight(.bold).monospacedDigit())
-                                .lineLimit(1)
-                                .fixedSize()
-                                .foregroundStyle(LabourTheme.primaryText)
-                                .padding(.horizontal, 12)
-                                .frame(minHeight: 44)
-                                .background(Capsule().fill(LabourTheme.primaryText.opacity(0.1)))
-                                .overlay(Capsule().strokeBorder(LabourTheme.primaryText.opacity(0.3), lineWidth: 1))
-                        }
-                    }
-                }
-                .padding(.vertical, 10)
-                .overlay(alignment: .top) { Rectangle().fill(LabourTheme.primaryText.opacity(0.14)).frame(height: 1) }
-            }
-            Text("Source: \(CallFallback.source.title)")
-                .font(.footnote)
-                .foregroundStyle(LabourTheme.secondaryText)
-                .padding(.top, 6)
-        }
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel("Can't get through? Work down this list.")
-    }
-}
-
-private struct ScriptCard: View {
-    var script: TriageScript
-    static let ink = LabourPalette.ink.color
-    static let redInk = LabourPalette.redInk.color
-
-    var body: some View {
-        // A notepad: what to read out, with the urgent lines in red ink.
-        VStack(alignment: .leading, spacing: 12) {
-            Text("SAY")
-                .font(.caption.weight(.semibold).monospaced())
-                .tracking(1)
-                .foregroundStyle(Self.redInk)
-            Text("“\(script.opening)”")
-                .font(.title2.weight(.bold))
-                .foregroundStyle(Self.ink)
-                .fixedSize(horizontal: false, vertical: true)
-            ForEach(script.lines, id: \.self) { line in
-                ScriptRow(label: line.label, value: line.value, isUrgent: line.isUrgent)
-            }
-        }
-        .padding(.vertical, 16)
-        .padding(.leading, 30)
-        .padding(.trailing, 16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            UnevenRoundedRectangle(
-                cornerRadii: .init(topLeading: 6, bottomLeading: 6, bottomTrailing: 20, topTrailing: 20)
-            ).fill(CallTab.cream)
-        )
-        .overlay(alignment: .leading) {
-            Rectangle().fill(Self.redInk.opacity(0.6)).frame(width: 1.5).padding(.leading, 18)
-        }
-        .accessibilityElement(children: .contain)
-    }
-}
-
-private struct ScriptRow: View {
-    var label: String
-    var value: String
-    var isUrgent: Bool
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(label.uppercased())
-                .font(.caption2.weight(.semibold).monospaced())
-                .foregroundStyle(isUrgent ? ScriptCard.redInk : ScriptCard.ink.opacity(0.6))
-            Text(value)
-                .font(.title3.weight(isUrgent ? .semibold : .regular))
-                .foregroundStyle(isUrgent ? ScriptCard.redInk : ScriptCard.ink)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .accessibilityElement(children: .combine)
+        Label(title, systemImage: systemImage)
+            .font(MissionType.body(13).weight(.semibold))
+            .foregroundStyle(LabourTheme.cream)
+            .padding(.horizontal, 14)
+            .frame(minHeight: LabourTheme.chipSize)
+            .overlay(Capsule().strokeBorder(LabourTheme.cream.opacity(0.5), lineWidth: 1.5))
+            .contentShape(Capsule())
     }
 }

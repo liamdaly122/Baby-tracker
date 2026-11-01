@@ -292,7 +292,9 @@ struct SimTape: View {
     }
 }
 
-/// The current advice in one line, on every tab but the timer. Tap to go to the timer.
+/// The current advice in one line, on every tab but the timer, so a change of level is never
+/// missed: a coloured dot and the headline. Tap to go to the timer. Not in the prototype, which
+/// shows the advice only on the timer.
 struct StatusStrip: View {
     @Environment(AppModel.self) private var model
     @Environment(\.missionMode) private var mode
@@ -301,23 +303,25 @@ struct StatusStrip: View {
     var body: some View {
         if let output = model.labour.output {
             let headline = StateCopy.headline(for: output, region: model.labour.region)
+            let hot = AdviceBlock<EmptyView>.isHot(output.state)
             Button(action: onTap) {
                 HStack(spacing: 10) {
                     Circle()
-                        .fill(LabourTheme.color(for: output.state))
-                        .frame(width: 12, height: 12)
+                        .fill(hot ? LabourTheme.cream : (mode == .practice ? LabourTheme.sim : LabourTheme.sun))
+                        .frame(width: 10, height: 10)
                     Text(mode.headline(headline))
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(LabourTheme.primaryText)
+                        .font(MissionType.body(14).weight(.semibold))
+                        .foregroundStyle(LabourTheme.cream)
                         .lineLimit(1)
                         .accessibilityLabel(mode.spokenHeadline(headline))
-                    Spacer()
+                    Spacer(minLength: 8)
                     Image(systemName: "timer")
-                        .foregroundStyle(LabourTheme.secondaryText)
+                        .foregroundStyle(hot ? LabourTheme.cream : LabourTheme.muted)
+                        .accessibilityHidden(true)
                 }
-                .padding(.horizontal, 16)
-                .frame(minHeight: 44)
-                .background(Color.black.opacity(0.4))
+                .padding(.horizontal, 18)
+                .frame(minHeight: LabourTheme.chipSize)
+                .background(hot ? LabourTheme.hot : Color.black.opacity(0.35))
             }
             .buttonStyle(.plain)
             .accessibilityHint("Opens the timer")
@@ -372,54 +376,5 @@ struct QuickEmergencyButton: View {
 enum EmergencyDial {
     static func url(_ region: ContentRegion) -> URL? {
         PhoneNumber.shortCode(StateCopy.emergencyNumber(region))?.telURL
-    }
-}
-
-/// A big red button that dials the emergency number. In a practice run it says what it would do.
-struct EmergencyCallButton: View {
-    @Environment(\.missionMode) private var mode
-    var region: ContentRegion
-
-    private var number: String { StateCopy.emergencyNumber(region) }
-
-    var body: some View {
-        if mode == .practice {
-            PracticeDial(action: "Call \(number)", detail: "In a real emergency this rings \(number).")
-        } else if let url = EmergencyDial.url(region) {
-            Link(destination: url) {
-                Label("Call \(number)", systemImage: "phone.fill")
-                    .font(.title2.bold())
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize + 8)
-                    .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(LabourTheme.emergency))
-            }
-            .accessibilityLabel("Call \(number)")
-        }
-    }
-}
-
-/// Where a call button would be, in a practice run: what it would ring, and no dialling.
-struct PracticeDial: View {
-    var action: String
-    var detail: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Label(action, systemImage: "phone")
-                .font(.title3.bold())
-            Text(detail)
-                .font(.subheadline)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .foregroundStyle(LabourTheme.blueprint)
-        .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize, alignment: .leading)
-        .padding(.horizontal, 16)
-        .padding(.vertical, 8)
-        .background(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .strokeBorder(LabourTheme.blueprint, style: StrokeStyle(lineWidth: 2, dash: [6, 4]))
-        )
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("Practice. \(action). \(detail)")
     }
 }
