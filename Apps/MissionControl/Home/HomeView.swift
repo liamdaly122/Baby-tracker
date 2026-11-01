@@ -23,22 +23,30 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     StorageNotices()
-                    countdown
-                    if isConfirmingLaunch {
-                        LaunchGate(
-                            offersDrill: window.drillOnLaunchCard,
-                            onLaunch: { model.launch() },
-                            onCancel: { withAnimation { isConfirmingLaunch = false } }
-                        )
-                        .transition(.opacity.combined(with: .move(edge: .top)))
+                    if let outcome = model.outcome {
+                        // After it has ended: no countdown, no LAUNCH, no practice run.
+                        OutcomeHome(record: outcome)
+                        if outcome.outcome != .loss {
+                            setUpLinks
+                        }
                     } else {
-                        launchButton
+                        countdown
+                        if isConfirmingLaunch {
+                            LaunchGate(
+                                offersDrill: window.drillOnLaunchCard,
+                                onLaunch: { model.launch() },
+                                onCancel: { withAnimation { isConfirmingLaunch = false } }
+                            )
+                            .transition(.opacity.combined(with: .move(edge: .top)))
+                        } else {
+                            launchButton
+                        }
+                        setUpLinks
                     }
-                    setUpLinks
                 }
                 .padding(16)
             }
-            .navigationTitle("Mission Control")
+            .navigationTitle(model.outcome == nil ? "Mission Control" : "")
         }
     }
 
@@ -126,7 +134,17 @@ struct HomeView: View {
             }
             Divider()
             AlertsRow()
-            if window.drillInHangar {
+            if model.outcome == nil {
+                Divider()
+                NavigationLink {
+                    SomethingHappenedView()
+                } label: {
+                    SetUpRow(
+                        title: "Something's happened", detail: "The baby's arrived, or things haven't gone to plan",
+                        icon: "heart")
+                }
+            }
+            if window.drillInHangar, model.outcome == nil {
                 Divider()
                 NavigationLink {
                     DrillHangarView()

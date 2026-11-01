@@ -22,6 +22,8 @@ final class AppModel {
     private(set) var library: ContentLibrary
     private(set) var profile: MissionProfile
     private(set) var birthPlan: BirthPlan
+    /// How things ended, once he has said. Anything but "all well" makes the app quiet.
+    private(set) var outcome: OutcomeRecord?
     /// The saved profile and birth plan couldn't be opened, so changes to them aren't kept. The
     /// profile was filled from the emergency card if there was one (`restoredFromCard`).
     let planningUnavailable: Bool
@@ -58,6 +60,9 @@ final class AppModel {
         self.profile = profile
         let birthPlan = Self.fetchOrInsert(BirthPlan.self, in: planningContext, make: BirthPlan.init)
         self.birthPlan = birthPlan
+        outcome = try? planningContext.fetch(
+            FetchDescriptor<OutcomeRecord>(sortBy: [SortDescriptor(\.recordedAt, order: .reverse)])
+        ).first
         let card = planningUnavailable ? emergencyCardURL.flatMap(EmergencyCard.read) : nil
         restoredFromCard = card != nil
         if let card {
@@ -124,7 +129,42 @@ final class AppModel {
 
     /// What the watch needs to launch on its own.
     var brief: MissionBrief {
-        profile.brief(thresholds: currentThresholds, place: bookedPlace)
+        profile.brief(thresholds: currentThresholds, place: bookedPlace, outcome: outcome?.outcome)
+    }
+
+    /// The humour the screens use: off after anything but "all well", whatever the setting.
+    var humour: HumourLevel {
+        (outcome?.outcome.keepsHumour ?? true) ? profile.humour : .off
+    }
+
+    /// Records how things ended. Ends labour mode and any practice run, so nothing alerts or
+    /// counts down after it, and tells the watch.
+    func recordOutcome(_ outcome: PregnancyOutcome, birthAt: Date?, babyName: String, now: Date = Date()) {
+        let context = planning.mainContext
+        if let existing = self.outcome {
+            context.delete(existing)
+        }
+        let record = OutcomeRecord(outcome: outcome, birthAt: birthAt, babyName: babyName, recordedAt: now)
+        context.insert(record)
+        self.outcome = record
+        endDrill()
+        session.end()
+        notifier.clearLeftOverAlerts(running: nil)
+        savePlanning()
+    }
+
+    /// "Recorded this by mistake?": takes the outcome away, so LAUNCH and the countdown come back.
+    func clearOutcome() {
+        guard let outcome else { return }
+        planning.mainContext.delete(outcome)
+        self.outcome = nil
+        savePlanning()
+    }
+
+    /// Her weeks when it ended, or today, for putting the right support first.
+    var gestationalAgeDaysAtOutcome: Int? {
+        let moment = outcome?.birthAt ?? outcome?.recordedAt ?? Date()
+        return profile.pregnancyCalendar?.gestationalAgeDays(at: moment, in: .current)
     }
 
     /// Where she's booked, once it's been added.
@@ -179,7 +219,7 @@ final class AppModel {
 
     /// A practice run on a pretend 39+0 labour. Asks about alerts too, as part of getting ready.
     func startDrill() {
-        guard !session.isActive else { return }
+        guard !session.isActive, outcome == nil else { return }
         let profile = self.profile
         let place = bookedPlace
         drill = try? DrillController(brief: brief) { days in

@@ -19,6 +19,8 @@ public struct MissionBrief: Codable, Sendable, Hashable {
     public var gbsPositive: Bool
     public var plannedCaesarean: Bool
     public var updatedAt: Date
+    /// How things ended, once recorded. The watch hides LAUNCH after any outcome.
+    public var outcome: PregnancyOutcome?
 
     public init(
         region: ContentRegion,
@@ -33,7 +35,8 @@ public struct MissionBrief: Codable, Sendable, Hashable {
         labourWard: PhoneNumber?,
         gbsPositive: Bool = false,
         plannedCaesarean: Bool = false,
-        updatedAt: Date
+        updatedAt: Date,
+        outcome: PregnancyOutcome? = nil
     ) {
         self.region = region
         self.dueDateText = dueDateText
@@ -48,9 +51,11 @@ public struct MissionBrief: Codable, Sendable, Hashable {
         self.gbsPositive = gbsPositive
         self.plannedCaesarean = plannedCaesarean
         self.updatedAt = updatedAt
+        self.outcome = outcome
     }
 
-    /// Briefs saved before GBS and planned caesarean existed decode with both off.
+    /// Briefs saved before GBS and planned caesarean existed decode with both off, and before outcomes
+    /// existed with none.
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         region = try container.decode(ContentRegion.self, forKey: .region)
@@ -66,6 +71,7 @@ public struct MissionBrief: Codable, Sendable, Hashable {
         gbsPositive = try container.decodeIfPresent(Bool.self, forKey: .gbsPositive) ?? false
         plannedCaesarean = try container.decodeIfPresent(Bool.self, forKey: .plannedCaesarean) ?? false
         updatedAt = try container.decode(Date.self, forKey: .updatedAt)
+        outcome = try? container.decodeIfPresent(PregnancyOutcome.self, forKey: .outcome)
     }
 
     public var dueDate: CalendarDay? {

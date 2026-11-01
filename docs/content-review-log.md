@@ -120,6 +120,19 @@ How the engine turns NHS wording into rules. The code is in `Sources/MissionCore
 | P4 | "If plans change": her wishes and his job if she's induced, has an epidural, needs forceps or ventouse, has a caesarean, or moves to the labour ward. Prompted with "Talk these through around 32 weeks" and BRAIN. In labour these show first on the "If the plan changes" card, above the general coaching. | Review NRC-06. Checklist plan.plan-changes (32 weeks). | Open |
 | P5 | The editor works on a draft: Save or Discard, and closing the plan without changing anything doesn't count as a change. There's no editor in labour mode. "Send it to her as text" shares it as plain text, his drafts marked "(my draft: is this right?)", ending "A list of preferences, not a contract. Things can change, and it's her choice." | Review arch-11, NRC-11. The PDF, the guided builder and the 20, 32 and 36-week review nudges are Phase 6. | Open |
 
+## When things go differently (review action 10)
+
+Sources in `docs/research/05-when-things-go-differently.md`. **All of this needs a bereavement midwife's review before release.**
+
+| # | Rule | Notes | Status |
+|---|---|---|---|
+| L1 | Ending labour mode offers two plain choices: "Labour has ended" (the baby's here, or something has happened) and "Not in labour after all". Then "How is everyone?": "Everyone is doing well", "The baby needs extra care", "She needs extra care", "We lost our baby". No humour or space theme on any of these screens, whatever the setting. | Review ux-02, content-01, arch-07. | Open |
+| L2 | The birth message: "Baby's here!" and "Mum and baby are doing well." only for "everyone is doing well". Otherwise it starts "Our baby was born at [time]." (or the name), with no claim about how anyone is, and says "Only say as much as you want to." Nothing is sent unless he sends it. | Review ux-02, content-01. | Open |
+| L3 | After a loss: "We're so sorry." and only the way out; no message. Home then shows "We're so sorry. There's nothing you need to do in this app. When you're ready, these people can help, you and her." and support, with no countdown, LAUNCH, practice run or set-up. Under 24 weeks, Miscarriage UK first; from 24 weeks (or with the weeks unknown), Sands first, plus registering the baby and time off work. Then Tommy's and Samaritans. | Review PRT-09, content-01. **Questions:** is "We're so sorry" right? Should registration and leave be shown so soon, or behind a "practical things" link? | Open |
+| L4 | Neonatal care: Bliss, Neonatal Care Leave and Pay, Samaritans. She needs extra care: Samaritans, and "Ask the team looking after her what's happening and what you can do." | Research gap: support for her physical recovery and the Birth Trauma Association aren't researched yet. | Open |
+| L5 | Anything but "everyone is doing well" turns the humour off everywhere, whatever the setting. Recording an outcome ends labour mode and its alerts, turns off LAUNCH and the practice run, and tells the watch, which then shows only "Labour mode is off." "Recorded this by mistake?" undoes it. Support is shown, never pushed: no notifications. | Review ux-02, content-15. | Open |
+| L6 | "Something's happened" on the home screen, at any week, records the same outcomes without labour mode (for a loss in early pregnancy, or a birth before he launched). | Review content-01 ("at any week"). Discreet mode before 14 weeks (PRT-09) is still to do. | Open |
+
 ## UK content v1 (Phase 2)
 
 `Sources/MissionContent/Content/uk/`: 134 checklist items in 12 modules, 94 glossary entries, 17 coaching cards, 12 story beats, 22 quiz questions in 7 quizzes, 35 badges. Every `sourceURL` is quoted in the research reports (the lint checks). Every clinical item's `reviewer` is null until the midwife review.

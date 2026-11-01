@@ -35,7 +35,7 @@ struct AppRootView: View {
                 HomeView()
             }
         }
-        .environment(\.humourLevel, model.profile.humour)
+        .environment(\.humourLevel, model.humour)
         .onChange(of: model.session.isActive) { _, active in
             // A real labour always wins, whichever device started it.
             if active {
