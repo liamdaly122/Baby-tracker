@@ -9,9 +9,9 @@ The heart of the app works. He presses LAUNCH, taps START and STOP for each cont
 Two things haven't happened yet:
 
 - **It hasn't been on a real iPhone.** Everything so far has run on the Mac's pretend iPhone (the simulator). See "Trying it on your iPhone" below.
-- **Most of it still looks like a plain iPhone app.** The redesign has started: the labour timer and the Call tab now look like the agreed prototype (v3). The other screens follow one at a time.
+- **Most of it still looks like a plain iPhone app.** The redesign has started: all five labour tabs now look like the agreed prototype (v3): the timer, Call, Plan, Coach and Decoder. The other screens follow one at a time.
 
-Right now we're doing the redesign. The labour timer is done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)). The Call tab is built and tested, waiting to be merged ([PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15)).
+Right now we're doing the redesign. The labour timer ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)) and the Call tab ([PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15)) are done. Plan, Coach and Decoder are built and tested, not merged yet.
 
 ## What works today
 
@@ -40,7 +40,7 @@ Right now we're doing the redesign. The labour timer is done ([PR #14](https://g
 | 6 | Red flags and the call script | Done |
 | 7 | The practice run | Done |
 | 8 | Rules for the redesign (every Call button dials, 999 always one tap away) | Done: the rules are in `docs/redesign-rules.md` |
-| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. The timer is redesigned ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)) and the Call tab is built, waiting to be merged ([PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15)); the other screens follow |
+| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. Done for the five labour tabs: the timer ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)), Call ([PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15)), and Plan, Coach and Decoder (not merged yet). The other screens follow |
 | 10 | Hard moments: loss, admission, neonatal care, false alarms | Done. Later: discreet mode in early pregnancy, support for her recovery |
 | 11 | A storage problem never stops labour mode or loses the hospital's number | Done |
 | 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Can start any time, alongside the rest |
@@ -55,7 +55,7 @@ Right now we're doing the redesign. The labour timer is done ([PR #14](https://g
 
 ## What's next, in order
 
-1. **The redesign**, screen by screen, following `docs/redesign-rules.md`. The timer is done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)) and the Call tab is waiting to be merged ([PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15)). Next: Plan, Coach and Decoder, launch and the practice run, set-up, the watch, and the home screen.
+1. **The redesign**, screen by screen, following `docs/redesign-rules.md`. The timer ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)) and Call tab ([PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15)) are done; Plan, Coach and Decoder are waiting to be merged. Next: launch and the practice run, set-up, the watch, and the home screen.
 2. The legal and privacy groundwork (12).
 3. A first test build for real phones (TestFlight).
 4. The watch as the main timer (18), the lock screen and the Live Activity.
@@ -91,6 +91,22 @@ Where it differs from the prototype, and why:
 - **Small call buttons use the display font a little bigger** (22 points, not 17), because the rules keep that font for big text.
 - **Kept from the app:** the backup unit, a text button beside each person, and "Labour settings" on the Plan tab. The prototype's "Copy 'We're heading in'" message isn't added: the app doesn't have that message yet.
 - **Added, not in the prototype:** the one-line advice strip above the other tabs, so a change in the advice is never missed.
+
+## The redesigned Plan, Coach and Decoder tabs
+
+- **Plan:** her plan on one printed sheet on a dark desk, with a rubber stamp saying whether she's checked it, her top choices numbered in red, each section in a ruled box, "If plans change" boxed in red, and a yellow sticky note for him.
+- **Coach:** the stages as stops on a line (Early to First hour), and that stage's cards one under another, each with mint bullet points and a red-edged "Avoid" box.
+- **Decoder:** the search box, then each term in big type with how much to worry, what it means, and a question to ask.
+
+Where they differ from the prototype, and why:
+
+- **The app's own words throughout:** "Birth plan" rather than "Flight plan", the stage name "Established" rather than "Active", the app's search hint, and the sticky note built from her plan and the coaching cards.
+- **Four worry levels, not three,** with the plain labels the rules set ("Routine" up to "Serious: the team acts fast"). A long label moves under the term when it doesn't fit beside it.
+- **A warning above the plan** when she hasn't checked it, or it has changed since she did, and a red "Not checked with her" on any section that's his draft. The prototype only had the stamp.
+- **The stamp sits above the heading,** not beside it: at the 11-point minimum it's too wide to fit next to it.
+- **No drop shadows** under the sheet or the sticky note: the rules allow no blur in labour mode.
+- **At the largest text sizes** the coach's stages become a list.
+- **Kept from the app:** "Labour settings" at the bottom of the plan, each coaching card's source, and tapping a term for its other names and source.
 
 ## Trying it on your iPhone
 

@@ -75,7 +75,7 @@ The redesign must cover each of these, live and in a practice run:
 ## 7. Motion, battery and haptics
 
 - **One clock ticks once a second in labour mode.** Views are given the time; they don't each run their own timer.
-- Animations run only while they mean something, such as a contraction running, and stop under Reduce Motion and Low Power Mode. No blur or grain effects in labour.
+- Animations run only while they mean something, such as a contraction running, and stop under Reduce Motion and Low Power Mode. No blur or grain effects in labour, drop shadows included.
 - **Haptics:**
   - start is heavy;
   - stop is lighter;
