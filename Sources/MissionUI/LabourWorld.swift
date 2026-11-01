@@ -14,7 +14,7 @@ public enum LabourWorld: Sendable {
         switch self {
         case .call: LabourPalette.callAccent.color
         case .plan: LabourTheme.sun
-        case .coach: LabourPalette.coachAccent.color
+        case .coach: LabourPalette.mint.color
         case .decoder: LabourPalette.decoderAccent.color
         }
     }
@@ -24,7 +24,7 @@ public enum LabourWorld: Sendable {
         switch self {
         case .call: LabourPalette.callSurface.color
         case .plan: LabourPalette.paper.color
-        case .coach: LabourPalette.coachSurface.color
+        case .coach: LabourPalette.coachCard.color
         case .decoder: LabourPalette.decoderSurface.color
         }
     }
@@ -32,18 +32,18 @@ public enum LabourWorld: Sendable {
     private var top: Color {
         switch self {
         case .call: LabourPalette.callTop.color
-        case .plan: Color(red: 0.13, green: 0.11, blue: 0.08)
-        case .coach: Color(red: 0.05, green: 0.23, blue: 0.24)
-        case .decoder: Color(red: 0.04, green: 0.08, blue: 0.19)
+        case .plan: LabourPalette.planTop.color
+        case .coach: LabourPalette.coachTop.color
+        case .decoder: LabourPalette.decoderBlue.color
         }
     }
 
     private var bottom: Color {
         switch self {
         case .call: LabourPalette.callBottom.color
-        case .plan: Color(red: 0.08, green: 0.07, blue: 0.05)
-        case .coach: Color(red: 0.02, green: 0.11, blue: 0.12)
-        case .decoder: Color(red: 0.04, green: 0.08, blue: 0.19)
+        case .plan: LabourPalette.planBottom.color
+        case .coach: LabourPalette.coachBottom.color
+        case .decoder: LabourPalette.decoderBlue.color
         }
     }
 
@@ -52,7 +52,8 @@ public enum LabourWorld: Sendable {
         ZStack {
             // The prototype's gradient settles at 70% of the way down.
             LinearGradient(
-                stops: [.init(color: top, location: 0), .init(color: bottom, location: 0.7)], startPoint: .top,
+                stops: [.init(color: top, location: 0), .init(color: bottom, location: self == .coach ? 0.75 : 0.7)],
+                startPoint: .top,
                 endPoint: .bottom)
             if self == .decoder {
                 Canvas { context, size in

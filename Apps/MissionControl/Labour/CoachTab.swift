@@ -2,61 +2,110 @@ import MissionCore
 import MissionUI
 import SwiftUI
 
-/// The stages as stops on a line, so where things are reads as a place on a journey.
-private struct StageTrack: View {
+/// The stages as stops on a line, as the prototype draws them: done stops filled mint, the current
+/// one sun. All six across when they fit; at big text sizes, a list.
+struct StageTrack: View {
     var stages: [LabourStage]
     var current: LabourStage
     var pick: (LabourStage) -> Void
 
     var body: some View {
+        ViewThatFits(in: .horizontal) {
+            stops
+            list
+        }
+    }
+
+    /// One stop under another, for big text sizes.
+    private var list: some View {
         let at = stages.firstIndex(of: current) ?? 0
-        ScrollView(.horizontal) {
-            HStack(spacing: 0) {
-                ForEach(Array(stages.enumerated()), id: \.element) { index, candidate in
-                    Button {
-                        pick(candidate)
-                    } label: {
-                        VStack(spacing: 6) {
-                            Circle()
-                                .fill(fill(index: index, at: at))
-                                .overlay(Circle().strokeBorder(LabourWorld.coach.accent.opacity(0.6), lineWidth: 2))
-                                .frame(width: 22, height: 22)
-                                .background(alignment: .center) {
-                                    if index < stages.count - 1 {
-                                        Rectangle()
-                                            .fill(LabourWorld.coach.accent.opacity(0.3))
-                                            .frame(width: 78, height: 2)
-                                            .offset(x: 39)
-                                    }
-                                }
-                            Text(candidate.label)
-                                .font(.caption.weight(.semibold))
-                                .foregroundStyle(index == at ? LabourTheme.primaryText : LabourTheme.secondaryText)
-                        }
-                        .frame(width: 78, height: 60)
-                        .contentShape(Rectangle())
+        return VStack(alignment: .leading, spacing: 0) {
+            ForEach(Array(stages.enumerated()), id: \.element) { index, stage in
+                Button {
+                    pick(stage)
+                } label: {
+                    HStack(spacing: 10) {
+                        dot(index: index, at: at)
+                        Text(stage.label)
+                            .font(MissionType.body(11, relativeTo: .caption2).weight(.semibold))
+                            .foregroundStyle(index == at ? LabourTheme.cream : LabourTheme.muted)
+                        Spacer(minLength: 0)
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(candidate.label)
-                    .accessibilityAddTraits(index == at ? .isSelected : [])
+                    .frame(minHeight: LabourTheme.chipSize)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(stage.label)
+                .accessibilityAddTraits(index == at ? .isSelected : [])
+            }
+        }
+    }
+
+    /// Equal columns, with the line behind the dots.
+    private var stops: some View {
+        let at = stages.firstIndex(of: current) ?? 0
+        return HStack(alignment: .top, spacing: 0) {
+            ForEach(Array(stages.enumerated()), id: \.element) { index, stage in
+                Button {
+                    pick(stage)
+                } label: {
+                    VStack(spacing: 6) {
+                        dot(index: index, at: at)
+                        Text(stage.label)
+                            .font(MissionType.body(11, relativeTo: .caption2).weight(.semibold))
+                            .foregroundStyle(index == at ? LabourTheme.cream : LabourTheme.muted)
+                            .lineLimit(1)
+                            .fixedSize()
+                    }
+                    .padding(.horizontal, 3)
+                    .frame(maxWidth: .infinity)
+                    .frame(minHeight: 52)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(stage.label)
+                .accessibilityAddTraits(index == at ? .isSelected : [])
+                .background(alignment: .top) {
+                    // The line between this stop and the next.
+                    if index < stages.count - 1 {
+                        GeometryReader { geometry in
+                            Rectangle()
+                                .fill(LabourPalette.mint.color.opacity(0.3))
+                                .frame(width: geometry.size.width, height: 2)
+                                .offset(x: geometry.size.width / 2, y: 13)
+                        }
+                        .accessibilityHidden(true)
+                    }
                 }
             }
-            .padding(.horizontal, 8)
         }
-        .scrollIndicators(.hidden)
+        .padding(.top, 4)
     }
 
-    private func fill(index: Int, at: Int) -> Color {
-        if index == at { return LabourTheme.amber }
-        return index < at ? LabourWorld.coach.accent.opacity(0.6) : LabourWorld.coach.surface
+    private func dot(index: Int, at: Int) -> some View {
+        let mint = LabourPalette.mint.color
+        return ZStack {
+            if index == at {
+                // The prototype's soft sun ring round the current stop: a flat ring, no blur.
+                Circle().fill(LabourTheme.sun.opacity(0.2)).frame(width: 28, height: 28)
+            }
+            Circle()
+                .fill(index == at ? LabourTheme.sun : (index < at ? mint.opacity(0.55) : Self.unvisited))
+                .overlay(Circle().strokeBorder(index == at ? LabourTheme.sun : mint.opacity(0.55), lineWidth: 2))
+                .frame(width: 18, height: 18)
+        }
+        .frame(width: 28, height: 28)
     }
+
+    /// The prototype's #0B2E31 inside a stop not reached yet.
+    private static let unvisited = PaletteColor(hex: 0x0B2E31).color
 }
 
-/// "Say this, do this" cards for where things are. The partner picks the stage: the app never guesses.
+/// "Say this, do this" cards for where things are, one under another as in the prototype. He
+/// picks the stage: the app never guesses.
 struct CoachTab: View {
     @Environment(AppModel.self) private var model
     @Binding var stage: LabourStage
-    @State private var page = 0
 
     private static let selfCareID = "coaching.established.self-care"
 
@@ -64,29 +113,28 @@ struct CoachTab: View {
         let stages = LabourStage.allCases.filter { candidate in
             model.library.coaching.contains { $0.stage == candidate }
         }
-        let cards = cards(for: stage)
-        VStack(spacing: 12) {
-            LabourTabHeader(
-                world: .coach, eyebrow: "Coach", title: "What helps now",
-                subtitle: "You pick the stage. The app never guesses."
-            )
-            .padding(.horizontal, 16)
-            StageTrack(stages: stages, current: stage) { picked in
-                stage = picked
-                page = 0
-            }
-            TabView(selection: $page) {
-                ForEach(Array(cards.enumerated()), id: \.element.id) { index, card in
-                    ScrollView {
-                        CoachingCardView(card: card)
-                            .padding(.horizontal, 16)
+        ScrollViewReader { reader in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    LabourTabHeader(
+                        world: .coach, eyebrow: "Coach", title: "What helps now",
+                        subtitle: "You pick the stage. The app never guesses."
+                    )
+                    .id("top")
+                    StageTrack(stages: stages, current: stage) { picked in
+                        stage = picked
+                        reader.scrollTo("top", anchor: .top)
                     }
-                    .tag(index)
+                    ForEach(cards(for: stage)) { card in
+                        CoachingCardView(card: card)
+                    }
                 }
+                .padding(.horizontal, 18)
+                .padding(.top, 4)
+                .padding(.bottom, 24)
             }
-            .tabViewStyle(.page(indexDisplayMode: .always))
+            .scrollIndicators(.hidden)
         }
-        .padding(.top, 8)
     }
 
     /// The stage's cards, with partner self-care at the end of every stage.
@@ -101,61 +149,77 @@ struct CoachTab: View {
     }
 }
 
-private struct CoachingCardView: View {
+/// One coaching card: the title in the display face, mint dots for what to do, and a red-edged
+/// "Avoid" box.
+struct CoachingCardView: View {
     var card: CoachingCard
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 10) {
             Text(card.title)
-                .font(.title.bold())
-                .foregroundStyle(LabourTheme.primaryText)
+                .font(MissionType.display(28, relativeTo: .title))
+                .tracking(0.56)
+                .foregroundStyle(LabourTheme.cream)
                 .fixedSize(horizontal: false, vertical: true)
-            ForEach(card.doThis, id: \.self) { line in
-                Label {
-                    Text(line).fixedSize(horizontal: false, vertical: true)
-                } icon: {
-                    Image(systemName: "checkmark.circle.fill").foregroundStyle(LabourWorld.coach.accent)
-                }
-                .font(.title3)
-                .foregroundStyle(LabourTheme.primaryText)
-            }
-            if !card.avoidThis.isEmpty {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("AVOID")
-                        .font(.caption.weight(.semibold).monospaced())
-                        .tracking(1)
-                        .foregroundStyle(LabourWorld.call.accent)
-                    ForEach(card.avoidThis, id: \.self) { line in
-                        Label {
-                            Text(line).fixedSize(horizontal: false, vertical: true)
-                        } icon: {
-                            Image(systemName: "xmark.circle.fill").foregroundStyle(LabourTheme.urgent)
-                        }
-                        .font(.body)
-                        .foregroundStyle(LabourTheme.primaryText)
+                .accessibilityAddTraits(.isHeader)
+            VStack(alignment: .leading, spacing: 7) {
+                ForEach(card.doThis, id: \.self) { line in
+                    bullet(line, size: 15.5) {
+                        Circle().fill(LabourPalette.mint.color).frame(width: 7, height: 7)
                     }
                 }
-                .padding(12)
+            }
+            if !card.avoidThis.isEmpty {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("AVOID")
+                        .font(MissionType.mono())
+                        .tracking(1.3)
+                        .foregroundStyle(LabourPalette.callAccent.color)
+                    ForEach(card.avoidThis, id: \.self) { line in
+                        bullet(line, size: 15) {
+                            Rectangle().fill(LabourTheme.signal).frame(width: 7, height: 7).rotationEffect(.degrees(45))
+                        }
+                    }
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 10)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous).fill(LabourTheme.urgent.opacity(0.12))
+                    RoundedRectangle(cornerRadius: 12, style: .continuous).fill(LabourTheme.signal.opacity(0.12))
                 )
-                .overlay(alignment: .leading) { Rectangle().fill(LabourTheme.urgent).frame(width: 3) }
+                .overlay(alignment: .leading) {
+                    UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12))
+                        .fill(LabourTheme.signal)
+                        .frame(width: 3)
+                }
+                .accessibilityElement(children: .combine)
             }
             if let provenance = card.provenance {
-                Text("Source: \(provenance.sourceTitle)")
-                    .font(.footnote)
-                    .foregroundStyle(LabourTheme.secondaryText)
+                Text("Source: \(provenance.sourceTitle)".uppercased())
+                    .font(MissionType.mono())
+                    .foregroundStyle(LabourTheme.muted)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .padding(20)
+        .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 24, style: .continuous).fill(LabourWorld.coach.surface))
+        .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(LabourWorld.coach.surface))
         .overlay(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .strokeBorder(LabourWorld.coach.accent.opacity(0.3), lineWidth: 1.5)
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .strokeBorder(LabourPalette.mint.color.opacity(0.28), lineWidth: 1.5)
         )
-        .padding(.bottom, 40)
+    }
+
+    private func bullet(_ text: String, size: CGFloat, @ViewBuilder mark: () -> some View) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 9) {
+            mark()
+                .alignmentGuide(.firstTextBaseline) { $0[.bottom] + 2 }
+            Text(text)
+                .font(MissionType.body(size))
+                .lineSpacing(3)
+                .foregroundStyle(LabourTheme.cream)
+                .fixedSize(horizontal: false, vertical: true)
+        }
     }
 }
 

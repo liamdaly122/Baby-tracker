@@ -99,6 +99,22 @@ public enum LabourPalette {
     public static let paperMuted = PaletteColor(hex: 0x5B5A72)
     /// The level strip's unlit chips.
     public static let levelChip = PaletteColor(hex: 0x141A3D)
+    /// The plan's sheet, its rules, and the brown-orange "not checked" stamp.
+    public static let paperHi = PaletteColor(hex: 0xFBF4E4)
+    public static let paperEdge = PaletteColor(hex: 0xE2D1AE)
+    public static let amberText = PaletteColor(hex: 0x8A5200)
+    /// The tabs' backgrounds, top and bottom: the plan's desk, the coach's teal and the decoder's blueprint.
+    public static let planTop = PaletteColor(hex: 0x221D15)
+    public static let planBottom = PaletteColor(hex: 0x14110C)
+    public static let coachTop = PaletteColor(hex: 0x0D3A3C)
+    public static let coachBottom = PaletteColor(hex: 0x061C1E)
+    public static let decoderBlue = PaletteColor(hex: 0x0A1430)
+    /// The coach's cards: the prototype's teal at 28% over its background.
+    public static let coachCard = PaletteColor(hex: 0x2E7C83).over(coachTop, opacity: 0.28)
+    /// The coach's mint, and the paler mint of "Routine" in the decoder.
+    public static let mint = PaletteColor(hex: 0x7FD8C8)
+    public static let paleMint = PaletteColor(hex: 0x9FE3D6)
+
     /// The practice run's cyan, deep teal and pale ink.
     public static let sim = PaletteColor(hex: 0x7FD8E8)
     public static let simDeep = PaletteColor(hex: 0x0E2A3A)
@@ -193,6 +209,42 @@ public enum LabourPalette {
                 name: "copy ink on call plate", text: PaletteColor(hex: 0xFFC4B8), background: callSurface, minimum: 4.5
             ),
             Pair(name: "sim ink on sim deep, practice dial", text: simInk, background: simDeep, minimum: 4.5),
+        ]
+        // Plan, Coach and Decoder.
+        let avoidBox = signal.over(coachCard, opacity: 0.12)
+        pairs += [
+            Pair(name: "paper ink on the plan sheet", text: ink, background: paperHi, minimum: 4.5),
+            Pair(name: "paper muted on the plan sheet", text: paperMuted, background: paperHi, minimum: 4.5),
+            Pair(name: "red ink on the plan sheet", text: redInk, background: paperHi, minimum: 4.5),
+            Pair(name: "amber text on the plan sheet", text: amberText, background: paperHi, minimum: 4.5),
+            Pair(name: "signal numbers on the plan sheet (32pt)", text: signal, background: paperHi, minimum: 3),
+            Pair(name: "sun on the plan desk", text: sun, background: planTop, minimum: 4.5),
+            Pair(name: "cream on the plan desk", text: cream, background: planTop, minimum: 4.5),
+            Pair(name: "muted on the plan desk", text: muted, background: planTop, minimum: 4.5),
+            Pair(name: "cream on a coach card", text: cream, background: coachCard, minimum: 4.5),
+            Pair(name: "muted on a coach card", text: muted, background: coachCard, minimum: 4.5),
+            Pair(name: "cream on the coach top", text: cream, background: coachTop, minimum: 4.5),
+            Pair(name: "muted on the coach top", text: muted, background: coachTop, minimum: 4.5),
+            Pair(name: "mint on the coach top", text: mint, background: coachTop, minimum: 4.5),
+            Pair(name: "call accent on the avoid box", text: callAccent, background: avoidBox, minimum: 4.5),
+            Pair(name: "cream on the avoid box", text: cream, background: avoidBox, minimum: 4.5),
+            Pair(
+                name: "cream 82% on the decoder", text: cream.over(decoderBlue, opacity: 0.82), background: decoderBlue,
+                minimum: 4.5),
+            Pair(name: "cream on the decoder", text: cream, background: decoderBlue, minimum: 4.5),
+            Pair(name: "blueprint on the decoder", text: blueprint, background: decoderBlue, minimum: 4.5),
+            Pair(name: "muted on the decoder", text: muted, background: decoderBlue, minimum: 4.5),
+            Pair(
+                name: "routine badge", text: paleMint, background: mint.over(decoderBlue, opacity: 0.16),
+                minimum: 4.5),
+            Pair(
+                name: "worth asking badge", text: blueprint, background: blueprint.over(decoderBlue, opacity: 0.16),
+                minimum: 4.5),
+            Pair(
+                name: "watch closely badge", text: sun, background: sun.over(decoderBlue, opacity: 0.18), minimum: 4.5),
+            Pair(
+                name: "serious badge", text: callAccent, background: signal.over(decoderBlue, opacity: 0.22),
+                minimum: 4.5),
         ]
         return pairs
     }()

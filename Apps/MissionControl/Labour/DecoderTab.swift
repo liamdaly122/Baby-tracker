@@ -17,42 +17,54 @@ struct DecoderTab: View {
                 world: .decoder, eyebrow: "Decoder", title: "What did they just say?",
                 subtitle: "\(model.library.glossary.count) terms in plain English, with a question to ask."
             )
-            .padding([.horizontal, .top], 16)
+            .padding(.horizontal, 18)
+            .padding(.top, 4)
             HStack(spacing: 10) {
                 Image(systemName: "magnifyingglass")
-                    .foregroundStyle(LabourTheme.secondaryText)
-                TextField("What did they say? “the drip”, “she's 6”", text: $query)
-                    .font(.title3)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-                    .focused($searchFocused)
-                    .submitLabel(.search)
+                    .foregroundStyle(LabourTheme.muted)
+                    .accessibilityHidden(true)
+                TextField(
+                    "", text: $query,
+                    prompt: Text("What did they say? “the drip”, “she's 6”").foregroundStyle(LabourTheme.muted)
+                )
+                .font(MissionType.body(16))
+                .foregroundStyle(LabourTheme.cream)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .focused($searchFocused)
+                .submitLabel(.search)
+                .accessibilityLabel("Search the decoder")
                 if !query.isEmpty {
                     Button {
                         query = ""
                     } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundStyle(LabourTheme.secondaryText)
-                            .frame(minWidth: 44, minHeight: 44)
+                            .foregroundStyle(LabourTheme.muted)
+                            .frame(minWidth: LabourTheme.chipSize, minHeight: LabourTheme.chipSize)
                     }
                     .accessibilityLabel("Clear search")
                 }
             }
             .padding(.horizontal, 14)
             .frame(minHeight: LabourTheme.minimumControlSize)
-            .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(LabourWorld.decoder.surface))
+            .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(Self.searchFill))
             .overlay(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .strokeBorder(LabourWorld.decoder.accent.opacity(0.5), lineWidth: 1.5)
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .strokeBorder(LabourTheme.blueprint.opacity(0.5), lineWidth: 1.5)
             )
-            .padding(16)
+            .padding(.horizontal, 18)
+            .padding(.top, 10)
+            .padding(.bottom, 6)
 
             let results = (index ?? GlossaryIndex(entries: model.library.glossary)).search(
                 query, stage: stage, limit: 100)
             if results.isEmpty {
                 Text("Nothing found. Ask them: “Can you explain that in plain English?”")
-                    .foregroundStyle(LabourTheme.secondaryText)
-                    .padding(16)
+                    .font(MissionType.body(14.5))
+                    .foregroundStyle(LabourTheme.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(18)
                 Spacer()
             } else {
                 ScrollView {
@@ -63,9 +75,10 @@ struct DecoderTab: View {
                             }
                         }
                     }
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, 18)
                     .padding(.bottom, 24)
                 }
+                .scrollIndicators(.hidden)
                 .scrollDismissesKeyboard(.immediately)
             }
         }
@@ -75,69 +88,100 @@ struct DecoderTab: View {
             }
         }
     }
+
+    /// The prototype's rgba(10, 20, 48, 0.9) behind the search box.
+    private static let searchFill = LabourPalette.decoderBlue.color.opacity(0.9)
 }
 
-private struct GlossaryRow: View {
+/// One term, as the prototype sets it: the word in the display face with how much to worry
+/// beside it, what it means, and a question to ask. Tap for other names for it and the source.
+struct GlossaryRow: View {
     var entry: GlossaryEntry
     var isExpanded: Bool
     var onTap: () -> Void
 
     var body: some View {
         Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(alignment: .firstTextBaseline) {
-                    Text(entry.term)
-                        .font(.title2.weight(.heavy))
-                        .foregroundStyle(LabourTheme.primaryText)
-                    Spacer()
-                    WorryBadge(level: entry.worryLevel)
+            VStack(alignment: .leading, spacing: 4) {
+                ViewThatFits(in: .horizontal) {
+                    HStack(alignment: .center, spacing: 10) {
+                        term
+                        Spacer(minLength: 0)
+                        WorryBadge(level: entry.worryLevel)
+                    }
+                    VStack(alignment: .leading, spacing: 4) {
+                        term
+                        WorryBadge(level: entry.worryLevel)
+                    }
                 }
                 Text(entry.plainEnglish)
-                    .font(.body)
-                    .foregroundStyle(LabourTheme.primaryText.opacity(0.9))
-                    .lineLimit(isExpanded ? nil : 2)
+                    .font(MissionType.body(14.5))
+                    .lineSpacing(3)
+                    .foregroundStyle(LabourTheme.cream.opacity(0.82))
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    Text("ASK")
+                        .font(MissionType.mono())
+                        .tracking(1.3)
+                    Text("“\(entry.questionToAsk)”")
+                        .font(MissionType.body(14.5))
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .foregroundStyle(LabourTheme.blueprint)
                 if isExpanded {
-                    HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Text("ASK")
-                            .font(.caption2.weight(.semibold).monospaced())
-                        Text("“\(entry.questionToAsk)”").fixedSize(horizontal: false, vertical: true)
-                    }
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(LabourWorld.decoder.accent)
                     if !entry.aliases.isEmpty {
                         Text("Also: \(entry.aliases.joined(separator: ", "))")
-                            .font(.footnote)
-                            .foregroundStyle(LabourTheme.secondaryText)
+                            .font(MissionType.body(13, relativeTo: .footnote))
+                            .foregroundStyle(LabourTheme.muted)
                     }
-                    Text("Source: \(entry.provenance.sourceTitle)")
-                        .font(.footnote)
-                        .foregroundStyle(LabourTheme.secondaryText)
+                    Text("Source: \(entry.provenance.sourceTitle)".uppercased())
+                        .font(MissionType.mono())
+                        .foregroundStyle(LabourTheme.muted)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
-            .padding(.vertical, 14)
+            .padding(.vertical, 12)
             .padding(.horizontal, 2)
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(Rectangle())
             .overlay(alignment: .top) {
-                Rectangle()
+                Line()
                     .stroke(style: StrokeStyle(lineWidth: 1, dash: [4, 4]))
-                    .foregroundStyle(LabourWorld.decoder.accent.opacity(0.35))
+                    .foregroundStyle(LabourTheme.blueprint.opacity(0.35))
                     .frame(height: 1)
             }
         }
         .buttonStyle(.plain)
+        .accessibilityHint(isExpanded ? "" : "Shows other names for it and the source")
+    }
+
+    private var term: some View {
+        Text(entry.term)
+            .font(MissionType.display(27, relativeTo: .title2))
+            .tracking(0.54)
+            .foregroundStyle(LabourTheme.cream)
+            .fixedSize(horizontal: false, vertical: true)
     }
 }
 
-/// How much to worry, in words as well as colour.
+/// A straight line across, for the dashed rule between terms.
+private struct Line: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: 0, y: rect.midY))
+        path.addLine(to: CGPoint(x: rect.width, y: rect.midY))
+        return path
+    }
+}
+
+/// How much to worry, in words as well as colour (redesign rule 8): the prototype's small tinted
+/// label, with the app's four levels.
 struct WorryBadge: View {
     var level: Int
 
     /// Seriousness, not an instruction: most of these he can't act on himself.
-    private var text: String { Self.label(level) }
-
     static func label(_ level: Int) -> String {
         switch level {
         case ...0: "Routine"
@@ -147,21 +191,25 @@ struct WorryBadge: View {
         }
     }
 
-    private var colour: Color {
+    /// The text colour and the tint behind it, each pair tested for contrast in `LabourPalette`.
+    private var colours: (text: Color, tint: Color) {
         switch level {
-        case 0: LabourTheme.secondaryText
-        case 1: LabourTheme.primaryText
-        case 2: LabourTheme.amber
-        default: LabourTheme.urgent
+        case ...0: (LabourPalette.paleMint.color, LabourPalette.mint.color.opacity(0.16))
+        case 1: (LabourTheme.blueprint, LabourTheme.blueprint.opacity(0.16))
+        case 2: (LabourTheme.sun, LabourTheme.sun.opacity(0.18))
+        default: (LabourPalette.callAccent.color, LabourTheme.signal.opacity(0.22))
         }
     }
 
     var body: some View {
-        Text(text)
-            .font(.caption.weight(.bold))
-            .foregroundStyle(colour)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .overlay(Capsule().strokeBorder(colour.opacity(0.7), lineWidth: 1))
+        Text(Self.label(level).uppercased())
+            .font(MissionType.mono())
+            .tracking(1.1)
+            .foregroundStyle(colours.text)
+            .lineLimit(1)
+            .fixedSize()
+            .padding(.horizontal, 6)
+            .padding(.vertical, 3)
+            .background(RoundedRectangle(cornerRadius: 4).fill(colours.tint))
     }
 }
