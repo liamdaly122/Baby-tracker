@@ -4,6 +4,33 @@ import SwiftData
 
 /// One-off fixes to saved data when the rules change.
 enum Migrations {
+    /// Review action 17: the first birth plan (five headlines and free text) moves into a
+    /// `BirthPlan`, once. Nobody recorded who wrote it, so every answer starts as his draft, to
+    /// check with her. A copy is kept as where the history starts.
+    @MainActor
+    static func moveBirthPlan(into plan: BirthPlan, in context: ModelContext, now: Date = Date()) {
+        guard let records = try? context.fetch(FetchDescriptor<BirthPlanRecord>()),
+            records.contains(where: { !$0.isEmpty })
+        else { return }
+        if plan.content.isEmpty, let record = records.first(where: { !$0.isEmpty }) {
+            let written = record.updatedAt == .distantPast ? now : record.updatedAt
+            var content = BirthPlanContent(topFive: Array(record.headlines.prefix(BirthPlanContent.maxTopFive)))
+            for section in BirthPlanSection.allCases {
+                if let text = record.sections[section], !text.trimmingCharacters(in: .whitespaces).isEmpty {
+                    content.setAnswer(section.id, text: text, decidedBy: .hisDraft, at: written)
+                }
+            }
+            plan.content = content
+            plan.changedAt = written
+            context.insert(BirthPlanRevision(content: content, reason: .moved, at: written))
+        }
+        for record in records {
+            record.headlines = []
+            record.sectionsJSON = nil
+        }
+        try? context.save()
+    }
+
     /// Review action 16: the hospital moves from flat fields on the profile into a `BirthPlace`
     /// (where she's booked). Runs whenever those fields hold anything, so it also catches a profile
     /// filled the old way. If a booked place already exists, its own values win and only blanks

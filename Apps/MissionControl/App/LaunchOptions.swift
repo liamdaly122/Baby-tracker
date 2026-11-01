@@ -113,19 +113,28 @@ enum LaunchOptions {
                 fillCallList(model)
             }
             let plan = model.birthPlan
-            if plan.isEmpty {
-                plan.headlines = [
+            if plan.content.isEmpty {
+                let agreed = Date().addingTimeInterval(-14 * 86_400)
+                var content = BirthPlanContent(topFive: [
                     "Gas and air first, epidural if she asks",
                     "Wait at least a minute before clamping the cord",
                     "Skin-to-skin straight away",
                     "Dad would like to cut the cord",
                     "Please explain any intervention to both of us",
-                ]
-                plan.sections = [
-                    .place: "Midwife-led unit next to the labour ward",
-                    .feeding: "Breastfeeding, with help on day one",
-                    .photos: "No photos of her without asking",
-                ]
+                ])
+                content.setAnswer(
+                    "place", text: "Midwife-led unit next to the labour ward", decidedBy: .her, at: agreed)
+                content.setAnswer(
+                    "feeding", text: "Breastfeeding, with help on day one", decidedBy: .together, at: agreed)
+                content.setAnswer("thirdStage", text: "Talk to us about it then", decidedBy: .onTheDay, at: agreed)
+                content.setBranch(
+                    .caesarean, wishes: "Screen lowered to see the baby born, skin-to-skin in theatre",
+                    hisJob: "Ask for the screen and for skin-to-skin", at: agreed)
+                plan.save(content, in: model.planning.mainContext, at: agreed)
+                plan.confirmWithHer(in: model.planning.mainContext, at: agreed)
+                // Since she checked it: one change, his draft.
+                content.setAnswer("photos", text: "No photos of her without asking", decidedBy: .hisDraft, at: Date())
+                plan.save(content, in: model.planning.mainContext)
             }
             model.savePlanning()
         }

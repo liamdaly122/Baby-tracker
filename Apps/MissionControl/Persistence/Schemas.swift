@@ -21,10 +21,27 @@ enum PlanningSchemaV2: VersionedSchema {
     }
 }
 
+/// Version 3 adds the birth plan's answers, branches and dated copies (review action 17). The old
+/// `BirthPlanRecord` stays so earlier versions still match; `Migrations.moveBirthPlan` moves it once.
+enum PlanningSchemaV3: VersionedSchema {
+    static var versionIdentifier: Schema.Version { Schema.Version(3, 0, 0) }
+    static var models: [any PersistentModel.Type] {
+        [
+            MissionProfile.self, BirthPlanRecord.self, BirthPlace.self, CrewContact.self, BirthPlan.self,
+            BirthPlanRevision.self,
+        ]
+    }
+}
+
 enum PlanningMigrationPlan: SchemaMigrationPlan {
-    static var schemas: [any VersionedSchema.Type] { [PlanningSchemaV1.self, PlanningSchemaV2.self] }
+    static var schemas: [any VersionedSchema.Type] {
+        [PlanningSchemaV1.self, PlanningSchemaV2.self, PlanningSchemaV3.self]
+    }
     static var stages: [MigrationStage] {
-        [.lightweight(fromVersion: PlanningSchemaV1.self, toVersion: PlanningSchemaV2.self)]
+        [
+            .lightweight(fromVersion: PlanningSchemaV1.self, toVersion: PlanningSchemaV2.self),
+            .lightweight(fromVersion: PlanningSchemaV2.self, toVersion: PlanningSchemaV3.self),
+        ]
     }
 }
 

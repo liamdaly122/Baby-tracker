@@ -21,7 +21,7 @@ final class AppModel {
     private(set) var sync: PhoneSync?
     private(set) var library: ContentLibrary
     private(set) var profile: MissionProfile
-    private(set) var birthPlan: BirthPlanRecord
+    private(set) var birthPlan: BirthPlan
     /// The saved profile and birth plan couldn't be opened, so changes to them aren't kept. The
     /// profile was filled from the emergency card if there was one (`restoredFromCard`).
     let planningUnavailable: Bool
@@ -56,7 +56,8 @@ final class AppModel {
         let planningContext = planningContainer.mainContext
         let profile = Self.fetchOrInsert(MissionProfile.self, in: planningContext, make: MissionProfile.init)
         self.profile = profile
-        birthPlan = Self.fetchOrInsert(BirthPlanRecord.self, in: planningContext, make: BirthPlanRecord.init)
+        let birthPlan = Self.fetchOrInsert(BirthPlan.self, in: planningContext, make: BirthPlan.init)
+        self.birthPlan = birthPlan
         let card = planningUnavailable ? emergencyCardURL.flatMap(EmergencyCard.read) : nil
         restoredFromCard = card != nil
         if let card {
@@ -69,6 +70,7 @@ final class AppModel {
             profile.restore(from: card, defaults: Self.thresholdTable(library, region: card.region).defaults)
         }
         Migrations.moveHospital(from: profile, in: planningContext)
+        Migrations.moveBirthPlan(into: birthPlan, in: planningContext)
         if runsMigrations && !planningUnavailable && !labourUnavailable {
             Migrations.run(profile: profile, labour: labourStore.mainContext)
             try? planningContext.save()
