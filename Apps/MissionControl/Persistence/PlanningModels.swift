@@ -142,56 +142,9 @@ extension PhoneNumber.Problem {
     }
 }
 
-/// The NHS birth plan sections, in the order a midwife reads them.
-enum BirthPlanSection: String, CaseIterable, Identifiable {
-    case place
-    case birthPartners
-    case painRelief
-    case positionsAndMonitoring
-    case thirdStage
-    case skinToSkin
-    case vitaminK
-    case feeding
-    case cord
-    case photos
-    case other
-
-    var id: String { rawValue }
-
-    var title: String {
-        switch self {
-        case .place: "Where"
-        case .birthPartners: "Birth partners"
-        case .painRelief: "Pain relief"
-        case .positionsAndMonitoring: "Positions and monitoring"
-        case .thirdStage: "Placenta (third stage)"
-        case .skinToSkin: "Skin-to-skin"
-        case .vitaminK: "Vitamin K"
-        case .feeding: "Feeding"
-        case .cord: "Cutting the cord"
-        case .photos: "Photos and video"
-        case .other: "Anything else"
-        }
-    }
-
-    var prompt: String {
-        switch self {
-        case .place: "Home, midwife-led unit or labour ward"
-        case .birthPartners: "Who's with her, and who goes into theatre"
-        case .painRelief: "What to try first, and what she'd rather avoid"
-        case .positionsAndMonitoring: "Moving around, the pool, monitoring preferences"
-        case .thirdStage: "Injection (active) or waiting (physiological)"
-        case .skinToSkin: "Straight away, ideally before the cord is cut"
-        case .vitaminK: "Injection or oral doses"
-        case .feeding: "Breast, expressed, formula or a mix"
-        case .cord: "Not before 1 minute; who cuts it"
-        case .photos: "What's OK and what isn't"
-        case .other: "Culture, faith, interpreter, past experiences"
-        }
-    }
-}
-
-/// The birth plan. The full builder and PDF arrive in Phase 6; labour mode reads this.
+/// The first birth plan: five headlines and free text per section. Kept so versions 1 and 2 of
+/// the store still match it; `Migrations.moveBirthPlan` moves it into a `BirthPlan` once and clears
+/// it. Nothing else reads it.
 @Model
 final class BirthPlanRecord {
     /// The top five things that matter most, shown large on one screen.

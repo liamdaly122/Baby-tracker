@@ -2,10 +2,13 @@ import Foundation
 import SwiftData
 import os
 
-/// The app keeps two SwiftData stores apart (App Store guideline 5.1.3):
-/// - planning: the pregnancy profile and birth plan;
-/// - labour: sessions and taps. Local only: no CloudKit, excluded from backups, and readable after
-///   first unlock so the lock-screen controls in Phase 4 can write to it.
+/// The app keeps two SwiftData stores apart, and neither is ever in iCloud (App Store guideline
+/// 5.1.3(ii): health data stays on this phone, so no CloudKit, iCloud Drive or iCloud key-value
+/// store for any of it):
+/// - planning: the pregnancy profile, the hospital, the call list and the birth plan. In the
+///   phone's own backup, so a restored phone keeps them.
+/// - labour: sessions and taps. Excluded from backups, and readable after first unlock so the
+///   lock-screen controls in Phase 4 can write to it.
 /// Each opens on its own, so one failing never takes the other down (`AppModel`).
 enum Stores {
     static let appGroupIdentifier = "group.com.liamdaly.missioncontrol"
@@ -13,7 +16,7 @@ enum Stores {
 
     static func planningContainer(inMemory: Bool = false) throws -> ModelContainer {
         if inMemory {
-            return try container(PlanningSchemaV2.self, PlanningMigrationPlan.self, name: "Planning", url: nil)
+            return try container(PlanningSchemaV3.self, PlanningMigrationPlan.self, name: "Planning", url: nil)
         }
         return try planningContainer(
             at: directory(named: "PlanningStore", excludeFromBackup: false).appending(path: "Planning.store"))
@@ -21,7 +24,7 @@ enum Stores {
 
     /// The planning store in a file of its own. The app keeps it in the App Group; tests use a temporary file.
     static func planningContainer(at url: URL) throws -> ModelContainer {
-        try container(PlanningSchemaV2.self, PlanningMigrationPlan.self, name: "Planning", url: url)
+        try container(PlanningSchemaV3.self, PlanningMigrationPlan.self, name: "Planning", url: url)
     }
 
     static func labourContainer(inMemory: Bool = false) throws -> ModelContainer {

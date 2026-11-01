@@ -2,44 +2,82 @@ import MissionCore
 import MissionUI
 import SwiftUI
 
-/// The birth plan as one printed sheet, large enough to hold up to a midwife. Read-only here.
+/// The birth plan as one printed sheet, large enough to hold up to a midwife. Read-only: there's
+/// no editor in labour mode, so nothing in it can be changed by mistake mid-labour.
 struct PlanTab: View {
     @Environment(AppModel.self) private var model
-    static let paper = Color(red: 0.98, green: 0.96, blue: 0.89)
-    static let ink = Color(red: 0.11, green: 0.13, blue: 0.28)
-    static let redInk = Color(red: 0.7, green: 0.19, blue: 0.11)
 
     var body: some View {
         let plan = model.birthPlan
+        let content = plan.content
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 LabourTabHeader(
                     world: .plan, eyebrow: "Her plan", title: "Show the midwife",
                     subtitle: "Read-only in labour. Turn the phone round.")
-                sheet(plan)
-                PlanChangedCard()
-                NavigationLink("Edit the birth plan") { BirthPlanEditor() }
-                    .frame(minHeight: 44)
-                    .foregroundStyle(LabourWorld.plan.accent)
+                if !content.isEmpty {
+                    CheckedWithHerLine(plan: plan)
+                }
+                PlanSheet(
+                    content: content, motherName: model.profile.motherName,
+                    unchecked: Set(content.uncheckedAnswers(herConfirmedAt: plan.herConfirmedAt).map(\.sectionID)))
+                PlanChangedCard(branches: PlanScenario.allCases.compactMap(content.branch(for:)))
             }
             .padding(16)
         }
     }
+}
 
-    private func sheet(_ plan: BirthPlanRecord) -> some View {
-        let headlines = plan.headlines.filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
-        let sections = BirthPlanSection.allCases.compactMap { section -> (BirthPlanSection, String)? in
-            guard let text = plan.sections[section], !text.trimmingCharacters(in: .whitespaces).isEmpty else {
-                return nil
+/// When she last agreed the plan, and what has changed since, so he never shows a midwife
+/// something she hasn't seen as if it were hers.
+private struct CheckedWithHerLine: View {
+    @Environment(AppModel.self) private var model
+    var plan: BirthPlan
+
+    var body: some View {
+        let changes = plan.changesSinceConfirmed(in: model.planning.mainContext) ?? []
+        VStack(alignment: .leading, spacing: 4) {
+            if let confirmed = plan.herConfirmedAt {
+                Label(
+                    "Checked with her on \(confirmed.formatted(date: .abbreviated, time: .omitted)).",
+                    systemImage: "checkmark.seal.fill"
+                )
+                .font(.headline)
+                if !changes.isEmpty {
+                    Text("Changed since: \(changes.map(\.description).joined(separator: ", ")).")
+                        .font(.subheadline)
+                        .foregroundStyle(LabourTheme.amber)
+                }
+            } else {
+                Label("Not checked with her yet. Ask her before you show it.", systemImage: "exclamationmark.triangle")
+                    .font(.headline)
+                    .foregroundStyle(LabourTheme.amber)
             }
-            return (section, text)
         }
-        let name = model.profile.motherName
-        return VStack(alignment: .leading, spacing: 14) {
+        .foregroundStyle(LabourTheme.primaryText)
+        .fixedSize(horizontal: false, vertical: true)
+        .accessibilityElement(children: .combine)
+    }
+}
+
+/// The plan on paper: her top five, then each section. Used in labour and when he reads it
+/// through with her, so she agrees exactly what the midwife will see.
+struct PlanSheet: View {
+    var content: BirthPlanContent
+    var motherName: String
+    /// Sections that are his draft and not checked with her.
+    var unchecked: Set<String> = []
+
+    static let paper = Color(red: 0.98, green: 0.96, blue: 0.89)
+    static let ink = Color(red: 0.11, green: 0.13, blue: 0.28)
+    static let redInk = Color(red: 0.7, green: 0.19, blue: 0.11)
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
             HStack {
                 Text("BIRTH PLAN")
                 Spacer()
-                Text(name.isEmpty ? "HER PREFERENCES" : name.uppercased())
+                Text(motherName.isEmpty ? "HER PREFERENCES" : motherName.uppercased())
             }
             .font(.caption2.weight(.semibold).monospaced())
             .tracking(1)
@@ -47,7 +85,7 @@ struct PlanTab: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
             .background(Self.ink)
-            if plan.isEmpty {
+            if content.isEmpty {
                 Text("No plan saved")
                     .font(.title.bold())
                     .padding(.horizontal, 16)
@@ -59,11 +97,12 @@ struct PlanTab: View {
                 .padding(.horizontal, 16)
                 .padding(.bottom, 16)
             } else {
-                if !headlines.isEmpty {
-                    topFive(headlines)
+                if !content.filledTopFive.isEmpty {
+                    topFive(content.filledTopFive)
                 }
-                if !sections.isEmpty {
-                    fields(sections)
+                let answers = BirthPlanSection.allCases.compactMap { content.answer(for: $0.id) }
+                if !answers.isEmpty {
+                    fields(answers)
                 }
                 Spacer(minLength: 4)
             }
@@ -76,12 +115,12 @@ struct PlanTab: View {
         .accessibilityElement(children: .contain)
     }
 
-    private func topFive(_ headlines: [String]) -> some View {
+    private func topFive(_ lines: [String]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("What matters most to her")
                 .font(.title2.bold())
             VStack(alignment: .leading, spacing: 0) {
-                ForEach(Array(headlines.enumerated()), id: \.offset) { index, line in
+                ForEach(Array(lines.enumerated()), id: \.offset) { index, line in
                     HStack(alignment: .firstTextBaseline, spacing: 12) {
                         Text("\(index + 1)")
                             .font(.title.bold().monospacedDigit())
@@ -100,20 +139,29 @@ struct PlanTab: View {
         .padding(.horizontal, 16)
     }
 
-    private func fields(_ sections: [(BirthPlanSection, String)]) -> some View {
+    private func fields(_ answers: [PlanAnswer]) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            ForEach(sections, id: \.0) { section, text in
+            ForEach(answers, id: \.sectionID) { answer in
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(section.title.uppercased())
-                        .font(.caption2.weight(.semibold).monospaced())
-                        .foregroundStyle(Self.ink.opacity(0.6))
-                    Text(text)
+                    HStack(alignment: .firstTextBaseline) {
+                        Text(BirthPlanSection.title(for: answer.sectionID).uppercased())
+                            .foregroundStyle(Self.ink.opacity(0.6))
+                        if answer.decidedBy == .onTheDay {
+                            Text("· DECIDE ON THE DAY").foregroundStyle(Self.ink.opacity(0.6))
+                        }
+                        if unchecked.contains(answer.sectionID) {
+                            Text("· NOT CHECKED WITH HER").foregroundStyle(Self.redInk)
+                        }
+                    }
+                    .font(.caption2.weight(.semibold).monospaced())
+                    Text(answer.text.trimmingCharacters(in: .whitespacesAndNewlines))
                         .font(.body)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(10)
                 .overlay(alignment: .top) { Rectangle().fill(Self.ink.opacity(0.15)).frame(height: 1) }
+                .accessibilityElement(children: .combine)
             }
         }
         .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(Self.ink, lineWidth: 1.5))
@@ -121,9 +169,11 @@ struct PlanTab: View {
     }
 }
 
-/// What to ask when things don't go to plan: induction, an epidural, theatre.
+/// What to do when things don't go to plan: her own wishes for each change first, then how to
+/// ask questions, and theatre.
 private struct PlanChangedCard: View {
     @Environment(AppModel.self) private var model
+    var branches: [PlanBranch]
 
     var body: some View {
         let speakUp = model.library.coaching.first { $0.id == "coaching.established.speak-up" }
@@ -134,6 +184,22 @@ private struct PlanChangedCard: View {
                 .tracking(1)
             Text("Plans change for lots of good reasons. It's still her choice at every step.")
                 .font(.body.weight(.semibold))
+            ForEach(branches, id: \.scenario) { branch in
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(branch.scenario.title)
+                        .font(.subheadline.weight(.bold))
+                    if !branch.wishes.isEmpty {
+                        Text(branch.wishes)
+                            .font(.callout)
+                    }
+                    if !branch.hisJob.isEmpty {
+                        Text("Your job: \(branch.hisJob)")
+                            .font(.callout.italic())
+                    }
+                }
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityElement(children: .combine)
+            }
             ForEach(speakUp?.doThis.prefix(4).map { $0 } ?? [], id: \.self) { line in
                 Label(line, systemImage: "bubble.left.fill")
                     .fixedSize(horizontal: false, vertical: true)
@@ -151,7 +217,7 @@ private struct PlanChangedCard: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .foregroundStyle(PlanTab.ink)
+        .foregroundStyle(PlanSheet.ink)
         .background(Rectangle().fill(LabourTheme.amber))
         .rotationEffect(.degrees(0.8))
         .shadow(color: .black.opacity(0.35), radius: 8, y: 6)

@@ -114,7 +114,7 @@ struct HomeView: View {
             NavigationLink {
                 BirthPlanEditor()
             } label: {
-                SetUpRow(title: "Birth plan", detail: "The five things that matter most", icon: "doc.text")
+                SetUpRow(title: "Birth plan", detail: planDetail, icon: "doc.text", isWarning: planNeedsHer)
             }
             Divider()
             NavigationLink {
@@ -140,6 +140,23 @@ struct HomeView: View {
         .padding(.horizontal, 16)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color(.secondarySystemGroupedBackground)))
+    }
+
+    /// She hasn't read the plan, or it has changed since she did.
+    private var planNeedsHer: Bool {
+        let plan = model.birthPlan
+        guard !plan.content.isEmpty else { return false }
+        return !(plan.changesSinceConfirmed(in: model.planning.mainContext)?.isEmpty ?? false)
+    }
+
+    private var planDetail: String {
+        let plan = model.birthPlan
+        if plan.content.isEmpty {
+            return "Write it together: the five things that matter most"
+        }
+        guard let confirmed = plan.herConfirmedAt else { return "Not checked with her yet" }
+        let date = confirmed.formatted(date: .abbreviated, time: .omitted)
+        return planNeedsHer ? "Changed since she checked it" : "Checked with her \(date)"
     }
 
     private var bookedPlace: BirthPlace? {
