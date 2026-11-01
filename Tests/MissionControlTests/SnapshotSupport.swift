@@ -19,15 +19,17 @@ enum Snapshot {
     static let channelTolerance = 32
     static let pixelTolerance = 0.01
 
-    /// Draws `view` at a phone's width on true black, at a text size, in real labour or practice.
+    /// Draws `view` at a phone's width on the night sky's darkest band, at a text size, in real
+    /// labour or practice, in the prototype's fonts.
     static func image(
         _ view: some View, width: CGFloat = 375, size: DynamicTypeSize, mode: MissionModeOption
     ) -> UIImage? {
+        MissionType.registerFonts()
         let content =
             view
             .padding(16)
             .frame(width: width)
-            .background(Color.black)
+            .background(LabourTheme.space)
             .environment(\.dynamicTypeSize, size)
             .environment(\.missionMode, mode.value)
             .environment(\.colorScheme, .dark)

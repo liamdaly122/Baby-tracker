@@ -16,6 +16,24 @@ public enum LabourTheme {
     public static let emergency = LabourPalette.emergency.color
     /// The practice run's colour: the prototype's pale blueprint blue, never a state colour.
     public static let blueprint = LabourPalette.blueprint.color
+
+    // The orbit look from the agreed prototype (v3). Contrast pairs are in `LabourPalette.textPairs`.
+    public static let space = LabourPalette.space.color
+    public static let cream = LabourPalette.cream.color
+    public static let muted = LabourPalette.muted.color
+    public static let sun = LabourPalette.sun.color
+    /// Borders and strokes. Panels with text use `hot`.
+    public static let signal = LabourPalette.signal.color
+    /// The red for panels, chips and switches that carry cream text.
+    public static let hot = LabourPalette.urgentFill.color
+    public static let navy = LabourPalette.navy.color
+    public static let paperInk = LabourPalette.ink.color
+    public static let paperMuted = LabourPalette.paperMuted.color
+    public static let levelChip = LabourPalette.levelChip.color
+    public static let sim = LabourPalette.sim.color
+    public static let simDeep = LabourPalette.simDeep.color
+    public static let simInk = LabourPalette.simInk.color
+
     /// Every control in labour mode is at least this tall.
     public static let minimumControlSize: CGFloat = 56
     /// The tap area of a small choice chip, such as "Mild" or "+1 min".

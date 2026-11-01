@@ -7,6 +7,10 @@ struct MissionControlApp: App {
     /// Nil when the app is only hosting its tests: they make their own models.
     @State private var model: AppModel? = LaunchOptions.isTestHost ? nil : LaunchOptions.makeModel()
 
+    init() {
+        MissionType.registerFonts()
+    }
+
     var body: some Scene {
         WindowGroup {
             if let model {

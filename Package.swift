@@ -29,7 +29,9 @@ var targets: [Target] = [
 
 #if canImport(SwiftUI)
     products.append(.library(name: "MissionUI", targets: ["MissionUI"]))
-    targets.append(.target(name: "MissionUI", dependencies: ["MissionCore"]))
+    // The prototype's fonts (SIL Open Font License 1.1, licences beside them): League Gothic,
+    // Instrument Sans and Martian Mono, from github.com/google/fonts.
+    targets.append(.target(name: "MissionUI", dependencies: ["MissionCore"], resources: [.copy("Fonts")]))
     targets.append(.testTarget(name: "MissionUITests", dependencies: ["MissionCore", "MissionUI"]))
     // WatchConnectivity glue shared by the phone and the watch (empty on macOS).
     products.append(.library(name: "MissionSync", targets: ["MissionSync"]))
