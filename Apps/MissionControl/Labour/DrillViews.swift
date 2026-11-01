@@ -74,43 +74,116 @@ struct DrillGuideCard: View {
     }
 }
 
+/// The prototype's practice-run card: deep teal with a cyan edge, a small cyan label and a big
+/// cream heading. Used before, during and at the end of a drill, so practice always looks like
+/// practice.
+struct SimCard<Content: View>: View {
+    var label: String
+    var title: String?
+    @ViewBuilder var content: () -> Content
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(label.uppercased())
+                .font(MissionType.mono())
+                .tracking(MissionType.monoTracking())
+                .foregroundStyle(LabourTheme.sim)
+            if let title {
+                Text(title)
+                    .font(MissionType.display(46))
+                    .tracking(0.9)
+                    .foregroundStyle(LabourTheme.cream)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+            }
+            content()
+        }
+        .foregroundStyle(LabourTheme.simInk)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 24, style: .continuous).fill(LabourTheme.simDeep))
+        .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(LabourTheme.sim, lineWidth: 1.5))
+    }
+}
+
+/// A button on a practice card: cyan, the darker red for "this is real", or outlined.
+struct SimButton: View {
+    enum Style {
+        case sim
+        case real
+        case ghost
+    }
+
+    var title: String
+    var style: Style = .sim
+    var action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(MissionType.body(15).weight(.bold))
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 12)
+                .foregroundStyle(text)
+                .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
+                .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(fill))
+                .overlay {
+                    if style == .ghost {
+                        RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(
+                            LabourTheme.sim, lineWidth: 1.5)
+                    }
+                }
+                .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var fill: Color {
+        switch style {
+        case .sim: LabourTheme.sim
+        case .real: LabourTheme.hot
+        case .ghost: .clear
+        }
+    }
+
+    private var text: Color {
+        switch style {
+        case .sim: LabourTheme.simDeep
+        case .real: LabourTheme.cream
+        case .ghost: LabourTheme.simInk
+        }
+    }
+}
+
 /// Asked before a drill: practice must never time a real labour. Yes goes to real labour mode.
 struct DrillStartQuestion: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(Drill.startQuestion)
-                .font(.headline)
-                .fixedSize(horizontal: false, vertical: true)
-            Button {
-                model.launch()
-            } label: {
-                Text(Drill.startYes)
-                    .font(.headline)
-                    .foregroundStyle(.black)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
-                    .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(LabourTheme.amber))
+        DrillStartCard(onYes: { model.launch() }, onNo: { model.startDrill() })
+    }
+}
+
+/// The question on its practice card: yes in the darker red, because yes is real.
+struct DrillStartCard: View {
+    var onYes: () -> Void
+    var onNo: () -> Void
+
+    var body: some View {
+        SimCard(label: "Before the drill") {
+            VStack(alignment: .leading, spacing: 10) {
+                Text(Drill.startQuestion)
+                    .font(MissionType.body(16).weight(.bold))
+                    .fixedSize(horizontal: false, vertical: true)
+                SimButton(title: Drill.startYes, style: .real, action: onYes)
+                SimButton(title: Drill.startNo, style: .sim, action: onNo)
             }
-            .buttonStyle(.plain)
-            Button {
-                model.startDrill()
-            } label: {
-                Text(Drill.startNo)
-                    .font(.headline)
-                    .foregroundStyle(LabourTheme.blueprint)
-                    .frame(maxWidth: .infinity, minHeight: LabourTheme.minimumControlSize)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .strokeBorder(LabourTheme.blueprint, lineWidth: 2)
-                    )
-                    .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-            }
-            .buttonStyle(.plain)
+            .padding(14)
+            .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(LabourTheme.sim.opacity(0.08)))
             Text("To time real tightenings, always use LAUNCH.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+                .font(MissionType.body(13, relativeTo: .footnote))
         }
     }
 }

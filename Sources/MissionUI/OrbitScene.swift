@@ -142,3 +142,117 @@ public struct OrbitScene: View {
         Path(ellipseIn: CGRect(x: centreX - radius, y: centreY - radius, width: radius * 2, height: radius * 2))
     }
 }
+
+/// The prototype's "splashdown" dawn, for the end of labour when everyone is well: sky bands from
+/// violet to gold, a low sun on the sea, and the capsule under its three parachutes. Drawn once on
+/// its 390 × 470 frame, scaled to the width. Still: the prototype's falling capsule and ripples
+/// are left out. Never shown after a loss or when the baby needs extra care.
+public struct DawnScene: View {
+    public init() {}
+
+    public static let frame = CGSize(width: 390, height: 470)
+
+    public var body: some View {
+        Canvas { context, size in
+            let scale = size.width / Self.frame.width
+            context.scaleBy(x: scale, y: scale)
+            Self.drawSky(in: &context)
+            Self.drawSea(in: &context)
+            Self.drawCapsule(in: &context)
+        }
+        .aspectRatio(Self.frame.width / Self.frame.height, contentMode: .fit)
+        .accessibilityHidden(true)
+    }
+
+    private static func hex(_ value: Int) -> Color { PaletteColor(hex: value).color }
+
+    private static func drawSky(in context: inout GraphicsContext) {
+        let bands = [0x3C3A78, 0x7B4F86, 0xC8677D, 0xEE8E6F, 0xF6B47A, 0xF9D49B]
+        for (index, colour) in bands.enumerated() {
+            let top = (330 * Double(index) / Double(bands.count)).rounded()
+            var band = Path()
+            band.move(to: CGPoint(x: 0, y: top))
+            band.addQuadCurve(to: CGPoint(x: 390, y: top), control: CGPoint(x: 195, y: top - 12))
+            band.addLine(to: CGPoint(x: 390, y: 470))
+            band.addLine(to: CGPoint(x: 0, y: 470))
+            band.closeSubpath()
+            context.fill(band, with: .color(hex(colour)))
+        }
+        let star = hex(0xFFE2A3)
+        var random = OrbitScene.Seeded(seed: 5)
+        for _ in 0..<10 {
+            let across = (random.next() * 390).rounded()
+            let down = (random.next() * 90).rounded()
+            let radius = ((0.6 + random.next() * 1.1) * 10).rounded() / 10
+            _ = random.next()
+            context.fill(circle(across, down, radius), with: .color(star))
+        }
+        context.fill(circle(196, 330, 70), with: .color(hex(0xFFE7B0).opacity(0.5)))
+        context.fill(circle(196, 330, 50), with: .color(hex(0xFFF1C9)))
+    }
+
+    private static func drawSea(in context: inout GraphicsContext) {
+        for (index, colour) in [0x2F6B83, 0x275A72, 0x1F4860, 0x183A51].enumerated() {
+            let top = 330 + Double(index) * 36
+            context.fill(Path(CGRect(x: 0, y: top, width: 390, height: 470 - top)), with: .color(hex(colour)))
+        }
+        let foam = LabourTheme.cream
+        var random = OrbitScene.Seeded(seed: 23)
+        var waves = Path()
+        for _ in 0..<26 {
+            let across = (random.next() * 380).rounded()
+            let down = (340 + random.next() * 120).rounded()
+            waves.move(to: CGPoint(x: across, y: down))
+            waves.addQuadCurve(to: CGPoint(x: across + 12, y: down), control: CGPoint(x: across + 6, y: down - 4))
+        }
+        context.stroke(waves, with: .color(foam.opacity(0.35)), lineWidth: 1.4)
+        context.stroke(
+            Path(ellipseIn: CGRect(x: 156, y: 345, width: 80, height: 14)), with: .color(foam), lineWidth: 2)
+    }
+
+    private static func drawCapsule(in context: inout GraphicsContext) {
+        let canopies: [(top: CGPoint, colour: Int)] = [
+            (CGPoint(x: 150, y: 120), 0xE5482F), (CGPoint(x: 196, y: 104), 0xF4E8D0),
+            (CGPoint(x: 242, y: 120), 0xE5482F),
+        ]
+        for (top, colour) in canopies {
+            let centreX = top.x
+            let centreY = top.y
+            let stripe = colour == 0xE5482F ? 0xF4E8D0 : 0xE5482F
+            var canopy = Path()
+            canopy.move(to: CGPoint(x: centreX - 34, y: centreY))
+            canopy.addQuadCurve(
+                to: CGPoint(x: centreX + 34, y: centreY), control: CGPoint(x: centreX, y: centreY - 46))
+            canopy.closeSubpath()
+            context.fill(canopy, with: .color(hex(colour)))
+            var band = Path()
+            band.move(to: CGPoint(x: centreX - 11, y: centreY - 1))
+            band.addQuadCurve(
+                to: CGPoint(x: centreX + 11, y: centreY - 1), control: CGPoint(x: centreX, y: centreY - 42))
+            band.closeSubpath()
+            context.fill(band, with: .color(hex(stripe)))
+            var lines = Path()
+            lines.move(to: CGPoint(x: centreX - 34, y: centreY))
+            lines.addLine(to: CGPoint(x: 190, y: 290))
+            lines.move(to: CGPoint(x: centreX + 34, y: centreY))
+            lines.addLine(to: CGPoint(x: 202, y: 290))
+            context.stroke(lines, with: .color(LabourTheme.cream.opacity(0.75)), lineWidth: 1)
+        }
+        var nose = Path()
+        nose.addLines([CGPoint(x: 182, y: 312), CGPoint(x: 196, y: 286), CGPoint(x: 210, y: 312)])
+        nose.closeSubpath()
+        context.fill(nose, with: .color(LabourTheme.cream))
+        context.fill(
+            Path(roundedRect: CGRect(x: 180, y: 312, width: 32, height: 34), cornerRadius: 4),
+            with: .color(LabourTheme.cream))
+        context.fill(
+            Path(roundedRect: CGRect(x: 178, y: 340, width: 36, height: 8), cornerRadius: 2),
+            with: .color(hex(0x232850)))
+        context.fill(circle(196, 326, 6), with: .color(hex(0x2E7C83)))
+        context.stroke(circle(196, 326, 6), with: .color(hex(0x232850)), lineWidth: 2)
+    }
+
+    private static func circle(_ centreX: Double, _ centreY: Double, _ radius: Double) -> Path {
+        Path(ellipseIn: CGRect(x: centreX - radius, y: centreY - radius, width: radius * 2, height: radius * 2))
+    }
+}

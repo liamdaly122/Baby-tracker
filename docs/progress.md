@@ -9,9 +9,9 @@ The heart of the app works. He presses LAUNCH, taps START and STOP for each cont
 Two things haven't happened yet:
 
 - **It hasn't been on a real iPhone.** Everything so far has run on the Mac's pretend iPhone (the simulator). See "Trying it on your iPhone" below.
-- **Most of it still looks like a plain iPhone app.** The redesign has started: all five labour tabs now look like the agreed prototype (v3): the timer, Call, Plan, Coach and Decoder. The other screens follow one at a time.
+- **Most of it still looks like a plain iPhone app.** The redesign has started: all five labour tabs, LAUNCH, the practice run and the end of labour now look like the agreed prototype (v3). The set-up screens, the watch and the home screen follow.
 
-Right now we're doing the redesign. The labour timer ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)) and the Call tab ([PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15)) are done. Plan, Coach and Decoder are built and tested, waiting to be merged ([PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16)).
+Right now we're doing the redesign. The five labour tabs are done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16)). LAUNCH, the practice run and the end of labour are built and tested, not merged yet.
 
 ## What works today
 
@@ -40,7 +40,7 @@ Right now we're doing the redesign. The labour timer ([PR #14](https://github.co
 | 6 | Red flags and the call script | Done |
 | 7 | The practice run | Done |
 | 8 | Rules for the redesign (every Call button dials, 999 always one tap away) | Done: the rules are in `docs/redesign-rules.md` |
-| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. Done for the five labour tabs: the timer ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)), Call ([PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15)), and Plan, Coach and Decoder (waiting to be merged, [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16)). The other screens follow |
+| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. Done for the five labour tabs ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16)); LAUNCH, the practice run and the end of labour are built (not merged yet). The other screens follow |
 | 10 | Hard moments: loss, admission, neonatal care, false alarms | Done. Later: discreet mode in early pregnancy, support for her recovery |
 | 11 | A storage problem never stops labour mode or loses the hospital's number | Done |
 | 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Can start any time, alongside the rest |
@@ -55,7 +55,7 @@ Right now we're doing the redesign. The labour timer ([PR #14](https://github.co
 
 ## What's next, in order
 
-1. **The redesign**, screen by screen, following `docs/redesign-rules.md`. The timer ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14)) and Call tab ([PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15)) are done; Plan, Coach and Decoder are waiting to be merged ([PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16)). Next: launch and the practice run, set-up, the watch, and the home screen.
+1. **The redesign**, screen by screen, following `docs/redesign-rules.md`. The five labour tabs are done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16)); LAUNCH, the practice run and the end of labour are waiting to be merged. Next: the set-up screens, the watch, then the home screen (with the lift-off).
 2. The legal and privacy groundwork (12).
 3. A first test build for real phones (TestFlight).
 4. The watch as the main timer (18), the lock screen and the Live Activity.
@@ -107,6 +107,20 @@ Where they differ from the prototype, and why:
 - **No drop shadows** under the sheet or the sticky note: the rules allow no blur in labour mode.
 - **At the largest text sizes** the coach's stages become a list.
 - **Kept from the app:** "Labour settings" at the bottom of the plan, each coaching card's source, and tapping a term for its other names and source.
+
+## LAUNCH, the practice run and the end of labour
+
+- **LAUNCH** now sits in the prototype's yellow-and-navy hazard-striped well, under a safety cover that says "Lift cover to launch". Tap the cover (or drag it up) and it tips back to show the big red LAUNCH key. Tap that and labour mode starts. The cover is the "are you sure?", so nothing launches from a pocket, and it closes itself again after a few seconds. While it's up, the app says what it does and doesn't do, and from 30 weeks the "Run the drill" key sits under LAUNCH.
+- **The practice run** uses the prototype's deep teal cards with a cyan edge: the "Is she having tightenings…?" question before the drill (the "yes, it's real" answer is red), the training hangar, and "End the practice run?".
+- **The end of labour** uses the dark choices of labour mode. When everyone is well, it opens on the prototype's dawn, with the capsule under its parachutes on the sea, and a paper card for the time, the details and the message. When the baby or she needs extra care, it's the same paper card with no dawn. After a loss, it's plain words only.
+
+Where it differs from the prototype, and why:
+
+- **No lift-off animation yet.** It's drawn from the home screen's rocket, so it comes with the home screen redesign.
+- **The disclaimer shows while the cover is up**: what the app does and doesn't do, and that her midwife's advice comes first. The prototype didn't have it at launch.
+- **The heading is plain** ("The baby's here.") rather than "Splashdown.", and there's no mission patch: there's no humour in labour mode.
+- **Nothing moves:** the hazard stripes, the falling capsule and the ripples are still.
+- **Fixed:** the "Tap again to end labour mode" button was white on bright orange (hard to read); it's now cream on the darker red.
 
 ## Trying it on your iPhone
 
