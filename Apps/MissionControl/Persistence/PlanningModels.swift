@@ -76,7 +76,9 @@ extension MissionProfile {
 
     /// Everything labour mode needs to start, on the phone or the watch, with the hospital from
     /// `place` (where she's booked). Gestation is worked out from it once, when labour starts.
-    func brief(thresholds: ThresholdProfile, place: BirthPlace?, now: Date = Date()) -> MissionBrief {
+    func brief(
+        thresholds: ThresholdProfile, place: BirthPlace?, outcome: PregnancyOutcome? = nil, now: Date = Date()
+    ) -> MissionBrief {
         MissionBrief(
             region: region,
             dueDateText: dueDate?.description,
@@ -90,7 +92,8 @@ extension MissionProfile {
             labourWard: place?.labourWardNumber(region: region),
             gbsPositive: gbsPositive,
             plannedCaesarean: plannedCaesarean,
-            updatedAt: now
+            updatedAt: now,
+            outcome: outcome
         )
     }
 

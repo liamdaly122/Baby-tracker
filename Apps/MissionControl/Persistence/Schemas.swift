@@ -33,14 +33,21 @@ enum PlanningSchemaV3: VersionedSchema {
     }
 }
 
+/// Version 4 adds how things ended (review action 10).
+enum PlanningSchemaV4: VersionedSchema {
+    static var versionIdentifier: Schema.Version { Schema.Version(4, 0, 0) }
+    static var models: [any PersistentModel.Type] { PlanningSchemaV3.models + [OutcomeRecord.self] }
+}
+
 enum PlanningMigrationPlan: SchemaMigrationPlan {
     static var schemas: [any VersionedSchema.Type] {
-        [PlanningSchemaV1.self, PlanningSchemaV2.self, PlanningSchemaV3.self]
+        [PlanningSchemaV1.self, PlanningSchemaV2.self, PlanningSchemaV3.self, PlanningSchemaV4.self]
     }
     static var stages: [MigrationStage] {
         [
             .lightweight(fromVersion: PlanningSchemaV1.self, toVersion: PlanningSchemaV2.self),
             .lightweight(fromVersion: PlanningSchemaV2.self, toVersion: PlanningSchemaV3.self),
+            .lightweight(fromVersion: PlanningSchemaV3.self, toVersion: PlanningSchemaV4.self),
         ]
     }
 }

@@ -79,6 +79,12 @@ struct LabourTabStack<Content: View>: View {
     var world: LabourWorld?
     var showsStatus = true
     @ViewBuilder var content: () -> Content
+    @State private var menuDestination: MenuDestination?
+
+    enum MenuDestination: Hashable {
+        case settings
+        case end
+    }
 
     var body: some View {
         NavigationStack {
@@ -104,16 +110,23 @@ struct LabourTabStack<Content: View>: View {
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
+            .navigationDestination(item: $menuDestination) { destination in
+                switch destination {
+                case .settings: LabourSettingsView()
+                case .end: EndLabourView()
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
+                    // Buttons, not links: a NavigationLink inside a Menu can open the wrong screen.
                     Menu {
-                        NavigationLink {
-                            LabourSettingsView()
+                        Button {
+                            menuDestination = .settings
                         } label: {
                             Label("Labour settings", systemImage: "gearshape")
                         }
-                        NavigationLink {
-                            EndLabourView()
+                        Button {
+                            menuDestination = .end
                         } label: {
                             Label(mode == .practice ? "End drill" : "End labour", systemImage: "flag.checkered")
                         }

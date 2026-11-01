@@ -51,6 +51,18 @@ struct WatchLaunchView: View {
     @State private var isPressing = false
 
     var body: some View {
+        if model.brief?.outcome != nil {
+            // Labour mode is over: no LAUNCH on the wrist either. Plain whatever happened.
+            Text("Labour mode is off.")
+                .font(.footnote)
+                .foregroundStyle(LabourTheme.secondaryText)
+                .multilineTextAlignment(.center)
+        } else {
+            launch
+        }
+    }
+
+    private var launch: some View {
         VStack(spacing: 8) {
             Text(weeksText)
                 .font(.footnote)
