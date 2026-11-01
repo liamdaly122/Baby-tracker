@@ -39,8 +39,8 @@ Right now we're working through the safety fixes from the October review, becaus
 | 5 | Phone numbers that dial correctly | Done |
 | 6 | Red flags and the call script | Done |
 | 7 | The practice run | Done |
-| 8 | Rules for the redesign (every Call button dials, 999 always one tap away) | Built, on `feature/redesign-rules`: the rules are in `docs/redesign-rules.md` |
-| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations built, on `feature/redesign-rules`. The rest happens screen by screen in the redesign |
+| 8 | Rules for the redesign (every Call button dials, 999 always one tap away) | Waiting to be merged ([PR #12](https://github.com/liamdaly122/Baby-tracker/pull/12)): the rules are in `docs/redesign-rules.md` |
+| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations waiting to be merged ([PR #12](https://github.com/liamdaly122/Baby-tracker/pull/12)). The rest happens screen by screen in the redesign |
 | 10 | Hard moments: loss, admission, neonatal care, false alarms | Done. Later: discreet mode in early pregnancy, support for her recovery |
 | 11 | A storage problem never stops labour mode or loses the hospital's number | Done |
 | 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Can start any time, alongside the rest |
@@ -55,7 +55,7 @@ Right now we're working through the safety fixes from the October review, becaus
 
 ## What's next, in order
 
-1. Merge the redesign rules and accessibility foundations (8 and 9).
+1. Merge the redesign rules and accessibility foundations (8 and 9, PR #12).
 2. Fair week-by-week stages on the home screen (19).
 3. **The redesign**, then a first test build for real phones (TestFlight).
 4. The watch as the main timer (18), the lock screen and the Live Activity.
@@ -80,7 +80,7 @@ There are test switches for the simulator and the phone. They're listed at the t
 
 ## Waiting on you
 
-- **Merging** the redesign rules pull request once it's open and its checks pass.
+- **Merging** PR #12 (the redesign rules) once its checks pass.
 - **GitHub settings:** make `main` the default branch, and protect it so the checks must pass before merging. I can do this with your go-ahead.
 - **The midwife review** of the advice rules in `docs/content-review-log.md`. It's best done before the redesign. It now includes two questions about the hospital numbers (H1, H2) and one about the birth plan in labour (P2). The new rules for loss and neonatal care (L1 to L6) need a bereavement midwife in particular.
 - **Deciding on the Apple Developer Program**, before TestFlight.
