@@ -255,6 +255,18 @@ class ContentLintTests(unittest.TestCase):
         self.assertTrue(any("[c]: reminderDaysBefore needs a deadline" in e for e in errors))
         self.assertTrue(any("[d]: deadline.anchor" in e for e in errors))
 
+    def test_must_do_is_his_action(self):
+        items = [
+            checklist_item("a", must="yes"),
+            checklist_item("b", must=True, title={"off": "Remind her about the whooping cough jab"}),
+            checklist_item("c", must=True),
+        ]
+        self.write("checklist", envelope("uk", items))
+        errors = self.lint()
+        self.assertTrue(any("[a]: must must be true or false" in e for e in errors))
+        self.assertTrue(any("[b]: a must-do must be something he does" in e for e in errors))
+        self.assertFalse(any("[c]:" in e for e in errors))
+
     def test_stages_must_be_valid(self):
         card = {"id": "c1", "stage": "lunch", "title": "t", "doThis": ["Rest"], "avoidThis": [],
                 "provenance": provenance()}

@@ -133,6 +133,14 @@ Sources in `docs/research/05-when-things-go-differently.md`. **All of this needs
 | L5 | Anything but "everyone is doing well" turns the humour off everywhere, whatever the setting. Recording an outcome ends labour mode and its alerts, turns off LAUNCH and the practice run, and tells the watch, which then shows only "Labour mode is off." "Recorded this by mistake?" undoes it. Support is shown, never pushed: no notifications. | Review ux-02, content-15. | Open |
 | L6 | "Something's happened" on the home screen, at any week, records the same outcomes without labour mode (for a loss in early pregnancy, or a birth before he launched). | Review content-01 ("at any week"). Discreet mode before 14 weeks (PRT-09) is still to do. | Open |
 
+## The build stages and HOLD (review action 19)
+
+| # | Rule | Notes | Status |
+|---|---|---|---|
+| S1 | 24 must-dos, all things he does: his employer's policy, paternity pay and notice, time off for appointments; learning the reduced movements rule and the pre-eclampsia signs; the safe sleep space and rules; the one-page birth plan, the three bags and putting them by the door, fitting the car seat; saving the unit's number, entering the hospital, driving the route, learning when to call, the "while you're out" plan, the comms plan, staying close; and after the birth, her warning signs, the heel prick and registering the birth. Her decisions (whooping cough, RSV, telling her employer) and appointments are information, not must-dos. | Review ux-07, content-06. The content lint and a test stop a "Remind her…" item being a must-do. **Question:** are any of these wrong to call a must-do, or missing? | Open |
+| S2 | HOLD: a stage waits only on must-dos from an earlier stage, after two weeks' grace; "Doesn't apply to us" and "Missed it" clear a must-do; stages that ended before he started never hold anything and become a catch-up list; the after-birth stage is never on hold; a held stage still shows how much is done; nothing is locked from ticking except things that can only happen after the birth. A must-do's deadline must fall no later than two weeks after the next stage opens. | Review ux-07, ux-08, content-06, TCI-07. The wording and the HOLD mechanic should be tried with dads (content-06). | Open |
+| S3 | A late item says "Past the date: still worth doing now", never "N days late". Items from a later week say "From week N" and can be ticked early. | Review content-06, ux-08. | Open |
+
 ## UK content v1 (Phase 2)
 
 `Sources/MissionContent/Content/uk/`: 134 checklist items in 12 modules, 94 glossary entries, 17 coaching cards, 12 story beats, 22 quiz questions in 7 quizzes, 35 badges. Every `sourceURL` is quoted in the research reports (the lint checks). Every clinical item's `reviewer` is null until the midwife review.

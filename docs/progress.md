@@ -39,8 +39,8 @@ Right now we're working through the safety fixes from the October review, becaus
 | 5 | Phone numbers that dial correctly | Done |
 | 6 | Red flags and the call script | Done |
 | 7 | The practice run | Done |
-| 8 | Rules for the redesign (every Call button dials, 999 always one tap away) | Waiting to be merged ([PR #12](https://github.com/liamdaly122/Baby-tracker/pull/12)): the rules are in `docs/redesign-rules.md` |
-| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations waiting to be merged ([PR #12](https://github.com/liamdaly122/Baby-tracker/pull/12)). The rest happens screen by screen in the redesign |
+| 8 | Rules for the redesign (every Call button dials, 999 always one tap away) | Done: the rules are in `docs/redesign-rules.md` |
+| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. The rest happens screen by screen in the redesign |
 | 10 | Hard moments: loss, admission, neonatal care, false alarms | Done. Later: discreet mode in early pregnancy, support for her recovery |
 | 11 | A storage problem never stops labour mode or loses the hospital's number | Done |
 | 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Can start any time, alongside the rest |
@@ -50,16 +50,16 @@ Right now we're working through the safety fixes from the October review, becaus
 | 16 | Saved hospital, and a call list of people | Main part done. Later: home births, finding the hospital on a map, messaging family after the birth |
 | 17 | A birth plan built up over the weeks | How it's stored: waiting to be merged ([PR #10](https://github.com/liamdaly122/Baby-tracker/pull/10)). Phase 6: the guided builder, the PDF and reminders |
 | 18 | The watch as the main timer | Phases 4 and 5 |
-| 19 | Fair week-by-week stages on the home screen | Before the redesign |
+| 19 | Fair week-by-week stages on the home screen | The rules are built and tested, waiting to be merged ([PR #13](https://github.com/liamdaly122/Baby-tracker/pull/13)). The screens that show them come in Phase 6 |
 | 20 | Weekly briefings and the home screen | Phase 6 |
 
 ## What's next, in order
 
-1. Merge the redesign rules and accessibility foundations (8 and 9, PR #12).
-2. Fair week-by-week stages on the home screen (19).
-3. **The redesign**, then a first test build for real phones (TestFlight).
+1. Merge the fair stages (19, PR #13).
+2. **The redesign**, screen by screen, following `docs/redesign-rules.md`: the timer first, then Call, Plan, Coach and Decoder, launch and the practice run, set-up, the watch, and the home screen.
+3. A first test build for real phones (TestFlight).
 4. The watch as the main timer (18), the lock screen and the Live Activity.
-5. Phase 6: the home screen, weekly briefings and the birth plan builder (20).
+5. Phase 6: the home screen's rocket and checklists, weekly briefings and the birth plan builder (20).
 6. Final checks, the midwife's sign-off, then a wider test.
 
 The legal and privacy groundwork (12) can happen alongside any of these.
@@ -80,7 +80,7 @@ There are test switches for the simulator and the phone. They're listed at the t
 
 ## Waiting on you
 
-- **Merging** PR #12 (the redesign rules) once its checks pass.
+- **Merging** PR #13 (the fair stages) once its checks pass.
 - **GitHub settings:** make `main` the default branch, and protect it so the checks must pass before merging. I can do this with your go-ahead.
-- **The midwife review** of the advice rules in `docs/content-review-log.md`. It's best done before the redesign. It now includes two questions about the hospital numbers (H1, H2) and one about the birth plan in labour (P2). The new rules for loss and neonatal care (L1 to L6) need a bereavement midwife in particular.
+- **The midwife review** of the advice rules in `docs/content-review-log.md`. It's best done before the redesign. It now includes two questions about the hospital numbers (H1, H2) and one about the birth plan in labour (P2). There's also a question on which checklist items count as must-dos (S1). The new rules for loss and neonatal care (L1 to L6) need a bereavement midwife in particular.
 - **Deciding on the Apple Developer Program**, before TestFlight.
