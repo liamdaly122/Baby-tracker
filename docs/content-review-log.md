@@ -140,7 +140,7 @@ Sources in `docs/research/05-when-things-go-differently.md`. **All of this needs
 | # | Rule | Notes | Status |
 |---|---|---|---|
 | C1 | Paternity notice deadline is the end of the qualifying week (EWC minus 99 days, weeks running Sunday to Saturday). | Checked 26 Oct 2026 against Acas, "Taking paternity leave" (https://www.acas.org.uk/page-print/393): due 1 May 2026 → deadline Saturday 17 January 2026. | Confirmed |
-| C2 | Glossary worry levels (0 to 3) are judgement calls. 3: PPROM, cord prolapse, pre-eclampsia, PPH, shoulder dystocia, Category 1 caesarean. 2: meconium, SROM, PROM, decelerations, FBS, OASI, GA, SCBU, NICU. | Needs a midwife's view, especially where a high number could frighten. | Open |
+| C2 | Glossary worry levels (0 to 3) are judgement calls, shown as "Routine", "Worth asking about", "Staff will watch closely" and "Serious: the team acts fast" (redesign rule 8; before, level 3 said "Act now" about things he can't act on). 3: PPROM, cord prolapse, pre-eclampsia, PPH, shoulder dystocia, Category 1 caesarean. 2: meconium, SROM, PROM, decelerations, FBS, OASI, GA, SCBU, NICU. | Needs a midwife's view, especially where a high number could frighten. | Open |
 | C3 | The cord prolapse home positioning wording appears in the glossary and in the engine copy (E14). | Keep the two in step. | Open |
 | C4 | "Cephalic", "effaced", "fundal height", "cannula" and "TED stockings" cite the Cwm Taf Morgannwg (NHS Wales) abbreviations list. | Fine for definitions; a midwife may prefer an England source. | Open |
 | C5 | The handover entry says shifts change "often around 8am and 8pm" (NNUH). | Varies by trust. | Open |

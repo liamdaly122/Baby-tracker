@@ -12,20 +12,20 @@ public enum LabourWorld: Sendable {
     /// The colour of the tab's labels and markers.
     public var accent: Color {
         switch self {
-        case .call: Color(red: 1.0, green: 0.61, blue: 0.54)
+        case .call: LabourPalette.callAccent.color
         case .plan: LabourTheme.amber
-        case .coach: Color(red: 0.5, green: 0.85, blue: 0.78)
-        case .decoder: Color(red: 0.55, green: 0.72, blue: 0.91)
+        case .coach: LabourPalette.coachAccent.color
+        case .decoder: LabourPalette.decoderAccent.color
         }
     }
 
     /// A tinted surface for cards in this world.
     public var surface: Color {
         switch self {
-        case .call: Color(red: 0.23, green: 0.07, blue: 0.06)
-        case .plan: Color(red: 0.98, green: 0.96, blue: 0.89)
-        case .coach: Color(red: 0.09, green: 0.27, blue: 0.29)
-        case .decoder: Color(red: 0.06, green: 0.11, blue: 0.24)
+        case .call: LabourPalette.callSurface.color
+        case .plan: LabourPalette.paper.color
+        case .coach: LabourPalette.coachSurface.color
+        case .decoder: LabourPalette.decoderSurface.color
         }
     }
 

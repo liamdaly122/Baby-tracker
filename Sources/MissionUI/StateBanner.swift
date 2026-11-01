@@ -31,13 +31,13 @@ public struct StateBanner: View {
     /// A practice run uses the blueprint tint, never the state colours, so it can't pass for labour.
     private var filled: Bool { mode == .live && LabourTheme.isFilled(state) }
     private var accent: Color { mode == .practice ? LabourTheme.blueprint : LabourTheme.color(for: state) }
-    private var textColor: Color { filled ? .white : LabourTheme.primaryText }
+    private var textColor: Color { filled ? LabourTheme.textOnFill(for: state) : LabourTheme.primaryText }
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(mode.headline(headline))
                 .font(.title2.weight(.bold))
-                .foregroundStyle(filled ? .white : accent)
+                .foregroundStyle(filled ? textColor : accent)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityLabel(mode.spokenHeadline(headline))
             ForEach(reasonLines, id: \.self) { line in
@@ -49,12 +49,13 @@ public struct StateBanner: View {
             if isExpanded {
                 Text(detail)
                     .font(.callout)
-                    .foregroundStyle(textColor.opacity(0.9))
+                    .foregroundStyle(textColor.opacity(filled ? 1 : 0.9))
                     .fixedSize(horizontal: false, vertical: true)
                 if let source {
                     Text("Source: \(source)")
                         .font(.footnote)
-                        .foregroundStyle(textColor.opacity(0.7))
+                        // Faded only on black: on a filled panel it would drop under 4.5:1.
+                        .foregroundStyle(textColor.opacity(filled ? 1 : 0.7))
                 }
             }
         }
@@ -62,7 +63,7 @@ public struct StateBanner: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: LabourTheme.cornerRadius, style: .continuous)
-                .fill(filled ? accent : LabourTheme.surface)
+                .fill(filled ? LabourTheme.fill(for: state) : LabourTheme.surface)
         )
         .overlay(
             RoundedRectangle(cornerRadius: LabourTheme.cornerRadius, style: .continuous)

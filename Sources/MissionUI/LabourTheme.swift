@@ -2,22 +2,27 @@ import MissionCore
 import SwiftUI
 
 /// Labour-mode look: true black, high-contrast amber and white, controls big enough for one thumb
-/// in a dark room. Bright fills are kept for the two states that need to shout.
+/// in a dark room. Bright fills are kept for the two states that need to shout. Colours come from
+/// `LabourPalette`, where their contrast is tested; the redesign rules are in docs/redesign-rules.md.
 public enum LabourTheme {
-    public static let background = Color.black
-    public static let surface = Color(white: 0.11)
-    public static let raisedSurface = Color(white: 0.17)
-    public static let primaryText = Color.white
-    public static let secondaryText = Color(white: 0.68)
-    public static let amber = Color(red: 1.0, green: 0.69, blue: 0.0)
-    public static let urgent = Color(red: 1.0, green: 0.42, blue: 0.21)
-    public static let emergency = Color(red: 0.89, green: 0.16, blue: 0.15)
+    public static let background = LabourPalette.black.color
+    public static let surface = LabourPalette.surface.color
+    public static let raisedSurface = LabourPalette.raisedSurface.color
+    public static let primaryText = LabourPalette.white.color
+    public static let secondaryText = LabourPalette.secondaryText.color
+    public static let amber = LabourPalette.amber.color
+    /// Bright orange for strokes, icons and text on black. Panels with text use `fill(for:)`.
+    public static let urgent = LabourPalette.urgent.color
+    public static let emergency = LabourPalette.emergency.color
     /// The practice run's colour: the prototype's pale blueprint blue, never a state colour.
-    public static let blueprint = Color(red: 0.55, green: 0.72, blue: 0.91)
+    public static let blueprint = LabourPalette.blueprint.color
+    /// Every control in labour mode is at least this tall.
     public static let minimumControlSize: CGFloat = 56
+    /// The tap area of a small choice chip, such as "Mild" or "+1 min".
+    public static let chipSize: CGFloat = 44
     public static let cornerRadius: CGFloat = 20
 
-    /// The accent for a state.
+    /// The accent for a state: strokes, icons and text on black.
     public static func color(for state: LabourState) -> Color {
         switch state {
         case .early: secondaryText
@@ -32,6 +37,38 @@ public enum LabourTheme {
     public static func isFilled(_ state: LabourState) -> Bool {
         state >= .callNow
     }
+
+    /// A solid panel for a state, dark enough to carry `textOnFill(for:)`.
+    public static func fill(for state: LabourState) -> Color {
+        fillPalette(for: state).color
+    }
+
+    /// The text colour on `fill(for:)`.
+    public static func textOnFill(for state: LabourState) -> Color {
+        textOnFillPalette(for: state).color
+    }
+
+    public static func fillPalette(for state: LabourState) -> PaletteColor {
+        switch state {
+        case .early, .establishing: LabourPalette.raisedSurface
+        case .callTriage: LabourPalette.amber
+        case .callNow: LabourPalette.urgentFill
+        case .call999: LabourPalette.emergency
+        }
+    }
+
+    public static func textOnFillPalette(for state: LabourState) -> PaletteColor {
+        state == .callTriage ? LabourPalette.black : LabourPalette.white
+    }
+}
+
+/// Which red flags the timer shows first, and the rest. Built from every flag, so a new one can't
+/// be left off the screen.
+public enum RedFlagLayout {
+    /// Always on the timer.
+    public static let pinned: [RedFlag] = [.reducedMovements, .watersBroken]
+    /// One tap away, in the order `RedFlag` lists them.
+    public static var others: [RedFlag] { RedFlag.allCases.filter { !pinned.contains($0) } }
 }
 
 extension RedFlag {

@@ -117,6 +117,17 @@ struct LabourTabStack<Content: View>: View {
                 }
             }
             .toolbar {
+                if #available(iOS 26, *) {
+                    // No shared glass behind it, so it stays red with "999" on it.
+                    ToolbarItem(placement: .topBarLeading) {
+                        QuickEmergencyButton(region: model.labour.region)
+                    }
+                    .sharedBackgroundVisibility(.hidden)
+                } else {
+                    ToolbarItem(placement: .topBarLeading) {
+                        QuickEmergencyButton(region: model.labour.region)
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     // Buttons, not links: a NavigationLink inside a Menu can open the wrong screen.
                     Menu {
@@ -175,17 +186,66 @@ struct StatusStrip: View {
     }
 }
 
+/// 999 in the top bar of every labour screen: one tap, always there. In a practice run it says
+/// what it would do instead.
+struct QuickEmergencyButton: View {
+    @Environment(\.missionMode) private var mode
+    var region: ContentRegion
+    @State private var explainsPractice = false
+
+    var body: some View {
+        let number = StateCopy.emergencyNumber(region)
+        if mode == .practice {
+            Button {
+                explainsPractice = true
+            } label: {
+                label(number, colour: LabourTheme.blueprint, text: LabourPalette.black.color)
+            }
+            .accessibilityLabel("Practice. \(number)")
+            .alert("In a real labour this rings \(number)", isPresented: $explainsPractice) {
+                Button("OK", role: .cancel) {}
+            }
+        } else if let url = EmergencyDial.url(region) {
+            Link(destination: url) {
+                label(number, colour: LabourTheme.emergency, text: LabourPalette.white.color)
+            }
+            .accessibilityLabel("Call \(number)")
+        }
+    }
+
+    /// Text as well as the icon: in the top bar the system shows icons alone, and a phone icon on
+    /// its own looks like the Call tab.
+    private func label(_ number: String, colour: Color, text: Color) -> some View {
+        HStack(spacing: 4) {
+            Image(systemName: "phone.fill")
+            Text(number)
+        }
+        .font(.subheadline.weight(.heavy))
+        .foregroundStyle(text)
+        .padding(.horizontal, 12)
+        .frame(minHeight: LabourTheme.chipSize)
+        .background(Capsule().fill(colour))
+    }
+}
+
+/// The emergency number's dial link, the same everywhere it appears.
+enum EmergencyDial {
+    static func url(_ region: ContentRegion) -> URL? {
+        PhoneNumber.shortCode(StateCopy.emergencyNumber(region))?.telURL
+    }
+}
+
 /// A big red button that dials the emergency number. In a practice run it says what it would do.
 struct EmergencyCallButton: View {
     @Environment(\.missionMode) private var mode
     var region: ContentRegion
 
-    private var number: String { region == .us ? "911" : "999" }
+    private var number: String { StateCopy.emergencyNumber(region) }
 
     var body: some View {
         if mode == .practice {
             PracticeDial(action: "Call \(number)", detail: "In a real emergency this rings \(number).")
-        } else if let url = URL(string: "tel:\(number)") {
+        } else if let url = EmergencyDial.url(region) {
             Link(destination: url) {
                 Label("Call \(number)", systemImage: "phone.fill")
                     .font(.title2.bold())

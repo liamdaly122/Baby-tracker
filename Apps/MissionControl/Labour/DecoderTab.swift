@@ -132,15 +132,18 @@ private struct GlossaryRow: View {
 }
 
 /// How much to worry, in words as well as colour.
-private struct WorryBadge: View {
+struct WorryBadge: View {
     var level: Int
 
-    private var text: String {
+    /// Seriousness, not an instruction: most of these he can't act on himself.
+    private var text: String { Self.label(level) }
+
+    static func label(_ level: Int) -> String {
         switch level {
-        case 0: "Normal"
-        case 1: "Worth asking"
-        case 2: "Pay attention"
-        default: "Act now"
+        case ...0: "Routine"
+        case 1: "Worth asking about"
+        case 2: "Staff will watch closely"
+        default: "Serious: the team acts fast"
         }
     }
 
