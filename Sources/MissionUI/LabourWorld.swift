@@ -13,7 +13,7 @@ public enum LabourWorld: Sendable {
     public var accent: Color {
         switch self {
         case .call: LabourPalette.callAccent.color
-        case .plan: LabourTheme.amber
+        case .plan: LabourTheme.sun
         case .coach: LabourPalette.coachAccent.color
         case .decoder: LabourPalette.decoderAccent.color
         }
@@ -31,7 +31,7 @@ public enum LabourWorld: Sendable {
 
     private var top: Color {
         switch self {
-        case .call: Color(red: 0.16, green: 0.05, blue: 0.04)
+        case .call: LabourPalette.callTop.color
         case .plan: Color(red: 0.13, green: 0.11, blue: 0.08)
         case .coach: Color(red: 0.05, green: 0.23, blue: 0.24)
         case .decoder: Color(red: 0.04, green: 0.08, blue: 0.19)
@@ -40,7 +40,7 @@ public enum LabourWorld: Sendable {
 
     private var bottom: Color {
         switch self {
-        case .call: Color(red: 0.07, green: 0.02, blue: 0.04)
+        case .call: LabourPalette.callBottom.color
         case .plan: Color(red: 0.08, green: 0.07, blue: 0.05)
         case .coach: Color(red: 0.02, green: 0.11, blue: 0.12)
         case .decoder: Color(red: 0.04, green: 0.08, blue: 0.19)
@@ -50,7 +50,10 @@ public enum LabourWorld: Sendable {
     /// The full-screen background, with a blueprint grid for the decoder.
     public var background: some View {
         ZStack {
-            LinearGradient(colors: [top, bottom], startPoint: .top, endPoint: .bottom)
+            // The prototype's gradient settles at 70% of the way down.
+            LinearGradient(
+                stops: [.init(color: top, location: 0), .init(color: bottom, location: 0.7)], startPoint: .top,
+                endPoint: .bottom)
             if self == .decoder {
                 Canvas { context, size in
                     var grid = Path()
@@ -71,7 +74,8 @@ public enum LabourWorld: Sendable {
     }
 }
 
-/// The header at the top of a labour tab: a small label, a big title, and one line on what it's for.
+/// The header at the top of a labour tab, as the prototype sets it: a small coloured label, a big
+/// title in the display face, and one line on what the tab is for.
 public struct LabourTabHeader: View {
     public var world: LabourWorld
     public var eyebrow: String
@@ -86,22 +90,26 @@ public struct LabourTabHeader: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 3) {
             Text(eyebrow.uppercased())
-                .font(.caption.weight(.semibold).monospaced())
-                .tracking(1.2)
+                .font(MissionType.mono())
+                .tracking(MissionType.monoTracking())
                 .foregroundStyle(world.accent)
             Text(title)
-                .font(.largeTitle.weight(.heavy))
-                .foregroundStyle(LabourTheme.primaryText)
+                .font(MissionType.display(38))
+                .tracking(0.76)
+                .foregroundStyle(LabourTheme.cream)
                 .fixedSize(horizontal: false, vertical: true)
             if let subtitle {
                 Text(subtitle)
-                    .font(.subheadline)
-                    .foregroundStyle(LabourTheme.secondaryText)
+                    .font(MissionType.body(13.5, relativeTo: .subheadline))
+                    .foregroundStyle(LabourTheme.muted)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
+        .padding(.horizontal, 2)
+        .padding(.top, 2)
+        .padding(.bottom, 4)
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isHeader)

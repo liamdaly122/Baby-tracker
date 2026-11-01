@@ -58,6 +58,12 @@ public struct TriageScript: Sendable, Hashable {
         public var value: String
         /// Lines the partner should say first because they change the advice.
         public var isUrgent: Bool
+
+        public init(label: String, value: String, isUrgent: Bool) {
+            self.label = label
+            self.value = value
+            self.isUrgent = isUrgent
+        }
     }
 
     /// Everything the card is built from. The thresholds come from the engine output, clamped.

@@ -22,14 +22,15 @@ enum Snapshot {
     /// Draws `view` at a phone's width on the night sky's darkest band, at a text size, in real
     /// labour or practice, in the prototype's fonts.
     static func image(
-        _ view: some View, width: CGFloat = 375, size: DynamicTypeSize, mode: MissionModeOption
+        _ view: some View, width: CGFloat = 375, size: DynamicTypeSize, mode: MissionModeOption,
+        background: Color = LabourTheme.space
     ) -> UIImage? {
         MissionType.registerFonts()
         let content =
             view
             .padding(16)
             .frame(width: width)
-            .background(LabourTheme.space)
+            .background(background)
             .environment(\.dynamicTypeSize, size)
             .environment(\.missionMode, mode.value)
             .environment(\.colorScheme, .dark)

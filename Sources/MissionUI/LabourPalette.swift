@@ -66,7 +66,11 @@ public enum LabourPalette {
     public static let blueprint = PaletteColor(red: 0.55, green: 0.72, blue: 0.91)
 
     public static let callAccent = PaletteColor(red: 1.0, green: 0.61, blue: 0.54)
-    public static let callSurface = PaletteColor(red: 0.23, green: 0.07, blue: 0.06)
+    /// The Call tab's plate, the prototype's #3A1310.
+    public static let callSurface = PaletteColor(hex: 0x3A1310)
+    /// The Call tab's background, top and bottom: the prototype's #2A0C09 to #12060A.
+    public static let callTop = PaletteColor(hex: 0x2A0C09)
+    public static let callBottom = PaletteColor(hex: 0x12060A)
     public static let coachAccent = PaletteColor(red: 0.5, green: 0.85, blue: 0.78)
     public static let coachSurface = PaletteColor(red: 0.09, green: 0.27, blue: 0.29)
     public static let decoderAccent = blueprint
@@ -169,6 +173,26 @@ public enum LabourPalette {
             Pair(
                 name: "cream on info card", text: cream, background: blueprint.over(space, opacity: 0.14),
                 minimum: 4.5),
+        ]
+        // The Call tab.
+        for (name, background) in [("call top", callTop), ("call bottom", callBottom), ("call plate", callSurface)] {
+            pairs += [
+                Pair(name: "cream on \(name)", text: cream, background: background, minimum: 4.5),
+                Pair(name: "muted on \(name)", text: muted, background: background, minimum: 4.5),
+                Pair(name: "call accent on \(name)", text: callAccent, background: background, minimum: 4.5),
+                Pair(
+                    name: "cream on a small call button on \(name)", text: cream,
+                    background: cream.over(background, opacity: 0.1), minimum: 4.5),
+            ]
+        }
+        pairs += [
+            Pair(
+                name: "cream 75% on call plate", text: cream.over(callSurface, opacity: 0.75), background: callSurface,
+                minimum: 4.5),
+            Pair(
+                name: "copy ink on call plate", text: PaletteColor(hex: 0xFFC4B8), background: callSurface, minimum: 4.5
+            ),
+            Pair(name: "sim ink on sim deep, practice dial", text: simInk, background: simDeep, minimum: 4.5),
         ]
         return pairs
     }()

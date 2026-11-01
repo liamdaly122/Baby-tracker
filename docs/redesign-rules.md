@@ -54,7 +54,7 @@ The redesign must cover each of these, live and in a practice run:
 
 ## 5. Readable at 3am
 
-- **Labour screens are true black.** Big bright surfaces are only for things held up for someone else to read: the birth plan sheet for the midwife. The call script's paper card is a design decision for the redesign: keep it, or make it ink on black. The timer's orbit scene from the agreed prototype counts as dark: a near-black sky (#05060F to #101737) and an Earth no brighter than #1D4B7A.
+- **Labour screens are true black.** Big bright surfaces are only for things held up for someone else to read: the birth plan sheet for the midwife. The call script's paper card stays, as in the prototype: it's read out loud, often with the light on. The timer's orbit scene from the agreed prototype counts as dark: a near-black sky (#05060F to #101737) and an Earth no brighter than #1D4B7A.
 - **Text passes WCAG 2.2 contrast:** 4.5:1, or 3:1 for large text, 18pt (or 14pt bold) and over. Every colour pair the app uses is checked by a test (`LabourPaletteTests`).
   - Hot colours behind text use the fill tokens: `LabourTheme.fill(for:)` and `textOnFill(for:)`.
   - Bright orange (`urgent`) is for strokes, icons and text on black only. Never put white text on it.
