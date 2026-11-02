@@ -71,7 +71,17 @@ jobs:
         run: >
           xcodebuild test -project MissionControl.xcodeproj -scheme MissionControl
           -destination 'platform=iOS Simulator,name=iPhone 17' CODE_SIGNING_ALLOWED=NO
-      - name: Build watch app
-        run: >
-          xcodebuild build -project MissionControl.xcodeproj -scheme MissionControlWatch
-          -destination 'generic/platform=watchOS Simulator' CODE_SIGNING_ALLOWED=NO
+      - name: Build and test watch app
+        # On watchOS, text sizes depend on the watch's screen size, so the watch's pictures only
+        # match on the model they were drawn on: an Apple Watch Ultra 2 (49mm), on the newest
+        # watchOS runtime the runner has (watchOS 27).
+        run: |
+          RUNTIME=$(xcrun simctl list runtimes available --json | python3 -c '
+          import json, sys
+          watch = [r for r in json.load(sys.stdin)["runtimes"] if r["platform"] == "watchOS"]
+          print(max(watch, key=lambda r: [int(p) for p in r["version"].split(".")])["identifier"])
+          ')
+          WATCH=$(xcrun simctl create "Picture tests watch" \
+            com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Ultra-2-49mm "$RUNTIME")
+          xcodebuild test -project MissionControl.xcodeproj -scheme MissionControlWatch \
+            -destination "id=$WATCH" CODE_SIGNING_ALLOWED=NO

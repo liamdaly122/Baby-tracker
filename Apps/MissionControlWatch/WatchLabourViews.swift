@@ -8,7 +8,8 @@ private let shortState: [LabourState: String] = [
     .call999: "Call 999",
 ]
 
-/// The main page: the advice in a pill, any question the app needs answered, and the big button.
+/// The main page, as the prototype's watch: the advice in a small pill, any question the app needs
+/// answered, the call button from "time to call", the round button, and how often and how many.
 struct WatchTimerPage: View {
     @Environment(WatchLabourModel.self) private var model
 
@@ -26,22 +27,15 @@ struct WatchTimerPage: View {
                 }
             }
         }
-        .containerBackground(stateTint.gradient, for: .tabView)
+        .containerBackground(LabourTheme.space, for: .tabView)
     }
 
     private var header: some View {
-        let state = model.output?.state ?? .early
-        return HStack {
-            Text(pillText(state))
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(state >= .callTriage ? Color.black : LabourTheme.primaryText)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 3)
-                .background(Capsule().fill(state >= .callNow ? LabourTheme.urgent : LabourTheme.color(for: state)))
-            Spacer()
-        }
-        .accessibilityLabel(
-            model.output.map { StateCopy.headline(for: $0, region: model.core?.start.profile.region ?? .uk) } ?? "")
+        WatchStatePill(text: pillText(model.output?.state ?? .early), state: model.output?.state ?? .early)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(
+                model.output.map { StateCopy.headline(for: $0, region: model.core?.start.profile.region ?? .uk) }
+                    ?? "")
     }
 
     /// After a logged call: "Called" while it covers the advice, "Call back" once something changes.
@@ -55,47 +49,31 @@ struct WatchTimerPage: View {
 
     private func burn(now: Date) -> some View {
         let open = model.openContraction
-        let elapsed = open.map { now.timeIntervalSince($0.start) } ?? 0
-        return Button {
+        return WatchBurnButton(isRunning: open != nil, elapsed: open.map { now.timeIntervalSince($0.start) } ?? 0) {
             WKHaptics.tap(start: open == nil)
             model.tap()
-        } label: {
-            ZStack {
-                Circle()
-                    .fill(Color.black.opacity(0.6))
-                Circle()
-                    .strokeBorder(LabourTheme.amber, lineWidth: open == nil ? 3 : 6)
-                VStack(spacing: 0) {
-                    Text(open == nil ? "Start" : clockText(elapsed))
-                        .font(.system(size: 30, weight: .bold, design: .rounded).monospacedDigit())
-                        .minimumScaleFactor(0.6)
-                    Text(open == nil ? "Contraction" : "Tap to stop")
-                        .font(.caption2)
-                        .foregroundStyle(LabourTheme.secondaryText)
-                }
-                .foregroundStyle(LabourTheme.primaryText)
-            }
-            .frame(width: 112, height: 112)
         }
-        .buttonStyle(.plain)
-        .accessibilityLabel(open == nil ? "Start contraction" : "Stop contraction, running \(clockText(elapsed))")
     }
 
     private func footer(now: Date) -> some View {
         VStack(spacing: 4) {
             if let notice = model.notice, notice.until > now {
-                Text(notice.text).font(.caption2).foregroundStyle(LabourTheme.secondaryText)
+                Text(notice.text)
+                    .font(MissionType.body(13, relativeTo: .footnote))
+                    .foregroundStyle(LabourTheme.muted)
             } else if let undoable = model.undoable, undoable.until > now {
-                Button("Undo", systemImage: "arrow.uturn.backward") { model.undo() }
-                    .font(.caption)
+                Button {
+                    model.undo()
+                } label: {
+                    Label("Undo", systemImage: "arrow.uturn.backward")
+                        .font(MissionType.body(14).weight(.semibold))
+                        .foregroundStyle(LabourTheme.paperInk)
+                        .frame(maxWidth: .infinity, minHeight: 40)
+                        .background(Capsule().fill(LabourTheme.cream))
+                }
+                .buttonStyle(.plain)
             }
-            HStack {
-                Text(every)
-                Spacer()
-                Text("\(lastHour(now: now)) in hour")
-            }
-            .font(.caption2.monospacedDigit())
-            .foregroundStyle(LabourTheme.secondaryText)
+            WatchStatsLine(every: every, lastHour: lastHour(now: now))
         }
     }
 
@@ -106,14 +84,6 @@ struct WatchTimerPage: View {
 
     private func lastHour(now: Date) -> Int {
         model.log.contractions.filter { now.timeIntervalSince($0.start) <= 3600 && $0.start <= now }.count
-    }
-
-    private var stateTint: Color {
-        switch model.output?.state ?? .early {
-        case .callNow, .call999: LabourTheme.emergency.opacity(0.55)
-        case .callTriage: LabourTheme.amber.opacity(0.35)
-        default: Color.black
-        }
     }
 }
 
@@ -155,22 +125,12 @@ private struct WatchQuestions: View {
     }
 
     private func ask(_ question: String, _ answers: [(String, () -> Void)]) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(question)
-                .font(.footnote.weight(.semibold))
-                .fixedSize(horizontal: false, vertical: true)
-            ForEach(Array(answers.enumerated()), id: \.offset) { index, answer in
-                Button(answer.0, action: answer.1)
-                    .font(.footnote.weight(.semibold))
-                    .tint(index == 0 ? LabourTheme.amber : LabourTheme.raisedSurface)
-            }
-        }
-        .padding(8)
-        .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(LabourTheme.surface))
+        WatchAskCard(question: question, answers: answers)
     }
 }
 
-/// Ring the unit (or 999) from the wrist.
+/// Ring the unit (or 999) from the wrist: the prototype's watch call button, sun at "time to
+/// call", the darker red from "call now".
 struct WatchCallButton: View {
     @Environment(WatchLabourModel.self) private var model
     var state: LabourState
@@ -179,33 +139,17 @@ struct WatchCallButton: View {
     var body: some View {
         let is999 = state == .call999
         let number = is999 ? PhoneNumber.shortCode("999") : model.brief?.triage
+        let warm = state == .callTriage
         if let number, let url = number.telURL {
             Link(destination: url) {
-                HStack(spacing: 8) {
-                    Image(systemName: "phone.fill")
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(is999 ? "Call 999" : "Call the unit")
-                            .font(.footnote.weight(.bold))
-                        if !is999 {
-                            Text(unitName)
-                                .font(.caption2)
-                                .lineLimit(1)
-                        }
-                    }
-                    Spacer(minLength: 0)
-                }
-                .padding(.horizontal, 10)
-                .frame(maxWidth: .infinity, minHeight: compact ? 40 : 46)
-                .foregroundStyle(state == .callTriage ? Color.black : Color.white)
-                .background(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(state == .callTriage ? LabourTheme.amber : LabourTheme.emergency))
+                WatchCallFace(title: is999 ? "Call 999" : "Call \(unitName)", warm: warm, compact: compact)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(is999 ? "Call 999" : "Call \(unitName), \(number.display)")
         } else if !is999 {
             Text("No unit number on iPhone. Call 111.")
-                .font(.caption2)
-                .foregroundStyle(LabourTheme.secondaryText)
+                .font(MissionType.body(13, relativeTo: .footnote))
+                .foregroundStyle(LabourTheme.muted)
         }
     }
 
@@ -224,29 +168,32 @@ struct WatchCallPage: View {
         let steps = CallFallback.steps(region: region, unit: model.brief?.triage, labourWard: model.brief?.labourWard)
         ScrollView {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Call")
-                    .font(.headline)
+                Text("COMMS")
+                    .font(MissionType.mono())
+                    .tracking(1.3)
+                    .foregroundStyle(CallLook.label)
                 WatchCallButton(state: .callNow)
                 if let after = model.brief?.triage?.afterConnecting {
-                    Text(after).font(.caption2).foregroundStyle(LabourTheme.secondaryText)
+                    Text(after)
+                        .font(MissionType.mono())
+                        .foregroundStyle(LabourTheme.cream.opacity(0.75))
                 }
-                Text("Can't get through?")
-                    .font(.footnote.weight(.semibold))
+                Text("IF NOBODY ANSWERS")
+                    .font(MissionType.mono())
+                    .tracking(1.3)
+                    .foregroundStyle(CallLook.label)
                     .padding(.top, 4)
                 ForEach(steps, id: \.self) { step in
                     if let number = step.number, let url = number.telURL {
                         Link(destination: url) {
-                            VStack(alignment: .leading, spacing: 1) {
-                                Text(step.title).font(.footnote.weight(.semibold))
-                                Text(number.display).font(.caption2.monospacedDigit())
-                                    .foregroundStyle(LabourTheme.secondaryText)
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                            WatchCallRow(title: step.title, number: number.display)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
             }
         }
+        .containerBackground(LabourPalette.callTop.color, for: .tabView)
     }
 }
 
@@ -268,15 +215,16 @@ struct WatchFlagsPage: View {
                             if isOn { model.setRedFlag(flag, isOn: true) } else { confirmingOff = flag }
                         })
                 )
-                .font(.footnote)
-                .tint(LabourTheme.color(for: flag.state))
+                .font(MissionType.body(14).weight(.semibold))
+                .tint(LabourTheme.hot)
             }
             if !model.log.contractions.isEmpty {
                 Button("They've stopped") { model.markStopped() }
-                    .font(.footnote)
+                    .font(MissionType.body(14))
             }
         }
         .navigationTitle("Red flags")
+        .containerBackground(LabourTheme.space, for: .tabView)
         .confirmationDialog(
             "Turn off \(confirmingOff?.label ?? "")?",
             isPresented: Binding(get: { confirmingOff != nil }, set: { if !$0 { confirmingOff = nil } })

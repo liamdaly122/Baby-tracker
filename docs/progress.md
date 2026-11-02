@@ -9,9 +9,9 @@ The heart of the app works. He presses LAUNCH, taps START and STOP for each cont
 Two things haven't happened yet:
 
 - **It hasn't been on a real iPhone.** Everything so far has run on the Mac's pretend iPhone (the simulator). See "Trying it on your iPhone" below.
-- **Most of it still looks like a plain iPhone app.** The redesign is well under way: all of labour mode, LAUNCH, the practice run, the end of labour and the set-up screens now look like the agreed prototype (v3). The watch and the home screen follow.
+- **Most of it still looks like a plain iPhone app.** The redesign is nearly done: all of labour mode, LAUNCH, the practice run, the end of labour, the set-up screens and the watch now look like the agreed prototype (v3). The home screen is last.
 
-Right now we're doing the redesign. Labour mode, LAUNCH, the practice run and the end of labour are done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16), [PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17)). The set-up screens are built and tested, waiting to be merged ([PR #18](https://github.com/liamdaly122/Baby-tracker/pull/18)).
+Right now we're doing the redesign. Labour mode, LAUNCH, the practice run, the end of labour and the set-up screens are done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16), [PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17), [PR #18](https://github.com/liamdaly122/Baby-tracker/pull/18)). The watch is built and tested, waiting to be merged ([PR #19](https://github.com/liamdaly122/Baby-tracker/pull/19)).
 
 ## What works today
 
@@ -21,7 +21,7 @@ Right now we're doing the redesign. Labour mode, LAUNCH, the practice run and th
 - **Alerts** that break through Sleep and other Focus modes.
 - **999 is one tap away** on every labour screen, and the "call now" panels are easy to read in the dark.
 - **The practice run:** a pretend labour to rehearse with, which never gets in the way of a real one.
-- **The watch app:** its own timer that stays in step with the phone. It has not been tried on a real watch.
+- **The watch app:** its own timer that stays in step with the phone, now in the prototype's look. It has not been tried on a real watch.
 - **Set-up screens:** the profile (due date, her details), the hospital or birth centre and a backup (with a reminder to check the numbers against her notes, and again from 34 weeks), the people to call (from Contacts or typed in), and when-to-call settings for a midwife's advice.
 - **The birth plan:** her top five, each section with whose decision it is, and what she'd want if plans change. You edit a copy and Save or Discard; "Read it through with her" records when she agreed it, and the app says what's changed since. In labour it's read-only and marks anything she hasn't seen. It never goes to iCloud.
 - **When things go differently:** ending labour mode asks how everyone is. If the baby needs extra care, or after a loss, the app goes quiet (no humour, countdown or LAUNCH) and shows support lines (Sands, Miscarriage UK, Tommy's, Bliss, Samaritans) and practical help with leave and registration. This also works from the home screen at any week.
@@ -40,7 +40,7 @@ Right now we're doing the redesign. Labour mode, LAUNCH, the practice run and th
 | 6 | Red flags and the call script | Done |
 | 7 | The practice run | Done |
 | 8 | Rules for the redesign (every Call button dials, 999 always one tap away) | Done: the rules are in `docs/redesign-rules.md` |
-| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. Done for labour mode, LAUNCH, the practice run and the end of labour ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16), [PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17)); the set-up screens are built, waiting to be merged ([PR #18](https://github.com/liamdaly122/Baby-tracker/pull/18)). The watch and home screen follow |
+| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. Done for labour mode, LAUNCH, the practice run, the end of labour and the set-up screens ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16), [PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17), [PR #18](https://github.com/liamdaly122/Baby-tracker/pull/18)); the watch is built, waiting to be merged ([PR #19](https://github.com/liamdaly122/Baby-tracker/pull/19)). The home screen follows |
 | 10 | Hard moments: loss, admission, neonatal care, false alarms | Done. Later: discreet mode in early pregnancy, support for her recovery |
 | 11 | A storage problem never stops labour mode or loses the hospital's number | Done |
 | 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Can start any time, alongside the rest |
@@ -55,7 +55,7 @@ Right now we're doing the redesign. Labour mode, LAUNCH, the practice run and th
 
 ## What's next, in order
 
-1. **The redesign**, screen by screen, following `docs/redesign-rules.md`. Labour mode, LAUNCH, the practice run and the end of labour are done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16), [PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17)); the set-up screens are waiting to be merged ([PR #18](https://github.com/liamdaly122/Baby-tracker/pull/18)). Next: the watch, then the home screen (with the lift-off).
+1. **The redesign**, screen by screen, following `docs/redesign-rules.md`. Labour mode, LAUNCH, the practice run, the end of labour and the set-up screens are done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16), [PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17), [PR #18](https://github.com/liamdaly122/Baby-tracker/pull/18)); the watch is waiting to be merged ([PR #19](https://github.com/liamdaly122/Baby-tracker/pull/19)). Next: the home screen (with the lift-off).
 2. The legal and privacy groundwork (12).
 3. A first test build for real phones (TestFlight).
 4. The watch as the main timer (18), the lock screen and the Live Activity.
@@ -133,6 +133,20 @@ Where they differ from the prototype, and why:
 - **The app's own wording and fields**, which are more than the prototype's: her details for the call, the backup unit, "whose decision" on each part of the plan, and the call thresholds.
 - **People can be moved up the list** with an arrow button, as the old list could be dragged.
 - **Not added from the prototype:** "Use example numbers" and the ready-made "We're heading in" messages, which the app doesn't have.
+
+## The redesigned watch
+
+The watch now looks like the prototype's: a small pill for the advice ("No pattern", "Time to call", "Call now"), a call button from "time to call" (yellow, then red), the round Start button with its yellow ring and the time in the display font, and "4 min apart · 15 in hour" in small type underneath. The Call page uses the phone's dark red comms look, the questions use its cream cards, and LAUNCH is the phone's red key, round, with a cream ring that fills as you hold it.
+
+Where it differs from the prototype, and why:
+
+- **The darker red** behind cream text, as on the phone, so it's readable.
+- **No clock of our own:** the watch already shows the time at the top.
+- **The hospital's full name** on the call button, cut short if it's long, rather than just its first word (a first word like "St" could be anyone). VoiceOver reads it in full.
+- **No glow** round the running button (no blur in labour mode).
+- **Kept from the app:** the questions, undo, the Call page with "If nobody answers", and the red flags page.
+
+Checked on the Apple Watch Ultra 2 simulator, and it now has its own picture tests (39 pictures: the advice pill at every level, the main screen at each stage, a question, a call row and LAUNCH, at three text sizes), run on every change like the phone's.
 
 ## Trying it on your iPhone
 
