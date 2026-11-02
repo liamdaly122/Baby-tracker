@@ -39,7 +39,18 @@ enum Snapshot {
         let renderer = ImageRenderer(content: content)
         renderer.scale = 1
         renderer.proposedSize = ProposedViewSize(width: width, height: nil)
-        return renderer.uiImage
+        return draw(renderer)
+    }
+
+    /// What the renderer holds, as a picture. A cold simulator can time out on the first few (CI's
+    /// did), leaving a picture with no pixels, so it tries again before giving up.
+    static func draw(_ renderer: ImageRenderer<some View>) -> UIImage? {
+        for _ in 0..<3 {
+            if let image = renderer.uiImage, image.pngData() != nil {
+                return image
+            }
+        }
+        return nil
     }
 
     /// Compares with the saved picture, or saves it when recording.

@@ -40,6 +40,14 @@ struct AppRootView: View {
             }
         }
         .environment(\.humourLevel, model.humour)
+        .overlay {
+            // Over labour mode, which is already running: a tap skips it.
+            if let start = model.liftOffAt, model.labour.isActive {
+                LiftOffView(start: start) { model.liftOffAt = nil }
+                    .transition(.opacity)
+            }
+        }
+        .animation(.easeOut(duration: 0.4), value: model.liftOffAt)
         .onChange(of: model.session.isActive) { _, active in
             // A real labour always wins, whichever device started it.
             if active {

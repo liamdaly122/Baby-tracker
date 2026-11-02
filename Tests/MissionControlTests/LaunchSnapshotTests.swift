@@ -24,8 +24,8 @@ struct LaunchSnapshotTests {
 
     @Test("LAUNCH under its cover, and with the cover lifted")
     func launch() {
-        let home = Color(red: 0.95, green: 0.95, blue: 0.97)
-        // The home screen is light until its own redesign.
+        // On the home screen's paper.
+        let home = LabourTheme.cream
         Self.check(LaunchWell(window: .drill) {}, named: "launch-closed", background: home, colorScheme: .light)
         Self.check(
             LaunchWell(window: .drill, startsOpen: true) {}, named: "launch-open", background: home, colorScheme: .light
@@ -44,6 +44,6 @@ struct LaunchSnapshotTests {
             named: "end-choice", background: LabourTheme.space)
         let renderer = ImageRenderer(content: DawnScene().frame(width: 390))
         renderer.scale = 1
-        Snapshot.check(renderer.uiImage, named: "end-dawn")
+        Snapshot.check(Snapshot.draw(renderer), named: "end-dawn")
     }
 }

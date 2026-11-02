@@ -130,7 +130,7 @@ struct SnapshotTests {
             let scene = OrbitScene(isPractice: mode == .practice).frame(width: 390, height: 844)
             let renderer = ImageRenderer(content: scene)
             renderer.scale = 1
-            Snapshot.check(renderer.uiImage, named: "orbit-\(mode.rawValue)")
+            Snapshot.check(Snapshot.draw(renderer), named: "orbit-\(mode.rawValue)")
         }
     }
 }

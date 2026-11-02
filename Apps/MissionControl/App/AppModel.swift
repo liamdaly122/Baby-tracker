@@ -17,6 +17,8 @@ final class AppModel {
     let session: LabourSessionModel
     /// A practice run, if one is going. In memory only, with no alerts, no watch link and no dialling.
     private(set) var drill: DrillController?
+    /// When LAUNCH was tapped, while the lift-off plays over labour mode. Nil once it's done or skipped.
+    var liftOffAt: Date?
     let notifier: ThresholdNotifier
     private(set) var sync: PhoneSync?
     private(set) var library: ContentLibrary
@@ -207,6 +209,12 @@ final class AppModel {
 
     /// A practice run is on screen.
     var isDrilling: Bool { !session.isActive && drill != nil }
+
+    /// LAUNCH from the home screen. Labour mode starts now; the lift-off only plays over it.
+    func launch(liftOff: Bool) {
+        liftOffAt = liftOff ? Date() : nil
+        launch()
+    }
 
     /// LAUNCH: fixes gestation, region and thresholds for this labour, and tells the watch. Ends any
     /// practice run, and starts the session before asking about alerts, so a permission prompt
