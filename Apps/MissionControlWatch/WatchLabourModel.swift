@@ -185,7 +185,22 @@ final class WatchLabourModel {
             }
         case .sessionEnded(let sessionID, _):
             endSession(sessionID)
+        case .wiped(let date):
+            wipe(before: date)
         }
+    }
+
+    /// "Delete everything" on the phone: forget the brief and every finished labour. A labour still
+    /// running here is kept, so a real one is never deleted from afar; its taps go when it ends.
+    private func wipe(before date: Date) {
+        if let brief, brief.updatedAt <= date {
+            self.brief = nil
+        }
+        ended = []
+        if core == nil {
+            notifier.cancelAll()
+        }
+        save()
     }
 
     private func receive(_ newBrief: MissionBrief) {
@@ -350,6 +365,7 @@ enum SyncLog {
             logger.info("events \(events.count) for \(id.uuidString.prefix(8)) mine=\(mine)")
         case .marks(let id, let marks): logger.info("marks \(marks.count) for \(id.uuidString.prefix(8)) mine=\(mine)")
         case .sessionEnded(let id, _): logger.info("ended \(id.uuidString.prefix(8)) mine=\(mine)")
+        case .wiped: logger.info("wiped mine=\(mine)")
         }
     }
 }

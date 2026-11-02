@@ -105,7 +105,8 @@ Severity: minor, significant, considerable, major, catastrophic. Likelihood: ver
 - **Controls in place:**
   - The weeks are fixed when labour starts.
   - "Is she 37 weeks or more?" is asked when they're unknown, and the answer is "Call now" until he says yes.
-- **Still to do:** hide the US option in release builds (PRT-07).
+  - The US option only appears in development builds, never in release (PRT-07).
+- **Still to do:** nothing known.
 
 ### HZ-10 A red flag is missed, or turned off by mistake
 
@@ -180,9 +181,9 @@ Severity: minor, significant, considerable, major, catastrophic. Likelihood: ver
 - **Controls in place:**
   - Everything stays on the phone and watch, with no accounts and no servers.
   - Sharing only happens when he taps Share.
+  - "Delete everything" on the home screen's Your data page, on the phone and watch (`DeleteEverythingTests`).
 - **Still to do:**
   - Check what alerts show on the lock screen.
-  - "Delete everything".
   - Discreet mode (PRT-09).
   - The domestic abuse findings in the review.
 

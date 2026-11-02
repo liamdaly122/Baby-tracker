@@ -47,6 +47,16 @@ final class WatchNotifier: NSObject {
         }
     }
 
+    /// Every alert, waiting or shown, after "Delete everything" on the phone.
+    func cancelAll() {
+        lastScheduled = []
+        planning = Task { [previous = planning] in
+            await previous?.value
+            center.removeAllPendingNotificationRequests()
+            center.removeAllDeliveredNotifications()
+        }
+    }
+
     func cancel(sessionID: UUID) {
         lastScheduled = []
         let prefix = LabourAlertPlanner.identifierPrefix(sessionID: sessionID)

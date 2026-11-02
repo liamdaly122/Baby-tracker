@@ -119,6 +119,9 @@ public enum SyncMessage: Codable, Sendable, Hashable {
     /// "This is what I've seen": the other side replies with anything newer.
     case marks(sessionID: UUID, [String: UInt64])
     case sessionEnded(sessionID: UUID, at: Date)
+    /// "Delete everything" on the phone at `at`: the watch forgets the brief and every finished
+    /// labour from before then. A labour still running on the watch is never deleted from afar.
+    case wiped(at: Date)
 
     public static let key = "missionControl.sync"
 

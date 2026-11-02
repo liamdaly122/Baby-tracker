@@ -35,7 +35,7 @@ It doesn't diagnose labour or anything else. It doesn't say what stage of labour
 - Deciding whether it's safe to stay at home.
 - Replacing the call to the maternity unit, or her midwife's advice.
 - Monitoring her or the baby. It has no sensors, and it doesn't use Apple Health.
-- Use outside the UK. A US option exists for development only and is to be hidden in release builds.
+- Use outside the UK. A US option exists for development only, and release builds don't show it.
 
 ## Words we use, and words we don't
 

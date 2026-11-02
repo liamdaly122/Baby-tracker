@@ -22,10 +22,14 @@ struct MissionProfileForm: View {
                     canIncrease: profile.parity < 10, decrease: { profile.parity -= 1 },
                     increase: { profile.parity += 1 })
                 PaperTick("Fast labour last time", isOn: $profile.previousFastLabour)
-                PaperLabel("Region")
-                PaperChips(
-                    [ContentRegion.uk, .us], title: { $0 == .uk ? "UK (NHS)" : "US" },
-                    isPicked: { $0 == model.profile.region }, pick: { model.profile.region = $0 })
+                #if DEBUG
+                    // The app is for the UK only (docs/regulatory/intended-purpose.md). The US rules
+                    // are kept for development, and hidden in release builds.
+                    PaperLabel("Region")
+                    PaperChips(
+                        [ContentRegion.uk, .us], title: { $0 == .uk ? "UK (NHS)" : "US" },
+                        isPicked: { $0 == model.profile.region }, pick: { model.profile.region = $0 })
+                #endif
             }
             PaperSection(
                 "For the triage call",

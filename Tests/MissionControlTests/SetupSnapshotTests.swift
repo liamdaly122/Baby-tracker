@@ -43,6 +43,18 @@ struct SetupSnapshotTests {
             named: "fields")
     }
 
+    @Test("Your data: where it's kept, what leaves the phone, and Delete everything")
+    func yourData() {
+        Self.check(
+            VStack(alignment: .leading, spacing: 16) {
+                PrivacySummary()
+                PaperSection("Delete everything", note: DeleteEverything.note) {
+                    Button("Delete everything") {}.buttonStyle(PaperButtonStyle(.danger))
+                }
+            },
+            named: "your-data")
+    }
+
     @Test("The hospital's card, buttons and a card")
     func cards() {
         Self.check(

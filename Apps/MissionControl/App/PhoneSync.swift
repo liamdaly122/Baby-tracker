@@ -45,6 +45,13 @@ final class PhoneSync: LabourSyncing {
         publishContext()
     }
 
+    /// "Delete everything": the watch deletes its copy, now if it's reachable or when it next wakes,
+    /// then gets the blank brief.
+    func didDeleteEverything(at date: Date) {
+        transport.send(.wiped(at: date))
+        publishContext()
+    }
+
     // MARK: Receiving
 
     private func handle(_ message: SyncMessage) {
@@ -66,6 +73,8 @@ final class PhoneSync: LabourSyncing {
             }
         case .sessionEnded(let sessionID, _):
             labour.receiveEnd(sessionID: sessionID)
+        case .wiped:
+            break  // Only the phone deletes everything.
         }
     }
 
