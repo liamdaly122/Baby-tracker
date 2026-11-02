@@ -43,7 +43,7 @@ The redesign is finished: every screen now looks like the agreed prototype (v3),
 | 9 | Readable in the dark, big buttons, large text, VoiceOver | Done for every screen in the redesign ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14) to [PR #20](https://github.com/liamdaly122/Baby-tracker/pull/20)) |
 | 10 | Hard moments: loss, admission, neonatal care, false alarms | Done. Later: discreet mode in early pregnancy, support for her recovery |
 | 11 | A storage problem never stops labour mode or loses the hospital's number | Done |
-| 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | The drafts are done ([PR #23](https://github.com/liamdaly122/Baby-tracker/pull/23)). "Delete everything", Apple's privacy files and the UK-only change are built, waiting to be merged. Still needed: the people in "Waiting on you" |
+| 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | The drafts are done ([PR #23](https://github.com/liamdaly122/Baby-tracker/pull/23)). "Delete everything", Apple's privacy files and the UK-only change are built, waiting to be merged ([PR #24](https://github.com/liamdaly122/Baby-tracker/pull/24)). Still needed: the people in "Waiting on you" |
 | 13 | Automatic checks on every change, and tests for the app itself | Done (GitHub settings still to change) |
 | 14 | One labour engine shared by the phone and watch | Done |
 | 15 | Phone and watch always agree | Done (the core) |
@@ -55,7 +55,7 @@ The redesign is finished: every screen now looks like the agreed prototype (v3),
 
 ## What's next, in order
 
-1. The legal and privacy groundwork (12). The documents are drafted ([PR #23](https://github.com/liamdaly122/Baby-tracker/pull/23)), and the app changes ("Delete everything", Apple's privacy files, UK only) are waiting to be merged.
+1. The legal and privacy groundwork (12). The documents are drafted ([PR #23](https://github.com/liamdaly122/Baby-tracker/pull/23)), and the app changes ("Delete everything", Apple's privacy files, UK only) are waiting to be merged ([PR #24](https://github.com/liamdaly122/Baby-tracker/pull/24)).
 2. A first test build for real phones (TestFlight).
 3. The watch as the main timer (18), the lock screen and the Live Activity.
 4. Phase 6: the home screen's rocket and checklists, weekly briefings and the birth plan builder (20).
@@ -184,7 +184,7 @@ These are first drafts, written for the right people to check. None of them is l
 - **The App Store listing** (`docs/store/app-store-listing.md`). A first go at the name, subtitle, description and keywords, plus the answers App Store Connect will ask for.
 - **A new automatic check** (`Scripts/claims-lint.py`). It fails GitHub's checks if the listing ever makes a claim the intended purpose rules out.
 
-The app side is built too:
+The app side is built too ([PR #24](https://github.com/liamdaly122/Baby-tracker/pull/24)):
 
 - **Your data**, a new page at the end of Ground control (and on the home screen after a loss), says in a few lines what's kept, where, and what leaves the phone.
 - **Delete everything**, on that page, asks twice, then deletes:
