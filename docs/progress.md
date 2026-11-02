@@ -6,12 +6,11 @@ Plain-English progress, kept up to date with each pull request. Last updated 2 N
 
 The heart of the app works. He presses LAUNCH, taps START and STOP for each contraction, and the app tells him when to call the maternity unit, following NHS guidance. It has a call script, red flags, a practice run and a watch app. More than 350 automatic tests check it on every change.
 
-Two things haven't happened yet:
+One thing hasn't happened yet:
 
 - **It hasn't been on a real iPhone.** Everything so far has run on the Mac's pretend iPhone (the simulator). See "Trying it on your iPhone" below.
-- **The redesign isn't all merged yet.** Every screen now looks like the agreed prototype (v3). The last one, the home screen with the lift-off, is built and tested, waiting to be merged.
 
-Right now we're finishing the redesign. Labour mode, LAUNCH, the practice run, the end of labour, the set-up screens and the watch are done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16), [PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17), [PR #18](https://github.com/liamdaly122/Baby-tracker/pull/18), [PR #19](https://github.com/liamdaly122/Baby-tracker/pull/19)). The home screen is built and tested, waiting to be merged.
+The redesign is finished: every screen now looks like the agreed prototype (v3), from labour mode to the watch and the home screen with its lift-off ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14) to [PR #20](https://github.com/liamdaly122/Baby-tracker/pull/20)). Next is the legal and privacy groundwork.
 
 ## What works today
 
@@ -41,7 +40,7 @@ Right now we're finishing the redesign. Labour mode, LAUNCH, the practice run, t
 | 6 | Red flags and the call script | Done |
 | 7 | The practice run | Done |
 | 8 | Rules for the redesign (every Call button dials, 999 always one tap away) | Done: the rules are in `docs/redesign-rules.md` |
-| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. Done for labour mode, LAUNCH, the practice run, the end of labour and the set-up screens and the watch ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16), [PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17), [PR #18](https://github.com/liamdaly122/Baby-tracker/pull/18), [PR #19](https://github.com/liamdaly122/Baby-tracker/pull/19)); the home screen is built, waiting to be merged |
+| 9 | Readable in the dark, big buttons, large text, VoiceOver | Done for every screen in the redesign ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14) to [PR #20](https://github.com/liamdaly122/Baby-tracker/pull/20)) |
 | 10 | Hard moments: loss, admission, neonatal care, false alarms | Done. Later: discreet mode in early pregnancy, support for her recovery |
 | 11 | A storage problem never stops labour mode or loses the hospital's number | Done |
 | 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Can start any time, alongside the rest |
@@ -49,19 +48,20 @@ Right now we're finishing the redesign. Labour mode, LAUNCH, the practice run, t
 | 14 | One labour engine shared by the phone and watch | Done |
 | 15 | Phone and watch always agree | Done (the core) |
 | 16 | Saved hospital, and a call list of people | Main part done. Later: home births, finding the hospital on a map, messaging family after the birth |
-| 17 | A birth plan built up over the weeks | How it's stored: waiting to be merged ([PR #10](https://github.com/liamdaly122/Baby-tracker/pull/10)). Phase 6: the guided builder, the PDF and reminders |
+| 17 | A birth plan built up over the weeks | How it's stored: done ([PR #10](https://github.com/liamdaly122/Baby-tracker/pull/10)). Phase 6: the guided builder, the PDF and reminders |
 | 18 | The watch as the main timer | Phases 4 and 5 |
 | 19 | Fair week-by-week stages on the home screen | Done: the rules are built and tested ([PR #13](https://github.com/liamdaly122/Baby-tracker/pull/13)). The screens that show them come in Phase 6 |
 | 20 | Weekly briefings and the home screen | Phase 6 |
 
 ## What's next, in order
 
-1. **The redesign**, screen by screen, following `docs/redesign-rules.md`. Everything else is done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14) to [PR #19](https://github.com/liamdaly122/Baby-tracker/pull/19)); the home screen, the last step, is waiting to be merged.
-2. The legal and privacy groundwork (12).
-3. A first test build for real phones (TestFlight).
-4. The watch as the main timer (18), the lock screen and the Live Activity.
-5. Phase 6: the home screen's rocket and checklists, weekly briefings and the birth plan builder (20).
-6. Final checks, the midwife's sign-off, then a wider test.
+1. The legal and privacy groundwork (12).
+2. A first test build for real phones (TestFlight).
+3. The watch as the main timer (18), the lock screen and the Live Activity.
+4. Phase 6: the home screen's rocket and checklists, weekly briefings and the birth plan builder (20).
+5. Final checks, the midwife's sign-off, then a wider test.
+
+The redesign, done screen by screen following `docs/redesign-rules.md`, is finished.
 
 The full plan, with the reasons, is in `docs/plan.md` (section B14).
 
@@ -182,7 +182,6 @@ There are test switches for the simulator and the phone. They're listed at the t
 
 ## Waiting on you
 
-- **Merging** PR #13 (the fair stages) once its checks pass.
 - **GitHub settings:** make `main` the default branch, and protect it so the checks must pass before merging. I can do this with your go-ahead.
-- **The midwife review** of the advice rules in `docs/content-review-log.md`. It's best done before the redesign. It now includes two questions about the hospital numbers (H1, H2) and one about the birth plan in labour (P2). There's also a question on which checklist items count as must-dos (S1). The new rules for loss and neonatal care (L1 to L6) need a bereavement midwife in particular.
+- **The midwife review** of the advice rules in `docs/content-review-log.md`. It's needed before the wider test. It now includes two questions about the hospital numbers (H1, H2) and one about the birth plan in labour (P2). There's also a question on which checklist items count as must-dos (S1). The new rules for loss and neonatal care (L1 to L6) need a bereavement midwife in particular.
 - **Deciding on the Apple Developer Program**, before TestFlight.
