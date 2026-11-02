@@ -7,7 +7,9 @@ import UIKit
 /// Picture tests (redesign rule 9): draw a view off screen and compare it with a saved PNG in
 /// `__Snapshots__`. To record new pictures after a deliberate change, run the tests with
 /// `TEST_RUNNER_RECORD_SNAPSHOTS=1` in front of `xcodebuild test`, check the PNGs, and commit them.
-/// The reference pictures are drawn on the iOS 27.0 simulator, the one CI uses.
+/// The reference pictures are drawn on the iOS 27.0 simulator, the one CI uses. The watch's are drawn
+/// on an Apple Watch Ultra 2 (49mm) on watchOS 27.0: watch text sizes depend on the screen size, so
+/// they only match on that model.
 @MainActor
 enum Snapshot {
     static let directory = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
@@ -23,12 +25,12 @@ enum Snapshot {
     /// labour or practice, in the prototype's fonts.
     static func image(
         _ view: some View, width: CGFloat = 375, size: DynamicTypeSize, mode: MissionModeOption,
-        background: Color = LabourTheme.space, colorScheme: ColorScheme = .dark
+        background: Color = LabourTheme.space, colorScheme: ColorScheme = .dark, inset: CGFloat = 16
     ) -> UIImage? {
         MissionType.registerFonts()
         let content =
             view
-            .padding(16)
+            .padding(inset)
             .frame(width: width)
             .background(background)
             .environment(\.dynamicTypeSize, size)

@@ -6,6 +6,10 @@ import SwiftUI
 struct MissionControlWatchApp: App {
     @State private var model = WatchLabourModel()
 
+    init() {
+        MissionType.registerFonts()
+    }
+
     var body: some Scene {
         WindowGroup {
             WatchRootView()
@@ -54,48 +58,34 @@ struct WatchLaunchView: View {
         if model.brief?.outcome != nil {
             // Labour mode is over: no LAUNCH on the wrist either. Plain whatever happened.
             Text("Labour mode is off.")
-                .font(.footnote)
-                .foregroundStyle(LabourTheme.secondaryText)
+                .font(MissionType.body(14))
+                .foregroundStyle(LabourTheme.muted)
                 .multilineTextAlignment(.center)
         } else {
             launch
         }
     }
 
+    /// LAUNCH on the wrist: hold the key, and a cream ring fills.
     private var launch: some View {
         VStack(spacing: 8) {
-            Text(weeksText)
-                .font(.footnote)
-                .foregroundStyle(LabourTheme.secondaryText)
-            ZStack {
-                Circle()
-                    .fill(LabourTheme.emergency)
-                Circle()
-                    .trim(from: 0, to: isPressing ? 1 : 0)
-                    .stroke(LabourTheme.primaryText, style: StrokeStyle(lineWidth: 5, lineCap: .round))
-                    .rotationEffect(.degrees(-90))
-                    .padding(4)
-                VStack(spacing: 0) {
-                    Text("LAUNCH")
-                        .font(.system(size: 22, weight: .heavy, design: .rounded))
-                    Text("Hold")
-                        .font(.caption2)
+            Text(weeksText.uppercased())
+                .font(MissionType.mono())
+                .tracking(1)
+                .foregroundStyle(LabourTheme.muted)
+            WatchLaunchKey(progress: isPressing ? 1 : 0)
+                .onLongPressGesture(minimumDuration: 0.8) {
+                    WKHaptics.success()
+                    model.launch()
+                } onPressingChanged: { pressing in
+                    withAnimation(pressing ? .linear(duration: 0.8) : .easeOut(duration: 0.2)) { isPressing = pressing }
                 }
-                .foregroundStyle(.white)
-            }
-            .frame(width: 110, height: 110)
-            .onLongPressGesture(minimumDuration: 0.8) {
-                WKHaptics.success()
-                model.launch()
-            } onPressingChanged: { pressing in
-                withAnimation(pressing ? .linear(duration: 0.8) : .easeOut(duration: 0.2)) { isPressing = pressing }
-            }
-            .accessibilityLabel("Launch labour mode")
-            .accessibilityHint("Press and hold. Labour started? Any week.")
-            .accessibilityAction(named: "Launch") { model.launch() }
+                .accessibilityLabel("Launch labour mode")
+                .accessibilityHint("Press and hold. Labour started? Any week.")
+                .accessibilityAction(named: "Launch") { model.launch() }
             Text("Labour started? Any week.")
-                .font(.caption2)
-                .foregroundStyle(LabourTheme.secondaryText)
+                .font(MissionType.body(13, relativeTo: .footnote))
+                .foregroundStyle(LabourTheme.muted)
                 .multilineTextAlignment(.center)
         }
     }

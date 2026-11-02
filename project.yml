@@ -96,7 +96,25 @@ targets:
         TARGETED_DEVICE_FAMILY: "4"
         SKIP_INSTALL: YES
         CODE_SIGN_ENTITLEMENTS: Apps/MissionControlWatch/MissionControlWatch.entitlements
-    scheme: {}
+    scheme:
+      testTargets:
+        - MissionControlWatchTests
+
+  # App-hosted picture tests (Swift Testing) for the watch screens. They share the iPhone tests'
+  # picture helper and save to the same __Snapshots__ folder, with "watch-" names.
+  MissionControlWatchTests:
+    type: bundle.unit-test
+    platform: watchOS
+    sources:
+      - Tests/MissionControlWatchTests
+      - path: Tests/MissionControlTests/SnapshotSupport.swift
+    dependencies:
+      - target: MissionControlWatch
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.liamdaly.missioncontrol.watchkitapp.tests
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "4"
 
   MissionControlWidgets:
     type: app-extension

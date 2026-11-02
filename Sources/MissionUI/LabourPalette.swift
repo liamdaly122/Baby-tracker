@@ -235,6 +235,13 @@ public enum LabourPalette {
             Pair(name: "call accent on night", text: callAccent, background: space, minimum: 4.5),
             Pair(name: "sun on a night box", text: sun, background: levelChip, minimum: 4.5),
             Pair(name: "paper ink on cream, night solid button", text: ink, background: cream, minimum: 4.5),
+            // The watch.
+            Pair(
+                name: "cream on the watch's quiet pill", text: cream, background: cream.over(space, opacity: 0.1),
+                minimum: 4.5),
+            Pair(
+                name: "muted on a watch call row", text: muted, background: cream.over(callTop, opacity: 0.1),
+                minimum: 4.5),
             Pair(name: "cream on sim deep", text: cream, background: simDeep, minimum: 4.5),
             Pair(name: "sim on sim deep", text: sim, background: simDeep, minimum: 4.5),
             Pair(
