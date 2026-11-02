@@ -74,13 +74,24 @@ jobs:
       - name: Build and test watch app
         # On watchOS, text sizes depend on the watch's screen size, so the watch's pictures only
         # match on the model they were drawn on: an Apple Watch Ultra 2 (49mm), on the newest
-        # watchOS runtime the runner has (watchOS 27).
+        # watchOS runtime the runner has (watchOS 27). Some runners come without one (main's run
+        # after PR #20 did), so it's downloaded for this Xcode when it's missing.
         run: |
-          RUNTIME=$(xcrun simctl list runtimes available --json | python3 -c '
+          newest_watch_runtime() {
+            xcrun simctl list runtimes available --json | python3 -c '
           import json, sys
           watch = [r for r in json.load(sys.stdin)["runtimes"] if r["platform"] == "watchOS"]
-          print(max(watch, key=lambda r: [int(p) for p in r["version"].split(".")])["identifier"])
-          ')
+          if watch:
+              print(max(watch, key=lambda r: [int(p) for p in r["version"].split(".")])["identifier"])
+          '
+          }
+          RUNTIME=$(newest_watch_runtime)
+          if [ -z "$RUNTIME" ]; then
+            echo "No watchOS simulator on this runner, so downloading one."
+            xcodebuild -downloadPlatform watchOS
+            RUNTIME=$(newest_watch_runtime)
+          fi
+          echo "Watch runtime: $RUNTIME"
           WATCH=$(xcrun simctl create "Picture tests watch" \
             com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Ultra-2-49mm "$RUNTIME")
           xcodebuild test -project MissionControl.xcodeproj -scheme MissionControlWatch \
