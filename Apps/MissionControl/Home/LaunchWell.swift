@@ -8,38 +8,50 @@ import SwiftUI
 /// full-size key at every week (`LaunchWindow`). While the cover is up, the app says what it does
 /// and doesn't do, and from 30 weeks offers the drill beside it. The cover closes itself after a
 /// while, as in the prototype, unless he's reading the full disclaimer or the drill question.
-struct LaunchWell: View {
+struct LaunchWell<Leading: View>: View {
     var window: LaunchWindow
+    /// The home screen's dock: a shorter well, something beside it (the prototype's "When to
+    /// call"), and what opens with the cover shown above it rather than below.
+    var compact: Bool
+    var leading: Leading
     var onLaunch: () -> Void
     @AppStorage("launchDisclaimerSeen") private var disclaimerSeen = false
     /// Read when the cover lifts, so the full text doesn't vanish while he's reading it.
     @State private var showsFullDisclaimer = false
     @State private var isOpen: Bool
+    @State private var askingAboutDrill = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// At the accessibility text sizes the well grows to fit its words, and the dock stacks.
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     /// `startsOpen` is for picture tests.
-    init(window: LaunchWindow, startsOpen: Bool = false, onLaunch: @escaping () -> Void) {
+    init(
+        window: LaunchWindow, startsOpen: Bool = false, compact: Bool = false, onLaunch: @escaping () -> Void,
+        @ViewBuilder leading: () -> Leading
+    ) {
         self.window = window
+        self.compact = compact
+        self.leading = leading()
         self.onLaunch = onLaunch
         _isOpen = State(initialValue: startsOpen)
     }
-    @State private var askingAboutDrill = false
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            well
-            if isOpen {
-                disclaimer
-                if window.drillOnLaunchCard {
-                    if askingAboutDrill {
-                        DrillStartQuestion()
-                    } else {
-                        drillKey
-                    }
+            if isOpen, compact {
+                opened
+            }
+            if compact, typeSize.isAccessibilitySize {
+                leading
+                well
+            } else {
+                HStack(spacing: 10) {
+                    leading
+                    well
                 }
-                Button("Not yet") { setOpen(false) }
-                    .font(MissionType.body(15).weight(.semibold))
-                    .frame(maxWidth: .infinity, minHeight: LabourTheme.chipSize)
+            }
+            if isOpen, !compact {
+                opened
             }
         }
         .task(id: isOpen && !showsFullDisclaimer && !askingAboutDrill) {
@@ -50,6 +62,22 @@ struct LaunchWell: View {
                 setOpen(false)
             }
         }
+    }
+
+    /// What the lifted cover shows: the disclaimer, the drill key, and "Not yet".
+    @ViewBuilder private var opened: some View {
+        disclaimer
+        if window.drillOnLaunchCard {
+            if askingAboutDrill {
+                DrillStartQuestion()
+            } else {
+                drillKey
+            }
+        }
+        Button("Not yet") { setOpen(false) }
+            .font(MissionType.body(15).weight(.semibold))
+            .foregroundStyle(LabourPalette.redInk.color)
+            .frame(maxWidth: .infinity, minHeight: LabourTheme.chipSize)
     }
 
     private func setOpen(_ open: Bool) {
@@ -73,13 +101,15 @@ struct LaunchWell: View {
             Button(action: onLaunch) {
                 VStack(spacing: 2) {
                     Text("LAUNCH")
-                        .font(MissionType.display(38))
+                        .font(MissionType.display(compact ? 30 : 38))
                         .tracking(3)
                     Text("Labour has started".uppercased())
                         .font(MissionType.mono())
                         .tracking(1.7)
                 }
                 .foregroundStyle(LabourTheme.cream)
+                .padding(.vertical, typeSize.isAccessibilitySize ? 12 : 0)
+                .padding(.bottom, typeSize.isAccessibilitySize ? 6 : 0)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background {
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
@@ -101,9 +131,12 @@ struct LaunchWell: View {
             cover
                 .padding(6)
         }
-        .frame(height: 112)
+        .frame(minHeight: height, maxHeight: typeSize.isAccessibilitySize ? .infinity : height)
+        .fixedSize(horizontal: false, vertical: typeSize.isAccessibilitySize)
         .sensoryFeedback(.impact(weight: .medium), trigger: isOpen)
     }
+
+    private var height: CGFloat { compact ? 74 : 112 }
 
     /// The safety cover. It tips back from its top edge, as the prototype's does.
     private var cover: some View {
@@ -126,6 +159,8 @@ struct LaunchWell: View {
                         .foregroundStyle(LabourTheme.muted)
                 }
             }
+            .padding(.horizontal, 10)
+            .padding(.vertical, typeSize.isAccessibilitySize ? 12 : 0)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(Self.coverFill))
             .overlay(
@@ -164,13 +199,14 @@ struct LaunchWell: View {
                 Text("Your midwife's advice always comes first. In an emergency, call 999.")
                     .fontWeight(.semibold)
                 Text("Allow alerts when asked, so it can tell you when to call even with the phone locked.")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(LabourTheme.paperMuted)
             } else {
                 Text("Based on NHS advice, not a diagnosis. Her midwife's advice comes first. Emergency: 999.")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(LabourTheme.paperMuted)
             }
         }
         .font(MissionType.body(15))
+        .foregroundStyle(LabourTheme.paperInk)
         .fixedSize(horizontal: false, vertical: true)
         .transition(.opacity)
     }
@@ -202,8 +238,8 @@ struct LaunchWell: View {
     }
 
     /// The prototype's cover, #1A2046, and the key's darker bottom edge, #A62F1B under the red.
-    private static let coverFill = PaletteColor(hex: 0x1A2046).color
-    private static let keyEdge = PaletteColor(hex: 0x7E2214).color
+    private static var coverFill: Color { PaletteColor(hex: 0x1A2046).color }
+    private static var keyEdge: Color { PaletteColor(hex: 0x7E2214).color }
 }
 
 /// The prototype's yellow-and-navy hazard stripes round the well, still.
@@ -224,5 +260,11 @@ struct HazardStripes: View {
             context.fill(stripes, with: .color(LabourTheme.sun))
         }
         .accessibilityHidden(true)
+    }
+}
+
+extension LaunchWell where Leading == EmptyView {
+    init(window: LaunchWindow, startsOpen: Bool = false, onLaunch: @escaping () -> Void) {
+        self.init(window: window, startsOpen: startsOpen, onLaunch: onLaunch) { EmptyView() }
     }
 }
