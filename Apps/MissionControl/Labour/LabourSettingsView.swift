@@ -7,23 +7,33 @@ struct LabourSettingsView: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        List {
-            Section {
-                ForEach(Self.summaries(model.labour.thresholds), id: \.0) { label, value in
-                    LabeledContent(label, value: value)
+        PaperPage("Labour settings", subtitle: "When to call, the hospital, her details") {
+            PaperSection("This labour's thresholds", note: "Your midwife may give you different advice. Use theirs.") {
+                PaperCard {
+                    ForEach(Self.summaries(model.labour.thresholds), id: \.0) { label, value in
+                        HStack(alignment: .firstTextBaseline) {
+                            Text(label)
+                                .font(MissionType.body(15))
+                            Spacer(minLength: 8)
+                            Text(value)
+                                .font(MissionType.body(15).weight(.semibold))
+                                .multilineTextAlignment(.trailing)
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
                 }
                 NavigationLink("Change when to call") { ThresholdEditor() }
-            } header: {
-                Text("This labour's thresholds")
-            } footer: {
-                Text("Your midwife may give you different advice. Use theirs.")
+                    .buttonStyle(PaperButtonStyle(.ghost))
             }
-            Section("Hospital and her details") {
+            PaperSection("Hospital and her details") {
                 NavigationLink("Hospital or birth centre") { BirthPlacesView() }
+                    .buttonStyle(PaperButtonStyle(.ghost))
                 NavigationLink("Her details for the call") { MissionProfileForm() }
+                    .buttonStyle(PaperButtonStyle(.ghost))
             }
         }
-        .navigationTitle("Labour settings")
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     static func summaries(_ thresholds: ThresholdProfile) -> [(String, String)] {

@@ -1,5 +1,6 @@
 import MissionContent
 import MissionCore
+import MissionUI
 import SwiftUI
 
 /// When to call, within safe bounds. The limits mean the app can never tell you to wait longer
@@ -26,81 +27,60 @@ struct ThresholdEditor: View {
     var body: some View {
         let table = model.thresholdTable
         let profile = table.profile(applying: model.profile.thresholdOverrides)
-        Form {
-            Section {
-                ForEach(Self.editable, id: \.field) { item in
-                    let limit = table.limit(for: item.field)
-                    if limit.isEditable {
-                        row(
-                            field: item.field, label: item.label, step: item.step, limit: limit,
-                            value: profile[item.field])
-                    }
+        PaperPage("When to call", subtitle: "NHS defaults, or your midwife's advice") {
+            PaperNote(
+                "Your midwife may give you different advice. Use theirs. The limits stop the app from ever waiting "
+                    + "longer than the NHS urgent rules.")
+            ForEach(Self.editable, id: \.field) { item in
+                let limit = table.limit(for: item.field)
+                if limit.isEditable {
+                    row(field: item.field, label: item.label, step: item.step, limit: limit, value: profile[item.field])
                 }
-            } footer: {
-                Text(
-                    "Your midwife may give you different advice. Use theirs. "
-                        + "The limits stop the app from ever waiting longer than the NHS urgent rules."
-                )
             }
-            Section {
-                Button("Reset to defaults", role: .destructive) {
-                    model.profile.thresholdOverrides = [:]
+            if model.labour.isActive {
+                Button("Use these for this labour") {
+                    model.labour.applyThresholds(model.currentThresholds)
                     model.savePlanning()
                 }
-                if model.labour.isActive {
-                    Button("Use these for this labour") {
-                        model.labour.applyThresholds(model.currentThresholds)
-                        model.savePlanning()
-                    }
-                }
-            } footer: {
-                if model.labour.isActive {
-                    Text("Changes apply to the next labour unless you choose to use them now.")
-                }
+                .buttonStyle(PaperButtonStyle(.solid))
+                PaperNote("Changes apply to the next labour unless you choose to use them now.")
             }
+            Button("Reset to defaults") {
+                model.profile.thresholdOverrides = [:]
+                model.savePlanning()
+            }
+            .buttonStyle(PaperButtonStyle(.danger))
         }
-        .navigationTitle("When to call")
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
         .task {
             let file = try? BundledContent.envelope(ThresholdItem.self, kind: .thresholds, region: model.profile.region)
             notes = Dictionary(uniqueKeysWithValues: (file?.items ?? []).map { ($0.id, $0.note) })
         }
     }
 
-    @ViewBuilder
+    /// One threshold on its card: on or off where it can be off, the value with − and +, a
+    /// warning if it makes the app suggest calling later, and the source's note.
     private func row(field: ThresholdField, label: String, step: Double, limit: ThresholdLimit, value: Double)
         -> some View
     {
-        VStack(alignment: .leading, spacing: 6) {
+        PaperCard {
             if limit.allowsDisabled {
-                Toggle(
+                PaperTick(
                     label,
-                    isOn: Binding(
-                        get: { value > 0 },
-                        set: { setOverride(field, $0 ? limit.min : 0) }
-                    )
-                )
+                    isOn: Binding(get: { value > 0 }, set: { setOverride(field, $0 ? limit.min : 0) }))
             }
             if !limit.allowsDisabled || value > 0 {
-                Stepper(
-                    value: Binding(get: { value }, set: { setOverride(field, $0) }),
-                    in: limit.min...limit.max,
-                    step: step
-                ) {
-                    LabeledContent(limit.allowsDisabled ? "For" : label, value: display(field, value))
-                }
+                PaperStepper(
+                    limit.allowsDisabled ? "For" : label, value: display(field, value),
+                    canDecrease: value - step >= limit.min - 0.0001, canIncrease: value + step <= limit.max + 0.0001,
+                    decrease: { setOverride(field, value - step) }, increase: { setOverride(field, value + step) })
             }
             if model.thresholdTable.delaysAdvice(field, value: value) {
-                Label(
-                    "Only if your midwife told you to: this makes the app suggest calling later.",
-                    systemImage: "exclamationmark.triangle.fill"
-                )
-                .font(.footnote)
-                .foregroundStyle(.orange)
+                PaperNote("Only if your midwife told you to: this makes the app suggest calling later.", tone: .warn)
             }
             if let note = notes[field] {
-                Text(note)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+                PaperNote(note)
             }
         }
     }

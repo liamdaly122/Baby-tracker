@@ -51,6 +51,11 @@ public struct PaletteColor: Sendable, Hashable {
 
 /// Every colour labour mode uses, as numbers. `LabourTheme` and `LabourWorld` read from here, and
 /// `LabourPaletteTests` checks each pair that carries text.
+private enum PaperColorHex {
+    static let good = PaletteColor(hex: 0x1F6B47)
+    static let teal = PaletteColor(hex: 0x1F5E64)
+}
+
 public enum LabourPalette {
     public static let black = PaletteColor(white: 0)
     public static let white = PaletteColor(white: 1)
@@ -103,6 +108,9 @@ public enum LabourPalette {
     public static let paperHi = PaletteColor(hex: 0xFBF4E4)
     public static let paperEdge = PaletteColor(hex: 0xE2D1AE)
     public static let amberText = PaletteColor(hex: 0x8A5200)
+    /// The set-up sheets' green for "Dials 01632 960118", and the teal of the hospital's card.
+    public static let okText = PaperColorHex.good
+    public static let tealText = PaperColorHex.teal
     /// The tabs' backgrounds, top and bottom: the plan's desk, the coach's teal and the decoder's blueprint.
     public static let planTop = PaletteColor(hex: 0x221D15)
     public static let planBottom = PaletteColor(hex: 0x14110C)
@@ -213,6 +221,20 @@ public enum LabourPalette {
         // Plan, Coach and Decoder.
         let avoidBox = signal.over(coachCard, opacity: 0.12)
         pairs += [
+            // The set-up sheets, on paper and (inside labour mode) at night.
+            Pair(name: "ok green on paper", text: okText, background: cream, minimum: 4.5),
+            Pair(name: "ok green on a paper box", text: okText, background: paperHi, minimum: 4.5),
+            Pair(name: "amber text on paper", text: amberText, background: cream, minimum: 4.5),
+            Pair(name: "paper ink on a paper box", text: ink, background: paperHi, minimum: 4.5),
+            Pair(name: "cream on the teal card", text: cream, background: tealText, minimum: 4.5),
+            Pair(
+                name: "cream 80% on the teal card", text: cream.over(tealText, opacity: 0.8), background: tealText,
+                minimum: 4.5),
+            Pair(name: "mint on night", text: mint, background: space, minimum: 4.5),
+            Pair(name: "mint on a night box", text: mint, background: levelChip, minimum: 4.5),
+            Pair(name: "call accent on night", text: callAccent, background: space, minimum: 4.5),
+            Pair(name: "sun on a night box", text: sun, background: levelChip, minimum: 4.5),
+            Pair(name: "paper ink on cream, night solid button", text: ink, background: cream, minimum: 4.5),
             Pair(name: "cream on sim deep", text: cream, background: simDeep, minimum: 4.5),
             Pair(name: "sim on sim deep", text: sim, background: simDeep, minimum: 4.5),
             Pair(

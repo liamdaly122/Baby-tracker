@@ -9,9 +9,9 @@ The heart of the app works. He presses LAUNCH, taps START and STOP for each cont
 Two things haven't happened yet:
 
 - **It hasn't been on a real iPhone.** Everything so far has run on the Mac's pretend iPhone (the simulator). See "Trying it on your iPhone" below.
-- **Most of it still looks like a plain iPhone app.** The redesign has started: all five labour tabs, LAUNCH, the practice run and the end of labour now look like the agreed prototype (v3). The set-up screens, the watch and the home screen follow.
+- **Most of it still looks like a plain iPhone app.** The redesign is well under way: all of labour mode, LAUNCH, the practice run, the end of labour and the set-up screens now look like the agreed prototype (v3). The watch and the home screen follow.
 
-Right now we're doing the redesign. The five labour tabs are done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16)). LAUNCH, the practice run and the end of labour are built and tested, waiting to be merged ([PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17)).
+Right now we're doing the redesign. Labour mode, LAUNCH, the practice run and the end of labour are done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16), [PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17)). The set-up screens are built and tested, not merged yet.
 
 ## What works today
 
@@ -40,7 +40,7 @@ Right now we're doing the redesign. The five labour tabs are done ([PR #14](http
 | 6 | Red flags and the call script | Done |
 | 7 | The practice run | Done |
 | 8 | Rules for the redesign (every Call button dials, 999 always one tap away) | Done: the rules are in `docs/redesign-rules.md` |
-| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. Done for the five labour tabs ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16)); LAUNCH, the practice run and the end of labour are built, waiting to be merged ([PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17)). The other screens follow |
+| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. Done for labour mode, LAUNCH, the practice run and the end of labour ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16), [PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17)); the set-up screens are built (not merged yet). The watch and home screen follow |
 | 10 | Hard moments: loss, admission, neonatal care, false alarms | Done. Later: discreet mode in early pregnancy, support for her recovery |
 | 11 | A storage problem never stops labour mode or loses the hospital's number | Done |
 | 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Can start any time, alongside the rest |
@@ -55,7 +55,7 @@ Right now we're doing the redesign. The five labour tabs are done ([PR #14](http
 
 ## What's next, in order
 
-1. **The redesign**, screen by screen, following `docs/redesign-rules.md`. The five labour tabs are done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16)); LAUNCH, the practice run and the end of labour are waiting to be merged ([PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17)). Next: the set-up screens, the watch, then the home screen (with the lift-off).
+1. **The redesign**, screen by screen, following `docs/redesign-rules.md`. Labour mode, LAUNCH, the practice run and the end of labour are done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16), [PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17)); the set-up screens are waiting to be merged. Next: the watch, then the home screen (with the lift-off).
 2. The legal and privacy groundwork (12).
 3. A first test build for real phones (TestFlight).
 4. The watch as the main timer (18), the lock screen and the Live Activity.
@@ -121,6 +121,18 @@ Where it differs from the prototype, and why:
 - **The heading is plain** ("The baby's here.") rather than "Splashdown.", and there's no mission patch: there's no humour in labour mode.
 - **Nothing moves:** the hazard stripes, the falling capsule and the ripples are still.
 - **Fixed:** the "Tap again to end labour mode" button was white on bright orange (hard to read); it's now cream on the darker red.
+
+## The redesigned set-up screens
+
+Mission profile, the hospital, the people to call, the birth plan and when to call now use the prototype's "Ground control" and "Flight plan" look: cream paper, big League Gothic headings, small capital labels over pale boxes, tick boxes, chips to pick from, dark buttons, and the hospital on a teal card. As he types a number, a green line says what it will dial, or a red one says what's wrong.
+
+Where they differ from the prototype, and why:
+
+- **Dark inside labour mode.** The same screens open from Labour settings during labour, so there they use the prototype's night colours instead of bright paper (the "dark at 3am" rule).
+- **They're pages, not sheets.** They open the way they always have, with a back button, rather than sliding up over the home screen. The home screen redesign may change this.
+- **The app's own wording and fields**, which are more than the prototype's: her details for the call, the backup unit, "whose decision" on each part of the plan, and the call thresholds.
+- **People can be moved up the list** with an arrow button, as the old list could be dragged.
+- **Not added from the prototype:** "Use example numbers" and the ready-made "We're heading in" messages, which the app doesn't have.
 
 ## Trying it on your iPhone
 

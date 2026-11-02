@@ -1,4 +1,5 @@
 import MissionCore
+import MissionUI
 import SwiftUI
 
 /// Her birth plan, edited as a draft: nothing changes until Save, and Discard leaves it as it was.
@@ -15,7 +16,8 @@ struct BirthPlanEditor: View {
         if let draft {
             let hasChanges = !draft.changes(since: model.birthPlan.content).isEmpty
             form(draft, hasChanges: hasChanges)
-                .navigationTitle("Birth plan")
+                .navigationTitle("")
+                .navigationBarTitleDisplayMode(.inline)
                 .navigationBarBackButtonHidden(hasChanges)
                 .toolbar {
                     if hasChanges {
@@ -49,48 +51,56 @@ struct BirthPlanEditor: View {
     }
 
     private func form(_ draft: BirthPlanContent, hasChanges: Bool) -> some View {
-        Form {
+        PaperPage("Birth plan", subtitle: "Her plan, written together") {
             CheckedSection(hasChanges: hasChanges, isReadingWithHer: $isReadingWithHer)
-            Section {
+            PaperSection(
+                "The five that matter most",
+                note: "A birth plan is a list of preferences, not a contract. Things can change, and it's still her "
+                    + "choice. Write it together."
+            ) {
                 ForEach(0..<BirthPlanContent.maxTopFive, id: \.self) { index in
-                    TextField("Preference \(index + 1)", text: topFive(index), axis: .vertical)
+                    PaperField("\(index + 1)") {
+                        TextField("", text: topFive(index), prompt: Text("Preference \(index + 1)"), axis: .vertical)
+                    }
                 }
-            } header: {
-                Text("The five that matter most")
-            } footer: {
-                Text(
-                    "A birth plan is a list of preferences, not a contract. Things can change, and it's still "
-                        + "her choice. Write it together."
-                )
             }
-            ForEach(BirthPlanSection.allCases) { section in
-                Section(section.title) {
-                    TextField(section.prompt, text: answerText(section), axis: .vertical)
-                    if !(draft.answers.first { $0.sectionID == section.id }?.text.isEmpty ?? true) {
-                        Picker("Whose decision", selection: decider(section)) {
-                            ForEach(PlanDecider.allCases, id: \.self) { decider in
-                                Text(decider.title).tag(decider)
-                            }
+            PaperSection("Her plan") {
+                ForEach(BirthPlanSection.allCases) { section in
+                    PaperCard {
+                        PaperLabel(section.title)
+                        TextField("", text: answerText(section), prompt: Text(section.prompt), axis: .vertical)
+                            .paperBox()
+                            .accessibilityLabel(section.title)
+                        if !(draft.answers.first { $0.sectionID == section.id }?.text.isEmpty ?? true) {
+                            PaperLabel("Whose decision")
+                            PaperChips(
+                                PlanDecider.allCases, title: \.title,
+                                isPicked: { $0 == decider(section).wrappedValue },
+                                pick: { decider(section).wrappedValue = $0 })
                         }
                     }
                 }
             }
-            Section {
+            PaperSection(
+                "If plans change",
+                note: "Talk these through around 32 weeks. To ask about any change: Benefits, Risks, Alternatives, "
+                    + "Intuition, and what if we do Nothing for now?"
+            ) {
                 ForEach(PlanScenario.allCases, id: \.self) { scenario in
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(scenario.title).font(.headline)
-                        TextField(scenario.prompt, text: branchWishes(scenario), axis: .vertical)
-                        TextField("Your job: what you'll do or ask", text: branchJob(scenario), axis: .vertical)
+                    PaperCard {
+                        Text(scenario.title)
+                            .font(MissionType.body(16).weight(.bold))
+                        TextField("", text: branchWishes(scenario), prompt: Text(scenario.prompt), axis: .vertical)
+                            .paperBox()
+                            .accessibilityLabel(scenario.title)
+                        TextField(
+                            "", text: branchJob(scenario), prompt: Text("Your job: what you'll do or ask"),
+                            axis: .vertical
+                        )
+                        .paperBox()
+                        .accessibilityLabel("\(scenario.title): your job")
                     }
-                    .padding(.vertical, 4)
                 }
-            } header: {
-                Text("If plans change")
-            } footer: {
-                Text(
-                    "Talk these through around 32 weeks. To ask about any change: Benefits, Risks, Alternatives, "
-                        + "Intuition, and what if we do Nothing for now?"
-                )
             }
         }
     }
@@ -162,7 +172,8 @@ struct BirthPlanEditor: View {
     }
 }
 
-/// Whether she has seen it: when she last agreed it, what changed since, and the ways to check.
+/// Whether she has seen it, as the prototype's status line: when she last agreed it and what has
+/// changed since, then the ways to check.
 private struct CheckedSection: View {
     @Environment(AppModel.self) private var model
     var hasChanges: Bool
@@ -173,54 +184,48 @@ private struct CheckedSection: View {
         let content = plan.content
         let changes = plan.changesSinceConfirmed(in: model.planning.mainContext)
         let unchecked = content.uncheckedAnswers(herConfirmedAt: plan.herConfirmedAt)
-        Section {
+        VStack(alignment: .leading, spacing: 8) {
             if let confirmed = plan.herConfirmedAt {
-                Label(
-                    "Checked with her on \(confirmed.formatted(date: .abbreviated, time: .omitted))",
-                    systemImage: "checkmark.seal.fill"
-                )
-                .foregroundStyle(.green)
+                PaperNote(
+                    "Checked with her on \(confirmed.formatted(date: .abbreviated, time: .omitted))".uppercased(),
+                    tone: .good)
                 if let changes, !changes.isEmpty {
-                    Text("Changed since: \(changes.map(\.description).joined(separator: ", ")).")
-                        .font(.subheadline)
-                        .foregroundStyle(.orange)
+                    PaperNote("Changed since: \(changes.map(\.description).joined(separator: ", ")).", tone: .warn)
                 }
             } else if !content.isEmpty {
-                Label("Not checked with her yet", systemImage: "exclamationmark.triangle.fill")
-                    .foregroundStyle(.orange)
+                PaperNote("Not checked with her yet".uppercased(), tone: .warn)
             }
             if !unchecked.isEmpty {
                 let titles = unchecked.map { BirthPlanSection.title(for: $0.sectionID) }
-                Text("Your drafts: \(titles.joined(separator: ", ")).")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                PaperNote("Your drafts: \(titles.joined(separator: ", ")).")
             }
             Button {
                 isReadingWithHer = true
             } label: {
                 Label("Read it through with her", systemImage: "person.2")
             }
+            .buttonStyle(PaperButtonStyle(.solid))
             .disabled(hasChanges || content.isEmpty)
-            if plan.herConfirmedAt != nil {
-                Button {
-                    plan.markReviewed(in: model.planning.mainContext)
-                    model.savePlanning()
-                } label: {
-                    Label("Looked at it again: still right", systemImage: "checkmark")
+            HStack(spacing: 8) {
+                if plan.herConfirmedAt != nil {
+                    Button("Still right") {
+                        plan.markReviewed(in: model.planning.mainContext)
+                        model.savePlanning()
+                    }
+                    .buttonStyle(PaperButtonStyle(.ghost))
+                    .disabled(hasChanges)
+                    .accessibilityLabel("Looked at it again: still right")
                 }
-                .disabled(hasChanges)
+                ShareLink(item: content.plainText(motherName: model.profile.motherName)) {
+                    Label("Send it to her", systemImage: "square.and.arrow.up")
+                }
+                .buttonStyle(PaperButtonStyle(.ghost))
+                .disabled(hasChanges || content.isEmpty)
             }
-            ShareLink(item: content.plainText(motherName: model.profile.motherName)) {
-                Label("Send it to her as text", systemImage: "square.and.arrow.up")
-            }
-            .disabled(hasChanges || content.isEmpty)
-        } header: {
-            Text("Checked with her")
-        } footer: {
             if hasChanges {
-                Text("Save your changes first.")
+                PaperNote("Save your changes first.")
             } else if let reviewed = plan.reviewedAt {
-                Text("Last looked at \(reviewed.formatted(date: .abbreviated, time: .omitted)).")
+                PaperNote("Last looked at \(reviewed.formatted(date: .abbreviated, time: .omitted)).")
             }
         }
     }
@@ -233,49 +238,26 @@ private struct ReadWithHer: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Hand her the phone. This is what the midwife will see.")
-                        .font(.headline)
-                    let content = model.birthPlan.content
-                    PlanSheet(content: content, motherName: model.profile.motherName)
-                    let branches = PlanScenario.allCases.compactMap(content.branch(for:))
-                    if !branches.isEmpty {
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("If plans change").font(.title3.bold())
-                            ForEach(branches, id: \.scenario) { branch in
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(branch.scenario.title).font(.headline)
-                                    if !branch.wishes.isEmpty {
-                                        Text(branch.wishes)
-                                    }
-                                    if !branch.hisJob.isEmpty {
-                                        Text("His job: \(branch.hisJob)").italic()
-                                    }
-                                }
-                                .fixedSize(horizontal: false, vertical: true)
-                            }
+            PaperPage("Read it with her", subtitle: "Hand her the phone") {
+                Text("This is what the midwife will see.")
+                    .font(MissionType.body(16).weight(.semibold))
+                let content = model.birthPlan.content
+                PlanSheet(content: content, motherName: model.profile.motherName)
+                let jobs = PlanScenario.allCases.compactMap(content.branch(for:)).filter { !$0.hisJob.isEmpty }
+                if !jobs.isEmpty {
+                    PaperSection("His jobs if plans change") {
+                        ForEach(jobs, id: \.scenario) { branch in
+                            PaperNote("\(branch.scenario.title): \(branch.hisJob)")
                         }
                     }
-                    Button {
-                        onFinish(true)
-                    } label: {
-                        Text("She's happy with it")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity, minHeight: 50)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    Button {
-                        onFinish(false)
-                    } label: {
-                        Text("She wants changes")
-                            .frame(maxWidth: .infinity, minHeight: 44)
-                    }
-                    .buttonStyle(.bordered)
                 }
-                .padding(16)
+                Button("She's happy with it") { onFinish(true) }
+                    .buttonStyle(PaperButtonStyle(.solid))
+                    .padding(.top, 6)
+                Button("She wants changes") { onFinish(false) }
+                    .buttonStyle(PaperButtonStyle(.ghost))
             }
-            .navigationTitle("Read it with her")
+            .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
         }
     }
