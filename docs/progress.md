@@ -43,7 +43,7 @@ The redesign is finished: every screen now looks like the agreed prototype (v3),
 | 9 | Readable in the dark, big buttons, large text, VoiceOver | Done for every screen in the redesign ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14) to [PR #20](https://github.com/liamdaly122/Baby-tracker/pull/20)) |
 | 10 | Hard moments: loss, admission, neonatal care, false alarms | Done. Later: discreet mode in early pregnancy, support for her recovery |
 | 11 | A storage problem never stops labour mode or loses the hospital's number | Done |
-| 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Can start any time, alongside the rest |
+| 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Started: the drafts are written, waiting to be merged ([PR #23](https://github.com/liamdaly122/Baby-tracker/pull/23)). Next: "Delete everything" and the other app changes |
 | 13 | Automatic checks on every change, and tests for the app itself | Done (GitHub settings still to change) |
 | 14 | One labour engine shared by the phone and watch | Done |
 | 15 | Phone and watch always agree | Done (the core) |
@@ -55,7 +55,7 @@ The redesign is finished: every screen now looks like the agreed prototype (v3),
 
 ## What's next, in order
 
-1. The legal and privacy groundwork (12).
+1. The legal and privacy groundwork (12). The documents are drafted ([PR #23](https://github.com/liamdaly122/Baby-tracker/pull/23)); next come the app changes: "Delete everything", the privacy manifests, and hiding the US option.
 2. A first test build for real phones (TestFlight).
 3. The watch as the main timer (18), the lock screen and the Live Activity.
 4. Phase 6: the home screen's rocket and checklists, weekly briefings and the birth plan builder (20).
@@ -168,6 +168,24 @@ Checked on the iPhone simulator, with 20 new picture tests: the launch site in a
 
 - **Fixed:** GitHub's check on `main` failed once after the watch was merged, because the first few picture tests timed out on a slow machine. The picture tests now try a drawing again before failing.
 
+## Legal and privacy groundwork
+
+These are first drafts, written for the right people to check. None of them is legal advice or a safety sign-off yet.
+
+- **What the app is for** (`docs/regulatory/intended-purpose.md`). One statement that the App Store listing, the website and the app all have to match. It covers who it's for, what it does and doesn't do, and the words we never use about it, like "monitors labour", "accurate" or "NHS-approved".
+- **Is it a medical device?** (`docs/regulatory/mhra-qualification-note.md`). It's a borderline case.
+  - For: its advice is only ever "phone the unit" or "call 999", which the MHRA's guidance says is unlikely to make an app a device.
+  - Against: that advice comes from rules the app applies to her contraction times, which the guidance says usually does.
+  - If it is a device, it's the lowest class (Class I): a self-declared UKCA mark, paperwork, and registering with the MHRA.
+  - Northern Ireland follows EU rules, which are stricter.
+  - The note recommends getting a regulatory adviser's view before testers outside the family.
+- **The hazard log** (`docs/safety/hazard-log.md`). The 17 ways the app could contribute to harm, such as a delayed call, a wrong number or a missed alert. Each one lists what already guards against it in the app and what's still to do. The ratings need a clinical safety officer.
+- **The privacy policy** (`docs/privacy-policy.md`). In plain English: everything stays on the phone and watch, there are no accounts, servers, analytics or adverts, and the app itself never goes online. It also says exactly what leaves the phone, and only when he taps: calls, texts, directions in Maps, shared plans and web links. It needs a name and contact email before it can go online.
+- **The App Store listing** (`docs/store/app-store-listing.md`). A first go at the name, subtitle, description and keywords, plus the answers App Store Connect will ask for.
+- **A new automatic check** (`Scripts/claims-lint.py`). It fails GitHub's checks if the listing ever makes a claim the intended purpose rules out.
+
+Next: "Delete everything" inside the app (planning, labour, the watch, alerts and the backup card), the privacy manifests Apple requires before TestFlight, hiding the US option, and a privacy page in the app.
+
 ## Trying it on your iPhone
 
 This can happen any time; nothing in the app is blocking it. It needs:
@@ -181,6 +199,10 @@ A free Apple ID works, but the app stops opening after 7 days until it's rebuilt
 There are test switches for the simulator and the phone. They're listed at the top of `Apps/MissionControl/App/LaunchOptions.swift`. For example, `-demoLabour` opens labour mode with an hour of contractions, and `-failLabourStore` shows what happens if the phone can't save.
 
 ## Waiting on you
+
+- **A regulatory adviser's opinion** on whether the app counts as a medical device (`docs/regulatory/mhra-qualification-note.md`). Best before testers outside the family.
+- **A clinical safety officer:** a registered clinician trained in clinical risk who can own the hazard log and sign off releases. Your midwife reviewer may know someone, or may be able to do it.
+- **For the privacy policy:** whose name the app is published under (you, or a limited company, which the review recommends for insurance), and a contact email.
 
 - **GitHub settings:** make `main` the default branch, and protect it so the checks must pass before merging. I can do this with your go-ahead.
 - **The midwife review** of the advice rules in `docs/content-review-log.md`. It's needed before the wider test. It now includes two questions about the hospital numbers (H1, H2) and one about the birth plan in labour (P2). There's also a question on which checklist items count as must-dos (S1). The new rules for loss and neonatal care (L1 to L6) need a bereavement midwife in particular.
