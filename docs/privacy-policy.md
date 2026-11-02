@@ -51,7 +51,7 @@ Only when you do it:
 - **Directions.** "Directions" opens Apple Maps with the unit's address, under Apple's privacy terms.
 - **Links.** Links to NHS pages and to support charities open in your web browser, like any other link.
 - **Sharing.** When you share the birth plan or a message after the birth, you choose the app and the person it goes to. After that, it's handled by that app (for example Messages or WhatsApp) under its own privacy terms.
-- **Alerts.** The app sets up alerts on your phone and watch to tell you when it's time to call. They're created on the device and never go through a server. They can show on your lock screen, including the unit's name. You can change this in Settings, Notifications, Mission Control.
+- **Alerts.** The app sets up alerts on your phone and watch to tell you when it's time to call. They're created on the device and never go through a server. They can show on your lock screen. They say what to do, such as "Time to call your maternity unit", and never include her name, her hospital number or the unit's name. You can change how they show in Settings, Notifications, Mission Control.
 
 ## Information Apple may share with us
 
