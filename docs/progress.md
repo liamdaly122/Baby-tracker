@@ -9,9 +9,9 @@ The heart of the app works. He presses LAUNCH, taps START and STOP for each cont
 Two things haven't happened yet:
 
 - **It hasn't been on a real iPhone.** Everything so far has run on the Mac's pretend iPhone (the simulator). See "Trying it on your iPhone" below.
-- **The redesign isn't all merged yet.** Every screen now looks like the agreed prototype (v3). The last one, the home screen with the lift-off, is built and tested, waiting to be merged.
+- **The redesign isn't all merged yet.** Every screen now looks like the agreed prototype (v3). The last one, the home screen with the lift-off, is built and tested, waiting to be merged ([PR #20](https://github.com/liamdaly122/Baby-tracker/pull/20)).
 
-Right now we're finishing the redesign. Labour mode, LAUNCH, the practice run, the end of labour, the set-up screens and the watch are done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16), [PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17), [PR #18](https://github.com/liamdaly122/Baby-tracker/pull/18), [PR #19](https://github.com/liamdaly122/Baby-tracker/pull/19)). The home screen is built and tested, waiting to be merged.
+Right now we're finishing the redesign. Labour mode, LAUNCH, the practice run, the end of labour, the set-up screens and the watch are done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16), [PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17), [PR #18](https://github.com/liamdaly122/Baby-tracker/pull/18), [PR #19](https://github.com/liamdaly122/Baby-tracker/pull/19)). The home screen is built and tested, waiting to be merged ([PR #20](https://github.com/liamdaly122/Baby-tracker/pull/20)).
 
 ## What works today
 
@@ -41,7 +41,7 @@ Right now we're finishing the redesign. Labour mode, LAUNCH, the practice run, t
 | 6 | Red flags and the call script | Done |
 | 7 | The practice run | Done |
 | 8 | Rules for the redesign (every Call button dials, 999 always one tap away) | Done: the rules are in `docs/redesign-rules.md` |
-| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. Done for labour mode, LAUNCH, the practice run, the end of labour and the set-up screens and the watch ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16), [PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17), [PR #18](https://github.com/liamdaly122/Baby-tracker/pull/18), [PR #19](https://github.com/liamdaly122/Baby-tracker/pull/19)); the home screen is built, waiting to be merged |
+| 9 | Readable in the dark, big buttons, large text, VoiceOver | Foundations done. Done for labour mode, LAUNCH, the practice run, the end of labour and the set-up screens and the watch ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14), [PR #15](https://github.com/liamdaly122/Baby-tracker/pull/15), [PR #16](https://github.com/liamdaly122/Baby-tracker/pull/16), [PR #17](https://github.com/liamdaly122/Baby-tracker/pull/17), [PR #18](https://github.com/liamdaly122/Baby-tracker/pull/18), [PR #19](https://github.com/liamdaly122/Baby-tracker/pull/19)); the home screen is built, waiting to be merged ([PR #20](https://github.com/liamdaly122/Baby-tracker/pull/20)) |
 | 10 | Hard moments: loss, admission, neonatal care, false alarms | Done. Later: discreet mode in early pregnancy, support for her recovery |
 | 11 | A storage problem never stops labour mode or loses the hospital's number | Done |
 | 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Can start any time, alongside the rest |
@@ -56,7 +56,7 @@ Right now we're finishing the redesign. Labour mode, LAUNCH, the practice run, t
 
 ## What's next, in order
 
-1. **The redesign**, screen by screen, following `docs/redesign-rules.md`. Everything else is done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14) to [PR #19](https://github.com/liamdaly122/Baby-tracker/pull/19)); the home screen, the last step, is waiting to be merged.
+1. **The redesign**, screen by screen, following `docs/redesign-rules.md`. Everything else is done ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14) to [PR #19](https://github.com/liamdaly122/Baby-tracker/pull/19)); the home screen, the last step, is waiting to be merged ([PR #20](https://github.com/liamdaly122/Baby-tracker/pull/20)).
 2. The legal and privacy groundwork (12).
 3. A first test build for real phones (TestFlight).
 4. The watch as the main timer (18), the lock screen and the Live Activity.
