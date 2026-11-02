@@ -87,7 +87,8 @@ final class AppModel {
         self.session = session
         session.storeIsTemporary = labourUnavailable
         session.detailsProvider = { [unowned self] days in
-            profile.triageDetails(gestationalAgeDays: days, place: self.bookedPlace)
+            // The current profile, not the one opened at launch: "Delete everything" replaces it.
+            self.profile.triageDetails(gestationalAgeDays: days, place: self.bookedPlace)
         }
         session.alerting = notifier
         reloadLibrary()
@@ -238,6 +239,50 @@ final class AppModel {
 
     func endDrill() {
         drill = nil
+    }
+
+    /// "Delete everything": every record in both stores, the emergency card, every alert, the full
+    /// disclaimer's "seen" mark and the watch's copy, leaving a blank profile and plan as on first
+    /// launch. Never while labour mode is running; a practice run is ended first. Throws if a store
+    /// can't be saved, and then nothing is deleted from it.
+    func deleteEverything(now: Date = Date()) throws {
+        guard !session.isActive else { return }
+        endDrill()
+        liftOffAt = nil
+        let planningContext = planning.mainContext
+        let labourContext = labourStore.mainContext
+        do {
+            for type in PlanningSchemaV4.models {
+                try Self.deleteAll(type, in: planningContext)
+            }
+            for type in LabourSchemaV1.models {
+                try Self.deleteAll(type, in: labourContext)
+            }
+            try labourContext.save()
+            try planningContext.save()
+        } catch {
+            planningContext.rollback()
+            labourContext.rollback()
+            Stores.log.error("Couldn't delete everything: \(error)")
+            throw error
+        }
+        if let emergencyCardURL {
+            try? FileManager.default.removeItem(at: emergencyCardURL)
+        }
+        UserDefaults.standard.removeObject(forKey: LaunchDisclaimer.seenKey)
+        notifier.clearAll()
+        profile = Self.fetchOrInsert(MissionProfile.self, in: planningContext, make: MissionProfile.init)
+        birthPlan = Self.fetchOrInsert(BirthPlan.self, in: planningContext, make: BirthPlan.init)
+        outcome = nil
+        planningSaveFailed = false
+        reloadLibrary()
+        sync?.didDeleteEverything(at: now)
+    }
+
+    private static func deleteAll<Model: PersistentModel>(_ type: Model.Type, in context: ModelContext) throws {
+        for item in try context.fetch(FetchDescriptor<Model>()) {
+            context.delete(item)
+        }
     }
 
     /// Saves the profile, updates the emergency card and sends the watch the new brief.

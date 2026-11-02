@@ -35,6 +35,10 @@ struct HomeView: View {
                             OutcomeHome(record: outcome)
                             if outcome.outcome != .loss {
                                 setUpLinks
+                            } else {
+                                // After a loss the set-up goes, but he can still delete it all.
+                                yourDataRow(isFirst: true)
+                                    .buttonStyle(.plain)
                             }
                         } else {
                             setUpLinks
@@ -156,10 +160,22 @@ struct HomeView: View {
                             icon: "airplane.departure")
                     }
                 }
+                yourDataRow(isFirst: false)
             }
             .buttonStyle(.plain)
         }
         .foregroundStyle(LabourTheme.paperInk)
+    }
+
+    /// What's kept and where, and "Delete everything".
+    private func yourDataRow(isFirst: Bool) -> some View {
+        NavigationLink {
+            YourDataView()
+        } label: {
+            SetUpRow(
+                title: "Your data", detail: "On this phone and watch only. Delete it all here", icon: "lock",
+                isFirst: isFirst)
+        }
     }
 
     /// She hasn't read the plan, or it has changed since she did.

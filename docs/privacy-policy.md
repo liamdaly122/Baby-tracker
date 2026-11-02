@@ -65,7 +65,7 @@ Most of what's in the app is about her, and some is about the people on your cal
 
 ## Deleting your information
 
-Deleting the app from your iPhone and Apple Watch deletes everything it keeps there. To remove the copy in your backups, delete those backups. [A "Delete everything" button inside the app is planned before release.]
+To delete everything without deleting the app, go to Your data on the home screen and tap Delete everything. It removes everything listed above from your iPhone, and from your Apple Watch as soon as it's connected, and asks you twice first. It doesn't delete a labour that's still running. Deleting the app from your iPhone and Apple Watch also deletes everything it keeps there. Copies in your backups stay until you delete those backups.
 
 Because we never receive your information, we can't see, change or delete it for you. Everything is in your hands.
 

@@ -15,7 +15,7 @@ struct LaunchWell<Leading: View>: View {
     var compact: Bool
     var leading: Leading
     var onLaunch: () -> Void
-    @AppStorage("launchDisclaimerSeen") private var disclaimerSeen = false
+    @AppStorage(LaunchDisclaimer.seenKey) private var disclaimerSeen = false
     /// Read when the cover lifts, so the full text doesn't vanish while he's reading it.
     @State private var showsFullDisclaimer = false
     @State private var isOpen: Bool
@@ -240,6 +240,12 @@ struct LaunchWell<Leading: View>: View {
     /// The prototype's cover, #1A2046, and the key's darker bottom edge, #A62F1B under the red.
     private static var coverFill: Color { PaletteColor(hex: 0x1A2046).color }
     private static var keyEdge: Color { PaletteColor(hex: 0x7E2214).color }
+}
+
+/// Whether the full disclaimer has been shown under the cover. "Delete everything" clears it, so
+/// the next pregnancy gets the full text again.
+enum LaunchDisclaimer {
+    static let seenKey = "launchDisclaimerSeen"
 }
 
 /// The prototype's yellow-and-navy hazard stripes round the well, still.

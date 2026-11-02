@@ -217,6 +217,7 @@ struct LabourSessionCoreTests {
             .state(brief: brief, session: ukStart), .state(brief: nil, session: nil), .brief(brief),
             .sessionStarted(ukStart), .events(sessionID: ukStart.sessionID, core.events),
             .marks(sessionID: ukStart.sessionID, ["phone": 3]), .sessionEnded(sessionID: ukStart.sessionID, at: at(9)),
+            .wiped(at: at(10)),
         ]
         for message in messages {
             #expect(SyncMessage(payload: try message.payload()) == message)

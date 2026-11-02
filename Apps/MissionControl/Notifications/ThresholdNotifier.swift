@@ -75,6 +75,15 @@ final class ThresholdNotifier: NSObject, LabourAlerting {
         }
     }
 
+    /// Every alert, waiting or shown, for "Delete everything".
+    func clearAll() {
+        planning = Task { [previous = planning] in
+            await previous?.value
+            center.removeAllPendingNotificationRequests()
+            center.removeAllDeliveredNotifications()
+        }
+    }
+
     /// At launch: clears alerts from any labour but `running`, pending and delivered, so a labour
     /// that ended while the app was closed (or couldn't be saved) doesn't keep alerting.
     func clearLeftOverAlerts(running: UUID?) {
