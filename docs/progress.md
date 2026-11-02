@@ -43,7 +43,7 @@ The redesign is finished: every screen now looks like the agreed prototype (v3),
 | 9 | Readable in the dark, big buttons, large text, VoiceOver | Done for every screen in the redesign ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14) to [PR #20](https://github.com/liamdaly122/Baby-tracker/pull/20)) |
 | 10 | Hard moments: loss, admission, neonatal care, false alarms | Done. Later: discreet mode in early pregnancy, support for her recovery |
 | 11 | A storage problem never stops labour mode or loses the hospital's number | Done |
-| 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Started: the drafts are written, waiting to be merged. Next: "Delete everything" and the other app changes |
+| 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Started: the drafts are written, waiting to be merged ([PR #23](https://github.com/liamdaly122/Baby-tracker/pull/23)). Next: "Delete everything" and the other app changes |
 | 13 | Automatic checks on every change, and tests for the app itself | Done (GitHub settings still to change) |
 | 14 | One labour engine shared by the phone and watch | Done |
 | 15 | Phone and watch always agree | Done (the core) |
@@ -55,7 +55,7 @@ The redesign is finished: every screen now looks like the agreed prototype (v3),
 
 ## What's next, in order
 
-1. The legal and privacy groundwork (12). The documents are drafted; next come the app changes: "Delete everything", the privacy manifests, and hiding the US option.
+1. The legal and privacy groundwork (12). The documents are drafted ([PR #23](https://github.com/liamdaly122/Baby-tracker/pull/23)); next come the app changes: "Delete everything", the privacy manifests, and hiding the US option.
 2. A first test build for real phones (TestFlight).
 3. The watch as the main timer (18), the lock screen and the Live Activity.
 4. Phase 6: the home screen's rocket and checklists, weekly briefings and the birth plan builder (20).
