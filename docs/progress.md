@@ -55,7 +55,7 @@ The redesign is finished: every screen now looks like the agreed prototype (v3),
 
 ## What's next, in order
 
-1. A first test build for real phones (TestFlight). Our side is ready (see "Getting ready for TestFlight"), waiting to be merged. Next it needs the Apple Developer Program.
+1. A first test build for real phones (TestFlight). Our side is ready (see "Getting ready for TestFlight"), waiting to be merged ([PR #25](https://github.com/liamdaly122/Baby-tracker/pull/25)). Next it needs the Apple Developer Program.
 2. The watch as the main timer (18), the lock screen and the Live Activity.
 3. Phase 6: the home screen's rocket and checklists, weekly briefings and the birth plan builder (20).
 4. Final checks, the midwife's sign-off, then a wider test.
@@ -202,7 +202,7 @@ The app side is built too ([PR #24](https://github.com/liamdaly122/Baby-tracker/
 
 ## Getting ready for TestFlight
 
-Everything Apple needs from the app before a test build can go up is done:
+Everything Apple needs from the app before a test build can go up is done ([PR #25](https://github.com/liamdaly122/Baby-tracker/pull/25)):
 
 - **An app icon** for the phone and the watch: the prototype's rocket lifting off at an angle, flame and all, under the dusk sky. It's drawn by the same code as the home screen's rocket, and a test redraws it and checks it still matches.
 - **No export paperwork.** The app says it only uses Apple's own encryption, so App Store Connect won't ask about it on every upload.
