@@ -43,7 +43,7 @@ The redesign is finished: every screen now looks like the agreed prototype (v3),
 | 9 | Readable in the dark, big buttons, large text, VoiceOver | Done for every screen in the redesign ([PR #14](https://github.com/liamdaly122/Baby-tracker/pull/14) to [PR #20](https://github.com/liamdaly122/Baby-tracker/pull/20)) |
 | 10 | Hard moments: loss, admission, neonatal care, false alarms | Done. Later: discreet mode in early pregnancy, support for her recovery |
 | 11 | A storage problem never stops labour mode or loses the hospital's number | Done |
-| 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | The drafts are done ([PR #23](https://github.com/liamdaly122/Baby-tracker/pull/23)). "Delete everything", Apple's privacy files and the UK-only change are built, waiting to be merged ([PR #24](https://github.com/liamdaly122/Baby-tracker/pull/24)). Still needed: the people in "Waiting on you" |
+| 12 | Legal and privacy groundwork (medical device rules, privacy policy, "delete everything") | Done on the app's side ([PR #23](https://github.com/liamdaly122/Baby-tracker/pull/23), [PR #24](https://github.com/liamdaly122/Baby-tracker/pull/24)). Still needed: the people in "Waiting on you" |
 | 13 | Automatic checks on every change, and tests for the app itself | Done (GitHub settings still to change) |
 | 14 | One labour engine shared by the phone and watch | Done |
 | 15 | Phone and watch always agree | Done (the core) |
@@ -55,11 +55,12 @@ The redesign is finished: every screen now looks like the agreed prototype (v3),
 
 ## What's next, in order
 
-1. The legal and privacy groundwork (12). The documents are drafted ([PR #23](https://github.com/liamdaly122/Baby-tracker/pull/23)), and the app changes ("Delete everything", Apple's privacy files, UK only) are waiting to be merged ([PR #24](https://github.com/liamdaly122/Baby-tracker/pull/24)).
-2. A first test build for real phones (TestFlight).
-3. The watch as the main timer (18), the lock screen and the Live Activity.
-4. Phase 6: the home screen's rocket and checklists, weekly briefings and the birth plan builder (20).
-5. Final checks, the midwife's sign-off, then a wider test.
+1. A first test build for real phones (TestFlight). Our side is ready (see "Getting ready for TestFlight"), waiting to be merged. Next it needs the Apple Developer Program.
+2. The watch as the main timer (18), the lock screen and the Live Activity.
+3. Phase 6: the home screen's rocket and checklists, weekly briefings and the birth plan builder (20).
+4. Final checks, the midwife's sign-off, then a wider test.
+
+The legal and privacy groundwork (12) is done on the app's side ([PR #23](https://github.com/liamdaly122/Baby-tracker/pull/23), [PR #24](https://github.com/liamdaly122/Baby-tracker/pull/24)). What's left of it needs people: see "Waiting on you".
 
 The redesign, done screen by screen following `docs/redesign-rules.md`, is finished.
 
@@ -199,6 +200,19 @@ The app side is built too ([PR #24](https://github.com/liamdaly122/Baby-tracker/
 - **Apple's privacy files** are in the phone app, the watch app and the widget. They say the app tracks nothing and collects nothing, and give Apple's reason for the app reading its own settings. Apple needs these before TestFlight.
 - **UK only:** the US option no longer appears in real builds. It stays in test builds for development.
 
+## Getting ready for TestFlight
+
+Everything Apple needs from the app before a test build can go up is done:
+
+- **An app icon** for the phone and the watch: the prototype's rocket lifting off at an angle, flame and all, under the dusk sky. It's drawn by the same code as the home screen's rocket, and a test redraws it and checks it still matches.
+- **No export paperwork.** The app says it only uses Apple's own encryption, so App Store Connect won't ask about it on every upload.
+- **Three safety checks** the hazard log still listed:
+  - **The call point:** 500 random patterns with every gap 5 minutes or less all say to call, never "Keep timing".
+  - **999:** a test checks it dials 999, and pictures check the key is in the header above every labour screen, at every text size.
+  - **Lock-screen alerts:** they only ever say what to do, like "Time to call your maternity unit". They can't include her name, hospital number or the unit's name, because the alerts are never given them. The privacy policy wrongly said the unit's name could show; it's corrected.
+- **What testers get** (`docs/store/testflight.md`): the test description, what to try, and a notice to send each tester first. It says the advice isn't midwife-checked yet so not to rely on it in a real labour, to use made-up details, what Apple shares with us, and how to report a safety concern.
+- **How to upload** (`docs/release-checklist.md`): the one-off set-up once you've joined the Apple Developer Program, then the same steps for every build.
+
 ## Trying it on your iPhone
 
 This can happen any time; nothing in the app is blocking it. It needs:
@@ -219,4 +233,4 @@ There are test switches for the simulator and the phone. They're listed at the t
 
 - **GitHub settings:** make `main` the default branch, and protect it so the checks must pass before merging. I can do this with your go-ahead.
 - **The midwife review** of the advice rules in `docs/content-review-log.md`. It's needed before the wider test. It now includes two questions about the hospital numbers (H1, H2) and one about the birth plan in labour (P2). There's also a question on which checklist items count as must-dos (S1). The new rules for loss and neonatal care (L1 to L6) need a bereavement midwife in particular.
-- **Deciding on the Apple Developer Program**, before TestFlight.
+- **Joining the Apple Developer Program** (£79 a year), the next step for TestFlight. Then sign in to Xcode and add the team ID (`docs/release-checklist.md`).

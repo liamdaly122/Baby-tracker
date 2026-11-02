@@ -23,9 +23,8 @@ Severity: minor, significant, considerable, major, catastrophic. Likelihood: ver
   - Every state says "or sooner if you're worried" or "you can call any time".
   - Before 37 weeks, or with the weeks unknown, any labour means "Call now" (E9).
   - The numbers never round across the call point (`EngineSafetyTests`).
-- **Still to do:**
-  - The midwife's decision on T2 and T5.
-  - A test that "Keep timing" never shows once the NHS rate is met.
+  - 500 random patterns with every gap 5 minutes or less all say to call, never "Keep timing" (`CallRuleTests`).
+- **Still to do:** the midwife's decision on T2 and T5.
 
 ### HZ-02 The wrong number is dialled, or the number is out of date
 
@@ -43,9 +42,10 @@ Severity: minor, significant, considerable, major, catastrophic. Likelihood: ver
 - **Causes:** hidden behind a menu, a long press or a scroll.
 - **Possible harm:** delay in an emergency. Provisional: catastrophic / very low.
 - **Controls in place:**
-  - 999 is in the top row of every labour screen, one tap away (`LabourRootView`, redesign rules).
+  - 999 is in the top row of every labour screen, one tap away. The header sits above whichever tab is showing, and every layout of its top row has the key (`LabourRootView`, redesign rules).
+  - A test checks it dials 999, and pictures of the header at every text size, live and in practice, guard it (`LabourHeaderTests`).
   - On the watch, the Call page.
-- **Still to do:** a test that 999 is on every labour tab.
+- **Still to do:** nothing known.
 
 ### HZ-04 Forgotten stops, double taps or missed contractions give a false pattern
 
@@ -182,11 +182,11 @@ Severity: minor, significant, considerable, major, catastrophic. Likelihood: ver
   - Everything stays on the phone and watch, with no accounts and no servers.
   - Sharing only happens when he taps Share.
   - "Delete everything" on the home screen's Your data page, on the phone and watch (`DeleteEverythingTests`).
+  - Alerts say only what to do, for example "Time to call your maternity unit", and the numbers behind it. The alert planner is never given her name, her hospital number or the unit's name, so no alert can show them.
 - **Still to do:**
-  - Check what alerts show on the lock screen.
-  - Discreet mode (PRT-09).
+  - Alerts still show that labour is under way ("Call your maternity unit now", "24 hours since her waters went"). Discreet mode should cover them (PRT-09).
   - The domestic abuse findings in the review.
 
 ## Reporting a safety concern
 
-Until the app has a support address and an in-app "Report a safety concern" route (to do before TestFlight), concerns go to the developer directly. Each one gets a row here within a working day, and a decision on whether to pull or fix the release.
+During TestFlight, testers report concerns through TestFlight's feedback, or by email with "Safety" in the subject, as the tester notice says (`docs/store/testflight.md`). An in-app "Report a safety concern" route comes before the App Store (`docs/release-checklist.md`). Each concern gets a row here within a working day, and a decision on whether to pull or fix the build.
