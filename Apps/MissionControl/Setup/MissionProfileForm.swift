@@ -1,4 +1,5 @@
 import MissionCore
+import MissionUI
 import SwiftUI
 
 /// Due date and her details for the triage call. The hospital has its own screen (`BirthPlacesView`).
@@ -8,51 +9,57 @@ struct MissionProfileForm: View {
 
     var body: some View {
         @Bindable var profile = model.profile
-        Form {
-            Section {
-                DatePicker("Due date", selection: dueDate, displayedComponents: .date)
-                Stepper(value: $profile.parity, in: 0...10) {
-                    LabeledContent("Previous births", value: "\(profile.parity)")
+        PaperPage("Mission profile", subtitle: "Due date and her details for the call") {
+            PaperSection(
+                "Pregnancy", note: "Second and later babies, or a fast labour last time, mean calling earlier."
+            ) {
+                PaperField("Due date") {
+                    DatePicker("Due date", selection: dueDate, displayedComponents: .date)
+                        .labelsHidden()
                 }
-                Toggle("Fast labour last time", isOn: $profile.previousFastLabour)
-                Picker("Region", selection: region) {
-                    Text("UK (NHS)").tag(ContentRegion.uk)
-                    Text("US").tag(ContentRegion.us)
-                }
-            } header: {
-                Text("Pregnancy")
-            } footer: {
-                Text("Second and later babies, or a fast labour last time, mean calling earlier.")
+                PaperStepper(
+                    "Previous births", value: "\(profile.parity)", canDecrease: profile.parity > 0,
+                    canIncrease: profile.parity < 10, decrease: { profile.parity -= 1 },
+                    increase: { profile.parity += 1 })
+                PaperTick("Fast labour last time", isOn: $profile.previousFastLabour)
+                PaperLabel("Region")
+                PaperChips(
+                    [ContentRegion.uk, .us], title: { $0 == .uk ? "UK (NHS)" : "US" },
+                    isPicked: { $0 == model.profile.region }, pick: { model.profile.region = $0 })
             }
-
-            Section {
-                TextField("Her name", text: $profile.motherName)
-                    .textContentType(.givenName)
-                TextField("Hospital number (from her notes)", text: $profile.hospitalNumber)
-                Toggle("GBS positive (group B strep)", isOn: $profile.gbsPositive)
-                Toggle("A caesarean is planned", isOn: $profile.plannedCaesarean)
-                TextField("Anything else they should know", text: $profile.notes, axis: .vertical)
-            } header: {
-                Text("For the triage call")
-            } footer: {
-                Text(
-                    "With GBS, call the unit as soon as labour starts or her waters go: antibiotics should "
-                        + "start then. With a caesarean planned, call them as soon as labour seems to start."
-                )
-            }
-
-            Section("Tone") {
-                Picker("Humour", selection: humour) {
-                    Text("Off").tag(HumourLevel.off)
-                    Text("Mild").tag(HumourLevel.mild)
-                    Text("Full CAPCOM").tag(HumourLevel.full)
+            PaperSection(
+                "For the triage call",
+                note: "With GBS, call the unit as soon as labour starts or her waters go: antibiotics should start "
+                    + "then. With a caesarean planned, call them as soon as labour seems to start."
+            ) {
+                PaperField("Her name") {
+                    TextField("", text: $profile.motherName)
+                        .textContentType(.givenName)
                 }
-                Text("Labour mode is always plain, whatever you choose here.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+                PaperField("Hospital number (from her notes)") {
+                    TextField("", text: $profile.hospitalNumber)
+                }
+                PaperTick("GBS positive (group B strep)", isOn: $profile.gbsPositive)
+                PaperTick("A caesarean is planned", isOn: $profile.plannedCaesarean)
+                PaperField("Anything else they should know") {
+                    TextField("", text: $profile.notes, axis: .vertical)
+                }
+            }
+            PaperSection("Tone", note: "Labour mode is always plain, whatever you choose here.") {
+                PaperChips(
+                    [HumourLevel.off, .mild, .full],
+                    title: {
+                        switch $0 {
+                        case .off: "Off"
+                        case .mild: "Mild"
+                        case .full: "Full CAPCOM"
+                        }
+                    },
+                    isPicked: { $0 == model.profile.humour }, pick: { model.profile.humour = $0 })
             }
         }
-        .navigationTitle("Mission profile")
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
         .onDisappear {
             model.savePlanning()
             model.reloadLibrary()
@@ -68,13 +75,5 @@ struct MissionProfileForm: View {
             },
             set: { model.profile.dueDate = CalendarDay($0, in: .current) }
         )
-    }
-
-    private var region: Binding<ContentRegion> {
-        Binding(get: { model.profile.region }, set: { model.profile.region = $0 })
-    }
-
-    private var humour: Binding<HumourLevel> {
-        Binding(get: { model.profile.humour }, set: { model.profile.humour = $0 })
     }
 }
